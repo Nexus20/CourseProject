@@ -14,7 +14,7 @@ namespace CourseProject.Models {
         public Brand Brand { get; set; }
 
         public int ParentModelID { get; set; }
-        public Model ParentModel { get; set; }
+        public CarModel ParentModel { get; set; }
 
     }
 }
