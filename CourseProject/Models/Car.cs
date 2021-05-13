@@ -33,5 +33,7 @@ namespace CourseProject.Models {
         public int TransmissionTypeID { get; set; }
         public TransmissionType TransmissionType { get; set; }
 
+        public string ImagesDirectoryPath { get; set; }
+
     }
 }
