@@ -19,5 +19,15 @@ namespace CourseProject.Data {
         public DbSet<BodyType> BodyTypes { get; set; }
         public DbSet<TransmissionType> TransmissionTypes { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            modelBuilder.Entity<Car>().ToTable("Car");
+            modelBuilder.Entity<CarModel>().ToTable("CarModel");
+            modelBuilder.Entity<Brand>().ToTable("Brand");
+            modelBuilder.Entity<FuelType>().ToTable("FuelType");
+            modelBuilder.Entity<BodyType>().ToTable("BodyType");
+            modelBuilder.Entity<TransmissionType>().ToTable("TransmissionType");
+        }
+
+
     }
 }
