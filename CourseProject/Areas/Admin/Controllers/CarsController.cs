@@ -52,10 +52,10 @@ namespace CourseProject.Areas.Admin.Controllers
         // GET: Admin/Cars/Create
         public IActionResult Create()
         {
-            ViewData["BodyTypeID"] = new SelectList(_context.BodyTypes, "ID", "ID");
-            ViewData["FuelTypeID"] = new SelectList(_context.FuelTypes, "ID", "ID");
-            ViewData["ModelID"] = new SelectList(_context.CarModels, "ID", "ID");
-            ViewData["TransmissionTypeID"] = new SelectList(_context.TransmissionTypes, "ID", "ID");
+            ViewData["BodyTypeID"] = new SelectList(_context.BodyTypes, "ID", "Name");
+            ViewData["FuelTypeID"] = new SelectList(_context.FuelTypes, "ID", "Name");
+            ViewData["ModelID"] = new SelectList(_context.CarModels, "ID", "Name");
+            ViewData["TransmissionTypeID"] = new SelectList(_context.TransmissionTypes, "ID", "Name");
             return View();
         }
 
@@ -72,10 +72,10 @@ namespace CourseProject.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BodyTypeID"] = new SelectList(_context.BodyTypes, "ID", "ID", car.BodyTypeID);
-            ViewData["FuelTypeID"] = new SelectList(_context.FuelTypes, "ID", "ID", car.FuelTypeID);
-            ViewData["ModelID"] = new SelectList(_context.CarModels, "ID", "ID", car.ModelID);
-            ViewData["TransmissionTypeID"] = new SelectList(_context.TransmissionTypes, "ID", "ID", car.TransmissionTypeID);
+            ViewData["BodyTypeID"] = new SelectList(_context.BodyTypes, "ID", "Name", car.BodyTypeID);
+            ViewData["FuelTypeID"] = new SelectList(_context.FuelTypes, "ID", "Name", car.FuelTypeID);
+            ViewData["ModelID"] = new SelectList(_context.CarModels, "ID", "Name", car.ModelID);
+            ViewData["TransmissionTypeID"] = new SelectList(_context.TransmissionTypes, "ID", "Name", car.TransmissionTypeID);
             return View(car);
         }
 
