@@ -112,7 +112,10 @@ namespace CourseProject.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ParentModelID")
+                    b.Property<int?>("ParentID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ParentModelID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
@@ -121,7 +124,7 @@ namespace CourseProject.Migrations
 
                     b.HasIndex("BrandID");
 
-                    b.HasIndex("ParentModelID");
+                    b.HasIndex("ParentID");
 
                     b.ToTable("CarModel");
                 });
@@ -199,15 +202,18 @@ namespace CourseProject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CourseProject.Models.CarModel", "ParentModel")
-                        .WithMany()
-                        .HasForeignKey("ParentModelID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("CourseProject.Models.CarModel", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentID");
 
                     b.Navigation("Brand");
 
-                    b.Navigation("ParentModel");
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("CourseProject.Models.CarModel", b =>
+                {
+                    b.Navigation("Children");
                 });
 #pragma warning restore 612, 618
         }

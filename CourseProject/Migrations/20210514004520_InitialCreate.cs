@@ -66,7 +66,8 @@ namespace CourseProject.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BrandID = table.Column<int>(type: "int", nullable: false),
-                    ParentModelID = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
+                    ParentModelID = table.Column<int>(type: "int", nullable: true, defaultValue: 0),
+                    ParentID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -78,11 +79,12 @@ namespace CourseProject.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CarModel_CarModel_ParentModelID",
-                        column: x => x.ParentModelID,
+                        name: "FK_CarModel_CarModel_ParentID",
+                        column: x => x.ParentID,
                         principalTable: "CarModel",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.NoAction,
+                        onUpdate: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -157,9 +159,9 @@ namespace CourseProject.Migrations
                 column: "BrandID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CarModel_ParentModelID",
+                name: "IX_CarModel_ParentID",
                 table: "CarModel",
-                column: "ParentModelID");
+                column: "ParentID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
