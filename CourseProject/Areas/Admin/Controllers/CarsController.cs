@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using CourseProject.Data;
 using CourseProject.Models;
 using CourseProject.Models.ViewModels;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace CourseProject.Areas.Admin.Controllers
 {
@@ -15,10 +18,12 @@ namespace CourseProject.Areas.Admin.Controllers
     public class CarsController : Controller
     {
         private readonly CarContext _context;
+        private readonly IWebHostEnvironment _appEnvironment;
 
-        public CarsController(CarContext context)
+        public CarsController(CarContext context, IWebHostEnvironment appEnvironment)
         {
             _context = context;
+            _appEnvironment = appEnvironment;
         }
 
         // GET: Admin/Cars
@@ -212,5 +217,33 @@ namespace CourseProject.Areas.Admin.Controllers
         {
             return _context.Cars.Any(e => e.ID == id);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddImages(int carID, IFormFileCollection uploadedImages) {
+
+            var car = _context.Cars.FirstOrDefaultAsync(car => car.ID == carID);
+
+            if (car == null) {
+                return NotFound();
+            }
+
+            var directoryPath = _appEnvironment.WebRootPath + $"/img/cars/{carID}";
+            if (!Directory.Exists(directoryPath)) {
+                DirectoryInfo dirInfo = new(directoryPath);
+                dirInfo.Create();
+            }
+
+            foreach (var uploadedImage in uploadedImages) {
+                var path = $"/img/cars/{carID}/{uploadedImage.FileName}";
+
+                using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create)) {
+                    await uploadedImage.CopyToAsync(fileStream);
+                }
+
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

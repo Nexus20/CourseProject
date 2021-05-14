@@ -74,6 +74,14 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<h3>Select image</h3>
+<form asp-action="AddImages" asp-controller="Cars" method="post" enctype="multipart/form-data">
+    <input type="file" name="uploadedImages" multiple accept="image/*" />
+    <input type="hidden" name="carID" value="@Model.ID" />
+    <input type="submit" value="Upload" />
+</form>
+
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
