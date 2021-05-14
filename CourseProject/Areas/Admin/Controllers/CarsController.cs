@@ -123,10 +123,14 @@ namespace CourseProject.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["BodyTypeID"] = new SelectList(_context.BodyTypes, "ID", "ID", car.BodyTypeID);
-            ViewData["FuelTypeID"] = new SelectList(_context.FuelTypes, "ID", "ID", car.FuelTypeID);
-            ViewData["ModelID"] = new SelectList(_context.CarModels, "ID", "ID", car.ModelID);
-            ViewData["TransmissionTypeID"] = new SelectList(_context.TransmissionTypes, "ID", "ID", car.TransmissionTypeID);
+
+
+            ViewData["State"] = new SelectList(Enum.GetNames(typeof(Car.CarState)), car.State);
+            ViewData["BodyTypeID"] = new SelectList(_context.BodyTypes, "ID", "Name", car.BodyTypeID);
+            ViewData["FuelTypeID"] = new SelectList(_context.FuelTypes, "ID", "Name", car.FuelTypeID);
+
+            ViewData["ModelID"] = new SelectList(CreateViewModel(), "ModelID", "ModelNameWithBrand", car.ModelID);
+            ViewData["TransmissionTypeID"] = new SelectList(_context.TransmissionTypes, "ID", "Name", car.TransmissionTypeID);
             return View(car);
         }
 
@@ -162,10 +166,12 @@ namespace CourseProject.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BodyTypeID"] = new SelectList(_context.BodyTypes, "ID", "ID", car.BodyTypeID);
-            ViewData["FuelTypeID"] = new SelectList(_context.FuelTypes, "ID", "ID", car.FuelTypeID);
-            ViewData["ModelID"] = new SelectList(_context.CarModels, "ID", "ID", car.ModelID);
-            ViewData["TransmissionTypeID"] = new SelectList(_context.TransmissionTypes, "ID", "ID", car.TransmissionTypeID);
+            ViewData["State"] = new SelectList(Enum.GetNames(typeof(Car.CarState)), car.State);
+            ViewData["BodyTypeID"] = new SelectList(_context.BodyTypes, "ID", "Name", car.BodyTypeID);
+            ViewData["FuelTypeID"] = new SelectList(_context.FuelTypes, "ID", "Name", car.FuelTypeID);
+
+            ViewData["ModelID"] = new SelectList(CreateViewModel(), "ModelID", "ModelNameWithBrand", car.ModelID);
+            ViewData["TransmissionTypeID"] = new SelectList(_context.TransmissionTypes, "ID", "Name", car.TransmissionTypeID);
             return View(car);
         }
 
