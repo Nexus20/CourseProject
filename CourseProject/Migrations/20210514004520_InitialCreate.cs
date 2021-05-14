@@ -83,8 +83,8 @@ namespace CourseProject.Migrations
                         column: x => x.ParentID,
                         principalTable: "CarModel",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.NoAction,
-                        onUpdate: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict,
+                        onUpdate: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(

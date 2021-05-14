@@ -52,9 +52,9 @@ namespace CourseProject.Data {
             context.SaveChanges();
 
             var brands = new Brand[] {
+                new() {Name = "Audi"},
                 new() {Name = "Skoda"},
                 new() {Name = "Volkswagen"},
-                new() {Name = "Audi"},
             };
 
             foreach (var brand in brands) {
@@ -64,12 +64,12 @@ namespace CourseProject.Data {
             context.SaveChanges();
 
             var carModels = new CarModel[] {
-                new() {BrandID = 1, Name = "Octavia", ParentModelID = 0},
-                new() {BrandID = 1, Name = "Fabia", ParentModelID = 0},
+                new() {BrandID = 3, Name = "Octavia", ParentModelID = 0},
+                new() {BrandID = 3, Name = "Fabia", ParentModelID = 0},
                 new() {BrandID = 2, Name = "Passat", ParentModelID = 0},
                 new() {BrandID = 2, Name = "Golf", ParentModelID = 0},
-                new() {BrandID = 3, Name = "A5", ParentModelID = 0},
-                new() {BrandID = 3, Name = "A7", ParentModelID = 0},
+                new() {BrandID = 1, Name = "A5", ParentModelID = 0},
+                new() {BrandID = 1, Name = "A7", ParentModelID = 0},
             };
 
             foreach (var carModel in carModels) {
