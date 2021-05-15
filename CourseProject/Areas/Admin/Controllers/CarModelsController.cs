@@ -172,5 +172,66 @@ namespace CourseProject.Areas.Admin.Controllers
         {
             return _context.CarModels.Any(e => e.Id == id);
         }
+
+        public async Task<IActionResult> Brands() {
+            return View(_context.Brands);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateBrand() {
+            return View("CreateEditBrand", new Brand());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditBrand(int? id) {
+
+            if (id == null) {
+                return NotFound();
+            }
+
+            var brand = await _context.Brands.FirstOrDefaultAsync(b => b.Id == id);
+
+            if (brand == null) {
+                return NotFound();
+            }
+
+            return View("CreateEditBrand", brand);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateEditBrand(Brand brand) {
+
+            if (ModelState.IsValid) {
+                if (brand.Id == 0) {
+                    _context.Add(brand);
+                    await _context.SaveChangesAsync();
+                }
+                else {
+                    try {
+                        _context.Update(brand);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException) {
+                        if (!CarModelExists(brand.Id)) {
+                            return NotFound();
+                        }
+                        else {
+                            throw;
+                        }
+                    }
+                }
+                return RedirectToAction(nameof(Brands));
+            }
+            return View(brand);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteBrand(int id) {
+            var brand = await _context.Brands.FindAsync(id);
+            _context.Brands.Remove(brand);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Brands));
+        }
+
     }
 }
