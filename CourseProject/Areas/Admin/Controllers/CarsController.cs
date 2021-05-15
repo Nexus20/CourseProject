@@ -61,6 +61,8 @@ namespace CourseProject.Areas.Admin.Controllers
                 return NotFound();
             }
 
+            ViewBag.ImagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/{car.Id}";
+
             return View(car);
         }
 
