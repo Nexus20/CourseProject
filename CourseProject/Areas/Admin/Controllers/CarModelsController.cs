@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -23,12 +24,15 @@ namespace CourseProject.Areas.Admin.Controllers
         }
 
         // GET: Admin/CarModels
-        public async Task<IActionResult> Index()
-        {
-            var carContext = _context.CarModels
-                .Include(c => c.Brand)
-                .Include(c => c.Parent);
-            return View(await carContext.ToListAsync());
+        public async Task<IActionResult> Index() {
+
+            var carModels = _context.CarModels
+                .Include(cm => cm.Brand)
+                .Where(cm => cm.ParentId == null)
+                .Include(cm => cm.Children);
+
+
+            return View(await carModels.ToListAsync());
         }
 
         // GET: Admin/CarModels/Details/5
