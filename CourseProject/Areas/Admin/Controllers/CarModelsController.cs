@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CourseProject.Data;
 using CourseProject.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Data.SqlClient;
 
 namespace CourseProject.Areas.Admin.Controllers
 {
@@ -21,10 +24,15 @@ namespace CourseProject.Areas.Admin.Controllers
         }
 
         // GET: Admin/CarModels
-        public async Task<IActionResult> Index()
-        {
-            var carContext = _context.CarModels.Include(c => c.Brand);
-            return View(await carContext.ToListAsync());
+        public async Task<IActionResult> Index() {
+
+            var carModels = _context.CarModels
+                .Include(cm => cm.Brand)
+                .Where(cm => cm.ParentId == null)
+                .Include(cm => cm.Children);
+
+
+            return View(await carModels.ToListAsync());
         }
 
         // GET: Admin/CarModels/Details/5
@@ -37,6 +45,7 @@ namespace CourseProject.Areas.Admin.Controllers
 
             var carModel = await _context.CarModels
                 .Include(c => c.Brand)
+                .Include(c => c.Parent)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (carModel == null)
             {
@@ -46,10 +55,19 @@ namespace CourseProject.Areas.Admin.Controllers
             return View(carModel);
         }
 
+        private List<CarModel> CreateParentModelsList() {
+            var parentModels = from cm in _context.CarModels
+                where cm.ParentId == null
+                orderby cm.Name
+                select cm;
+            return parentModels.ToList();
+        }
+
         // GET: Admin/CarModels/Create
         public IActionResult Create()
         {
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Id");
+            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name");
+            ViewData["ParentId"] = new SelectList(CreateParentModelsList(), "Id", "Name");
             return View();
         }
 
@@ -58,7 +76,7 @@ namespace CourseProject.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,BrandId,ParentModelId")] CarModel carModel)
+        public async Task<IActionResult> Create([Bind("Id,Name,BrandId,ParentId")] CarModel carModel)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +84,8 @@ namespace CourseProject.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Id", carModel.BrandId);
+            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name", carModel.BrandId);
+            ViewData["ParentId"] = new SelectList(CreateParentModelsList(), "Id", "Name", carModel.ParentId);
             return View(carModel);
         }
 
@@ -83,7 +102,8 @@ namespace CourseProject.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Id", carModel.BrandId);
+            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name", carModel.BrandId);
+            ViewData["ParentId"] = new SelectList(CreateParentModelsList(), "Id", "Name", carModel.ParentId);
             return View(carModel);
         }
 
@@ -92,7 +112,7 @@ namespace CourseProject.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,BrandId,ParentModelId")] CarModel carModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,BrandId,ParentId")] CarModel carModel)
         {
             if (id != carModel.Id)
             {
@@ -119,43 +139,127 @@ namespace CourseProject.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Id", carModel.BrandId);
+            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name", carModel.BrandId);
+            ViewData["ParentId"] = new SelectList(CreateParentModelsList(), "Id", "Name", carModel.ParentId);
             return View(carModel);
         }
 
         // GET: Admin/CarModels/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id, bool? hasChildrenError) {
+            
+            if (id == null) {
                 return NotFound();
             }
 
             var carModel = await _context.CarModels
                 .Include(c => c.Brand)
+                .Include(c => c.Parent)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (carModel == null)
-            {
+            
+            if (carModel == null) {
                 return NotFound();
+            }
+
+            if (hasChildrenError.GetValueOrDefault()) {
+                ViewData["HasChildrenError"] =
+                    "The record you attempted to delete has child records. You have to delete child elements first!";
             }
 
             return View(carModel);
         }
 
         // POST: Admin/CarModels/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var carModel = await _context.CarModels.FindAsync(id);
-            _context.CarModels.Remove(carModel);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+        public async Task<IActionResult> Delete(CarModel carModel) {
+
+            try {
+                if (await _context.CarModels.AnyAsync(cm => cm.Id == carModel.Id)) {
+                    _context.CarModels.Remove(carModel);
+                    await _context.SaveChangesAsync();
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception) {
+                return RedirectToAction(nameof(Delete), new {id = carModel.Id, hasChildrenError = true});
+            }
+
+            //var carModel = await _context.CarModels.FindAsync(id);
+
+            //if (carModel.Children.Count > 0) {
+            //    ViewData
+            //}
+
+            //_context.CarModels.Remove(carModel);
+            //await _context.SaveChangesAsync();
+            //return RedirectToAction(nameof(Index));
         }
 
         private bool CarModelExists(int id)
         {
             return _context.CarModels.Any(e => e.Id == id);
         }
+
+        public async Task<IActionResult> Brands() {
+            return View(_context.Brands);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateBrand() {
+            return View("CreateEditBrand", new Brand());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditBrand(int? id) {
+
+            if (id == null) {
+                return NotFound();
+            }
+
+            var brand = await _context.Brands.FirstOrDefaultAsync(b => b.Id == id);
+
+            if (brand == null) {
+                return NotFound();
+            }
+
+            return View("CreateEditBrand", brand);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateEditBrand(Brand brand) {
+
+            if (ModelState.IsValid) {
+                if (brand.Id == 0) {
+                    _context.Add(brand);
+                    await _context.SaveChangesAsync();
+                }
+                else {
+                    try {
+                        _context.Update(brand);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException) {
+                        if (!CarModelExists(brand.Id)) {
+                            return NotFound();
+                        }
+                        else {
+                            throw;
+                        }
+                    }
+                }
+                return RedirectToAction(nameof(Brands));
+            }
+            return View(brand);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteBrand(int id) {
+            var brand = await _context.Brands.FindAsync(id);
+            _context.Brands.Remove(brand);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Brands));
+        }
+
     }
 }
