@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CourseProject.Data;
 using CourseProject.Models;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Data.SqlClient;
 
 namespace CourseProject.Areas.Admin.Controllers
 {
@@ -24,7 +25,9 @@ namespace CourseProject.Areas.Admin.Controllers
         // GET: Admin/CarModels
         public async Task<IActionResult> Index()
         {
-            var carContext = _context.CarModels.Include(c => c.Brand).Include(c => c.Parent);
+            var carContext = _context.CarModels
+                .Include(c => c.Brand)
+                .Include(c => c.Parent);
             return View(await carContext.ToListAsync());
         }
 
@@ -138,10 +141,10 @@ namespace CourseProject.Areas.Admin.Controllers
         }
 
         // GET: Admin/CarModels/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id, bool? hasChildrenError) {
+            
+            if (id == null) {
                 return NotFound();
             }
 
@@ -149,23 +152,44 @@ namespace CourseProject.Areas.Admin.Controllers
                 .Include(c => c.Brand)
                 .Include(c => c.Parent)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (carModel == null)
-            {
+            
+            if (carModel == null) {
                 return NotFound();
+            }
+
+            if (hasChildrenError.GetValueOrDefault()) {
+                ViewData["HasChildrenError"] =
+                    "The record you attempted to delete has child records. You have to delete child elements first!";
             }
 
             return View(carModel);
         }
 
         // POST: Admin/CarModels/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var carModel = await _context.CarModels.FindAsync(id);
-            _context.CarModels.Remove(carModel);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+        public async Task<IActionResult> Delete(CarModel carModel) {
+
+            try {
+                if (await _context.CarModels.AnyAsync(cm => cm.Id == carModel.Id)) {
+                    _context.CarModels.Remove(carModel);
+                    await _context.SaveChangesAsync();
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception) {
+                return RedirectToAction(nameof(Delete), new {id = carModel.Id, hasChildrenError = true});
+            }
+
+            //var carModel = await _context.CarModels.FindAsync(id);
+
+            //if (carModel.Children.Count > 0) {
+            //    ViewData
+            //}
+
+            //_context.CarModels.Remove(carModel);
+            //await _context.SaveChangesAsync();
+            //return RedirectToAction(nameof(Index));
         }
 
         private bool CarModelExists(int id)
