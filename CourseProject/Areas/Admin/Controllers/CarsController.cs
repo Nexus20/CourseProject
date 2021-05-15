@@ -141,6 +141,9 @@ namespace CourseProject.Areas.Admin.Controllers
 
             ViewData["ModelId"] = new SelectList(CreateViewModel(), "ModelId", "ModelNameWithBrand", car.ModelId);
             ViewData["TransmissionTypeId"] = new SelectList(_context.TransmissionTypes, "Id", "Name", car.TransmissionTypeId);
+
+            ViewBag.ImagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/{car.Id}";
+
             return View(car);
         }
 
@@ -245,6 +248,19 @@ namespace CourseProject.Areas.Admin.Controllers
                     await uploadedImage.CopyToAsync(fileStream);
                 }
 
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveImages(int carId, string[] fileNames) {
+
+            foreach (var fileName in fileNames) {
+                var path = $"{_appEnvironment.WebRootPath}/img/cars/{carId}/{fileName}";
+                if (System.IO.File.Exists(path)) {
+                    System.IO.File.Delete(path);
+                }
             }
 
             return RedirectToAction(nameof(Index));
