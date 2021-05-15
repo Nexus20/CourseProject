@@ -18,9 +18,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Brand)
             </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.ParentModelId)
-            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.Parent)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -33,9 +33,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Brand.Id)
             </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.ParentModelId)
-            </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.Parent.Id)
+            </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

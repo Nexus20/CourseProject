@@ -23,7 +23,7 @@ namespace CourseProject.Areas.Admin.Controllers
         // GET: Admin/CarModels
         public async Task<IActionResult> Index()
         {
-            var carContext = _context.CarModels.Include(c => c.Brand);
+            var carContext = _context.CarModels.Include(c => c.Brand).Include(c => c.Parent);
             return View(await carContext.ToListAsync());
         }
 
@@ -37,6 +37,7 @@ namespace CourseProject.Areas.Admin.Controllers
 
             var carModel = await _context.CarModels
                 .Include(c => c.Brand)
+                .Include(c => c.Parent)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (carModel == null)
             {
@@ -49,7 +50,8 @@ namespace CourseProject.Areas.Admin.Controllers
         // GET: Admin/CarModels/Create
         public IActionResult Create()
         {
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Id");
+            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name");
+            ViewData["ParentId"] = new SelectList(_context.CarModels, "Id", "Id");
             return View();
         }
 
@@ -58,7 +60,7 @@ namespace CourseProject.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,BrandId,ParentModelId")] CarModel carModel)
+        public async Task<IActionResult> Create([Bind("Id,Name,BrandId,ParentId")] CarModel carModel)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +68,8 @@ namespace CourseProject.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Id", carModel.BrandId);
+            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name", carModel.BrandId);
+            ViewData["ParentId"] = new SelectList(_context.CarModels, "Id", "Id", carModel.ParentId);
             return View(carModel);
         }
 
@@ -83,7 +86,8 @@ namespace CourseProject.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Id", carModel.BrandId);
+            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name", carModel.BrandId);
+            ViewData["ParentId"] = new SelectList(_context.CarModels, "Id", "Id", carModel.ParentId);
             return View(carModel);
         }
 
@@ -92,7 +96,7 @@ namespace CourseProject.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,BrandId,ParentModelId")] CarModel carModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,BrandId,ParentId")] CarModel carModel)
         {
             if (id != carModel.Id)
             {
@@ -119,7 +123,8 @@ namespace CourseProject.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Id", carModel.BrandId);
+            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name", carModel.BrandId);
+            ViewData["ParentId"] = new SelectList(_context.CarModels, "Id", "Id", carModel.ParentId);
             return View(carModel);
         }
 
@@ -133,6 +138,7 @@ namespace CourseProject.Areas.Admin.Controllers
 
             var carModel = await _context.CarModels
                 .Include(c => c.Brand)
+                .Include(c => c.Parent)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (carModel == null)
             {
