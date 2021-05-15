@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CourseProject.Data;
 using CourseProject.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace CourseProject.Areas.Admin.Controllers
 {
@@ -47,11 +48,19 @@ namespace CourseProject.Areas.Admin.Controllers
             return View(carModel);
         }
 
+        private List<CarModel> CreateParentModelsList() {
+            var parentModels = from cm in _context.CarModels
+                where cm.ParentId == null
+                orderby cm.Name
+                select cm;
+            return parentModels.ToList();
+        }
+
         // GET: Admin/CarModels/Create
         public IActionResult Create()
         {
             ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name");
-            ViewData["ParentId"] = new SelectList(_context.CarModels, "Id", "Id");
+            ViewData["ParentId"] = new SelectList(CreateParentModelsList(), "Id", "Name");
             return View();
         }
 
@@ -69,7 +78,7 @@ namespace CourseProject.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name", carModel.BrandId);
-            ViewData["ParentId"] = new SelectList(_context.CarModels, "Id", "Id", carModel.ParentId);
+            ViewData["ParentId"] = new SelectList(CreateParentModelsList(), "Id", "Name", carModel.ParentId);
             return View(carModel);
         }
 
@@ -87,7 +96,7 @@ namespace CourseProject.Areas.Admin.Controllers
                 return NotFound();
             }
             ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name", carModel.BrandId);
-            ViewData["ParentId"] = new SelectList(_context.CarModels, "Id", "Id", carModel.ParentId);
+            ViewData["ParentId"] = new SelectList(CreateParentModelsList(), "Id", "Name", carModel.ParentId);
             return View(carModel);
         }
 
@@ -124,7 +133,7 @@ namespace CourseProject.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name", carModel.BrandId);
-            ViewData["ParentId"] = new SelectList(_context.CarModels, "Id", "Id", carModel.ParentId);
+            ViewData["ParentId"] = new SelectList(CreateParentModelsList(), "Id", "Name", carModel.ParentId);
             return View(carModel);
         }
 
