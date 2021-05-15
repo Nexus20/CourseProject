@@ -1,4 +1,5 @@
-﻿@model IEnumerable<CourseProject.Models.Car>
+﻿@using System.IO
+@model IEnumerable<CourseProject.Models.Car>
 
 @{
     ViewData["Title"] = "Index";
@@ -39,6 +40,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.TransmissionType)
             </th>
+            <th>Image</th>
             <th></th>
         </tr>
     </thead>
@@ -72,6 +74,14 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.TransmissionType.Name)
+            </td>
+            <td>
+                @{
+                    var files = new DirectoryInfo(ViewBag.ImagesDirectory + $"{item.Id}").GetFiles();
+                }
+                @if(files.Length > 0) {
+                    <img src="/img/cars/@item.Id/@files[0].Name" alt="" style="width: 100px">
+                }
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -35,6 +35,10 @@ namespace CourseProject.Areas.Admin.Controllers
                 .Include(c => c.Model)
                     .ThenInclude(cm => cm.Brand)
                 .Include(c => c.TransmissionType);
+
+
+            ViewBag.ImagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/";
+
             return View(await carContext.ToListAsync());
         }
 
