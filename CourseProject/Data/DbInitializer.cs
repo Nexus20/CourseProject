@@ -64,12 +64,12 @@ namespace CourseProject.Data {
             context.SaveChanges();
 
             var carModels = new CarModel[] {
-                new() {BrandId = 3, Name = "Octavia", ParentModelId = 0},
-                new() {BrandId = 3, Name = "Fabia", ParentModelId = 0},
-                new() {BrandId = 2, Name = "Passat", ParentModelId = 0},
-                new() {BrandId = 2, Name = "Golf", ParentModelId = 0},
-                new() {BrandId = 1, Name = "A5", ParentModelId = 0},
-                new() {BrandId = 1, Name = "A7", ParentModelId = 0},
+                new() {BrandId = 3, Name = "Octavia"},
+                new() {BrandId = 3, Name = "Fabia"},
+                new() {BrandId = 2, Name = "Passat"},
+                new() {BrandId = 2, Name = "Golf"},
+                new() {BrandId = 1, Name = "A5"},
+                new() {BrandId = 1, Name = "A7"},
             };
 
             foreach (var carModel in carModels) {

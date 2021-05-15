@@ -15,7 +15,7 @@ namespace CourseProject.Models {
         public Brand Brand { get; set; }
 
         //[ForeignKey("Parent")]
-        public int? ParentModelId { get; set; }
+        public int? ParentId { get; set; }
         public virtual CarModel Parent { get; set; }
         public virtual ICollection<CarModel> Children { get; set; }
 
