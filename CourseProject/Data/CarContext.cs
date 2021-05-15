@@ -22,6 +22,12 @@ namespace CourseProject.Data {
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<Car>().ToTable("Car");
             modelBuilder.Entity<CarModel>().ToTable("CarModel");
+            //modelBuilder.Entity<CarModel>()
+            //    .HasOne(cm => cm.Parent)
+            //    .WithMany(cm => cm.Children)
+            //    .HasForeignKey(cm => cm.ParentModelID)
+            //    .IsRequired(false);
+
 
             modelBuilder.Entity<Brand>().ToTable("Brand");
             modelBuilder.Entity<FuelType>().ToTable("FuelType");

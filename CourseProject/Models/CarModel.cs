@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 namespace CourseProject.Models {
     public class CarModel {
 
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public int BrandID { get; set; }
+        public int BrandId { get; set; }
         public Brand Brand { get; set; }
 
-        [ForeignKey("Parent")]
-        public int? ParentModelID { get; set; }
+        //[ForeignKey("Parent")]
+        public int? ParentModelId { get; set; }
         public virtual CarModel Parent { get; set; }
         public virtual ICollection<CarModel> Children { get; set; }
 

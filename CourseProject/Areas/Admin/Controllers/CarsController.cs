@@ -51,7 +51,7 @@ namespace CourseProject.Areas.Admin.Controllers
                 .Include(c => c.FuelType)
                 .Include(c => c.Model)
                 .Include(c => c.TransmissionType)
-                .FirstOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (car == null)
             {
                 return NotFound();
@@ -63,13 +63,13 @@ namespace CourseProject.Areas.Admin.Controllers
         // GET: Admin/Cars/Create
         public IActionResult Create() {
             ViewData["State"] = new SelectList(Enum.GetNames(typeof(Car.CarState)));
-            ViewData["BodyTypeID"] = new SelectList(_context.BodyTypes, "ID", "Name");
-            ViewData["FuelTypeID"] = new SelectList(_context.FuelTypes, "ID", "Name");
+            ViewData["BodyTypeId"] = new SelectList(_context.BodyTypes, "Id", "Name");
+            ViewData["FuelTypeId"] = new SelectList(_context.FuelTypes, "Id", "Name");
 
             
-            //ViewData["ModelID"] = new SelectList(_context.CarModels, "ID", "Name");
-            ViewData["ModelID"] = new SelectList(CreateViewModel(), "ModelID", "ModelNameWithBrand");
-            ViewData["TransmissionTypeID"] = new SelectList(_context.TransmissionTypes, "ID", "Name");
+            //ViewData["ModelId"] = new SelectList(_context.CarModels, "Id", "Name");
+            ViewData["ModelId"] = new SelectList(CreateViewModel(), "ModelId", "ModelNameWithBrand");
+            ViewData["TransmissionTypeId"] = new SelectList(_context.TransmissionTypes, "Id", "Name");
             return View();
         }
 
@@ -78,22 +78,21 @@ namespace CourseProject.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Year,Price,State,ModelID,EngineVolume,Mileage,FuelTypeID,BodyTypeID,TransmissionTypeID,ImagesDirectoryPath")] Car car)
+        public async Task<IActionResult> Create([Bind("Id,Year,Price,State,ModelId,EngineVolume,Mileage,FuelTypeId,BodyTypeId,TransmissionTypeId")] Car car)
         {
-            if (ModelState.IsValid)
-            {
+            if (ModelState.IsValid) {
                 _context.Add(car);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["State"] = new SelectList(Enum.GetNames(typeof(Car.CarState)), car.State);
-            ViewData["BodyTypeID"] = new SelectList(_context.BodyTypes, "ID", "Name", car.BodyTypeID);
-            ViewData["FuelTypeID"] = new SelectList(_context.FuelTypes, "ID", "Name", car.FuelTypeID);
+            ViewData["BodyTypeId"] = new SelectList(_context.BodyTypes, "Id", "Name", car.BodyTypeId);
+            ViewData["FuelTypeId"] = new SelectList(_context.FuelTypes, "Id", "Name", car.FuelTypeId);
 
-            //ViewData["ModelID"] = new SelectList(_context.CarModels, "ID", "Name", car.ModelID);
-            ViewData["ModelID"] = new SelectList(CreateViewModel(), "ModelID", "ModelNameWithBrand", car.ModelID);
+            //ViewData["ModelId"] = new SelectList(_context.CarModels, "Id", "Name", car.ModelId);
+            ViewData["ModelId"] = new SelectList(CreateViewModel(), "ModelId", "ModelNameWithBrand", car.ModelId);
 
-            ViewData["TransmissionTypeID"] = new SelectList(_context.TransmissionTypes, "ID", "Name", car.TransmissionTypeID);
+            ViewData["TransmissionTypeId"] = new SelectList(_context.TransmissionTypes, "Id", "Name", car.TransmissionTypeId);
             return View(car);
         }
 
@@ -106,7 +105,7 @@ namespace CourseProject.Areas.Admin.Controllers
             var viewModel = new List<CarBrandModel>();
             foreach (var carModel in carModels) {
                 viewModel.Add(new CarBrandModel() {
-                    ModelID = carModel.ID,
+                    ModelId = carModel.Id,
                     ModelName = carModel.Name,
                     BrandName = carModel.Brand.Name
                 });
@@ -131,11 +130,11 @@ namespace CourseProject.Areas.Admin.Controllers
 
 
             ViewData["State"] = new SelectList(Enum.GetNames(typeof(Car.CarState)), car.State);
-            ViewData["BodyTypeID"] = new SelectList(_context.BodyTypes, "ID", "Name", car.BodyTypeID);
-            ViewData["FuelTypeID"] = new SelectList(_context.FuelTypes, "ID", "Name", car.FuelTypeID);
+            ViewData["BodyTypeId"] = new SelectList(_context.BodyTypes, "Id", "Name", car.BodyTypeId);
+            ViewData["FuelTypeId"] = new SelectList(_context.FuelTypes, "Id", "Name", car.FuelTypeId);
 
-            ViewData["ModelID"] = new SelectList(CreateViewModel(), "ModelID", "ModelNameWithBrand", car.ModelID);
-            ViewData["TransmissionTypeID"] = new SelectList(_context.TransmissionTypes, "ID", "Name", car.TransmissionTypeID);
+            ViewData["ModelId"] = new SelectList(CreateViewModel(), "ModelId", "ModelNameWithBrand", car.ModelId);
+            ViewData["TransmissionTypeId"] = new SelectList(_context.TransmissionTypes, "Id", "Name", car.TransmissionTypeId);
             return View(car);
         }
 
@@ -144,9 +143,9 @@ namespace CourseProject.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Year,Price,State,ModelID,EngineVolume,Mileage,FuelTypeID,BodyTypeID,TransmissionTypeID,ImagesDirectoryPath")] Car car)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Year,Price,State,ModelId,EngineVolume,Mileage,FuelTypeId,BodyTypeId,TransmissionTypeId,ImagesDirectoryPath")] Car car)
         {
-            if (id != car.ID)
+            if (id != car.Id)
             {
                 return NotFound();
             }
@@ -160,7 +159,7 @@ namespace CourseProject.Areas.Admin.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CarExists(car.ID))
+                    if (!CarExists(car.Id))
                     {
                         return NotFound();
                     }
@@ -172,11 +171,11 @@ namespace CourseProject.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["State"] = new SelectList(Enum.GetNames(typeof(Car.CarState)), car.State);
-            ViewData["BodyTypeID"] = new SelectList(_context.BodyTypes, "ID", "Name", car.BodyTypeID);
-            ViewData["FuelTypeID"] = new SelectList(_context.FuelTypes, "ID", "Name", car.FuelTypeID);
+            ViewData["BodyTypeId"] = new SelectList(_context.BodyTypes, "Id", "Name", car.BodyTypeId);
+            ViewData["FuelTypeId"] = new SelectList(_context.FuelTypes, "Id", "Name", car.FuelTypeId);
 
-            ViewData["ModelID"] = new SelectList(CreateViewModel(), "ModelID", "ModelNameWithBrand", car.ModelID);
-            ViewData["TransmissionTypeID"] = new SelectList(_context.TransmissionTypes, "ID", "Name", car.TransmissionTypeID);
+            ViewData["ModelId"] = new SelectList(CreateViewModel(), "ModelId", "ModelNameWithBrand", car.ModelId);
+            ViewData["TransmissionTypeId"] = new SelectList(_context.TransmissionTypes, "Id", "Name", car.TransmissionTypeId);
             return View(car);
         }
 
@@ -193,7 +192,7 @@ namespace CourseProject.Areas.Admin.Controllers
                 .Include(c => c.FuelType)
                 .Include(c => c.Model)
                 .Include(c => c.TransmissionType)
-                .FirstOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (car == null)
             {
                 return NotFound();
@@ -215,26 +214,26 @@ namespace CourseProject.Areas.Admin.Controllers
 
         private bool CarExists(int id)
         {
-            return _context.Cars.Any(e => e.ID == id);
+            return _context.Cars.Any(e => e.Id == id);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddImages(int carID, IFormFileCollection uploadedImages) {
+        public async Task<IActionResult> AddImages(int carId, IFormFileCollection uploadedImages) {
 
-            var car = _context.Cars.FirstOrDefaultAsync(car => car.ID == carID);
+            var car = _context.Cars.FirstOrDefaultAsync(car => car.Id == carId);
 
             if (car == null) {
                 return NotFound();
             }
 
-            var directoryPath = _appEnvironment.WebRootPath + $"/img/cars/{carID}";
+            var directoryPath = _appEnvironment.WebRootPath + $"/img/cars/{carId}";
             if (!Directory.Exists(directoryPath)) {
                 DirectoryInfo dirInfo = new(directoryPath);
                 dirInfo.Create();
             }
 
             foreach (var uploadedImage in uploadedImages) {
-                var path = $"/img/cars/{carID}/{uploadedImage.FileName}";
+                var path = $"/img/cars/{carId}/{uploadedImage.FileName}";
 
                 using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create)) {
                     await uploadedImage.CopyToAsync(fileStream);

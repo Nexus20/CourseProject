@@ -64,12 +64,12 @@ namespace CourseProject.Data {
             context.SaveChanges();
 
             var carModels = new CarModel[] {
-                new() {BrandID = 3, Name = "Octavia", ParentModelID = 0},
-                new() {BrandID = 3, Name = "Fabia", ParentModelID = 0},
-                new() {BrandID = 2, Name = "Passat", ParentModelID = 0},
-                new() {BrandID = 2, Name = "Golf", ParentModelID = 0},
-                new() {BrandID = 1, Name = "A5", ParentModelID = 0},
-                new() {BrandID = 1, Name = "A7", ParentModelID = 0},
+                new() {BrandId = 3, Name = "Octavia", ParentModelId = 0},
+                new() {BrandId = 3, Name = "Fabia", ParentModelId = 0},
+                new() {BrandId = 2, Name = "Passat", ParentModelId = 0},
+                new() {BrandId = 2, Name = "Golf", ParentModelId = 0},
+                new() {BrandId = 1, Name = "A5", ParentModelId = 0},
+                new() {BrandId = 1, Name = "A7", ParentModelId = 0},
             };
 
             foreach (var carModel in carModels) {
@@ -80,16 +80,16 @@ namespace CourseProject.Data {
 
             var cars = new Car[] {
                 new() {
-                    BodyTypeID = 1, EngineVolume = 1.6, FuelTypeID = 1, ImagesDirectoryPath = "", Mileage = 0,
-                    ModelID = 1, State = Car.CarState.New, TransmissionTypeID = 1, Price = 100000M, Year = 2006
+                    BodyTypeId = 1, EngineVolume = 1.6, FuelTypeId = 1, Mileage = 0,
+                    ModelId = 1, State = Car.CarState.New, TransmissionTypeId = 1, Price = 100000M, Year = 2006
                 },
                 new() {
-                    BodyTypeID = 1, EngineVolume = 1.6, FuelTypeID = 2, ImagesDirectoryPath = "", Mileage = 0,
-                    ModelID = 2, State = Car.CarState.New, TransmissionTypeID = 1, Price = 100000M, Year = 2007
+                    BodyTypeId = 1, EngineVolume = 1.6, FuelTypeId = 2, Mileage = 0,
+                    ModelId = 2, State = Car.CarState.New, TransmissionTypeId = 1, Price = 100000M, Year = 2007
                 },
                 new() {
-                    BodyTypeID = 1, EngineVolume = 1.6, FuelTypeID = 1, ImagesDirectoryPath = "", Mileage = 0,
-                    ModelID = 3, State = Car.CarState.New, TransmissionTypeID = 1, Price = 100000M, Year = 2008
+                    BodyTypeId = 1, EngineVolume = 1.6, FuelTypeId = 1, Mileage = 0,
+                    ModelId = 3, State = Car.CarState.New, TransmissionTypeId = 1, Price = 100000M, Year = 2008
                 },
             };
 

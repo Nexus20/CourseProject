@@ -21,7 +21,7 @@ namespace CourseProject.Migrations
 
             modelBuilder.Entity("CourseProject.Models.BodyType", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -29,14 +29,14 @@ namespace CourseProject.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.ToTable("BodyType");
                 });
 
             modelBuilder.Entity("CourseProject.Models.Brand", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -44,34 +44,31 @@ namespace CourseProject.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.ToTable("Brand");
                 });
 
             modelBuilder.Entity("CourseProject.Models.Car", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("BodyTypeID")
+                    b.Property<int>("BodyTypeId")
                         .HasColumnType("int");
 
                     b.Property<double?>("EngineVolume")
                         .HasColumnType("float");
 
-                    b.Property<int>("FuelTypeID")
+                    b.Property<int>("FuelTypeId")
                         .HasColumnType("int");
-
-                    b.Property<string>("ImagesDirectoryPath")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Mileage")
                         .HasColumnType("float");
 
-                    b.Property<int>("ModelID")
+                    b.Property<int>("ModelId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
@@ -80,58 +77,56 @@ namespace CourseProject.Migrations
                     b.Property<int>("State")
                         .HasColumnType("int");
 
-                    b.Property<int>("TransmissionTypeID")
+                    b.Property<int>("TransmissionTypeId")
                         .HasColumnType("int");
 
                     b.Property<int>("Year")
                         .HasColumnType("int");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
-                    b.HasIndex("BodyTypeID");
+                    b.HasIndex("BodyTypeId");
 
-                    b.HasIndex("FuelTypeID");
+                    b.HasIndex("FuelTypeId");
 
-                    b.HasIndex("ModelID");
+                    b.HasIndex("ModelId");
 
-                    b.HasIndex("TransmissionTypeID");
+                    b.HasIndex("TransmissionTypeId");
 
                     b.ToTable("Car");
                 });
 
             modelBuilder.Entity("CourseProject.Models.CarModel", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("BrandID")
+                    b.Property<int>("BrandId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ParentID")
+                    b.Property<int?>("ParentId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ParentModelID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                    b.Property<int?>("ParentModelId")
+                        .HasColumnType("int");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
-                    b.HasIndex("BrandID");
+                    b.HasIndex("BrandId");
 
-                    b.HasIndex("ParentID");
+                    b.HasIndex("ParentId");
 
                     b.ToTable("CarModel");
                 });
 
             modelBuilder.Entity("CourseProject.Models.FuelType", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -139,14 +134,14 @@ namespace CourseProject.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.ToTable("FuelType");
                 });
 
             modelBuilder.Entity("CourseProject.Models.TransmissionType", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -154,7 +149,7 @@ namespace CourseProject.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.ToTable("TransmissionType");
                 });
@@ -163,25 +158,25 @@ namespace CourseProject.Migrations
                 {
                     b.HasOne("CourseProject.Models.BodyType", "BodyType")
                         .WithMany()
-                        .HasForeignKey("BodyTypeID")
+                        .HasForeignKey("BodyTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CourseProject.Models.FuelType", "FuelType")
                         .WithMany()
-                        .HasForeignKey("FuelTypeID")
+                        .HasForeignKey("FuelTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CourseProject.Models.CarModel", "Model")
                         .WithMany()
-                        .HasForeignKey("ModelID")
+                        .HasForeignKey("ModelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CourseProject.Models.TransmissionType", "TransmissionType")
                         .WithMany()
-                        .HasForeignKey("TransmissionTypeID")
+                        .HasForeignKey("TransmissionTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -198,13 +193,13 @@ namespace CourseProject.Migrations
                 {
                     b.HasOne("CourseProject.Models.Brand", "Brand")
                         .WithMany()
-                        .HasForeignKey("BrandID")
+                        .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CourseProject.Models.CarModel", "Parent")
                         .WithMany("Children")
-                        .HasForeignKey("ParentID");
+                        .HasForeignKey("ParentId");
 
                     b.Navigation("Brand");
 
