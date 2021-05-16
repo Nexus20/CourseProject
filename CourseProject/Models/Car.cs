@@ -37,7 +37,7 @@ namespace CourseProject.Models {
         [Display(Name = "Body")]
         public BodyType BodyType { get; set; }
 
-        public int TransmissionTypeId { get; set; }
+        public int? TransmissionTypeId { get; set; }
         [Display(Name = "Transmission")]
         public TransmissionType TransmissionType { get; set; }
 
