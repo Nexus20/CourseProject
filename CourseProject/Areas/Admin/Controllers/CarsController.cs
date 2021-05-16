@@ -74,6 +74,8 @@ namespace CourseProject.Areas.Admin.Controllers
                .Include(c => c.FuelType)
                .Include(c => c.Model)
                    .ThenInclude(cm => cm.Brand)
+               .Include(c => c.Model)
+                   .ThenInclude(cm => cm.Parent)
                .Include(c => c.TransmissionType)
                .FirstOrDefaultAsync(m => m.Id == id);
 

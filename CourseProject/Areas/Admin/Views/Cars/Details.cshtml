@@ -8,7 +8,9 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Car</h4>
+    <h4>
+        @Model.Model.Brand.Name @Model.Model.Parent?.Name @Model.Model.Name
+    </h4>
     <hr />
     <div class="row">
         <div class="col-sm-6">
@@ -30,12 +32,6 @@
                 </dt>
                 <dd class = "col-sm-8">
                     @Html.DisplayFor(model => model.State)
-                </dd>
-                <dt class = "col-sm-4">
-                    @Html.DisplayNameFor(model => model.Model)
-                </dt>
-                <dd class = "col-sm-8">
-                    @Html.DisplayFor(model => model.Model.Name)
                 </dd>
                 <dt class = "col-sm-4">
                     @Html.DisplayNameFor(model => model.EngineVolume)
