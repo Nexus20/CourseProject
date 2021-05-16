@@ -8,6 +8,35 @@ using CourseProject.Models;
 namespace CourseProject.Data {
     public static class DbInitializer {
 
+        public static void Initialize2(CarContext context) {
+
+            List<Car> cars = new List<Car>();
+
+            Random random = new Random();
+
+            for (var i = 0; i < 100; i++) {
+                cars.Add(new Car() {
+                    BodyTypeId = 1,
+                    EngineVolume = 1.6,
+                    FuelTypeId = 1,
+                    Mileage = 0,
+                    ModelId = random.Next(1, 5),
+                    State = Car.CarState.New,
+                    TransmissionTypeId = 1,
+                    Price = 100000M,
+                    Year = random.Next(1980, 2022)
+                });
+            }
+
+            foreach (var car in cars) {
+                context.Cars.Add(car);
+            }
+
+            context.SaveChanges();
+
+        }
+
+
         public static void Initialize(CarContext context) {
 
             context.Database.EnsureCreated();
