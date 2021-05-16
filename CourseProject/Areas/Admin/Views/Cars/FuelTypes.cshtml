@@ -1,12 +1,12 @@
-﻿@model IEnumerable<BodyType>
+﻿@model IEnumerable<FuelType>
 @{
-    ViewData["Title"] = "BodyTypes";
+    ViewData["Title"] = "FuelTypes";
 }
 
 <h1>BodyTypes</h1>
 
 <p>
-    <a asp-action="CreateBodyType">Create New</a>
+    <a asp-action="CreateFuelType">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -24,11 +24,11 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                <a asp-action="EditBodyType" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> |
-                <form asp-action="DeleteBodyType">
+                <a asp-action="EditFuelType" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> |
+                <form asp-action="DeleteFuelType">
                     <input type="hidden" asp-for="@item.Id" name="id" />
                     <input type="submit" value="Delete" class="btn btn-danger" /> |
-                    <a asp-action="BodyTypes">Back to List</a>
+                    <a asp-action="FuelTypes">Back to List</a>
                 </form>
             </td>
         </tr>

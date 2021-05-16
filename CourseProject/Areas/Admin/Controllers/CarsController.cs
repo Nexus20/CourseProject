@@ -332,6 +332,71 @@ namespace CourseProject.Areas.Admin.Controllers
 
         #endregion
 
+        #region FuelTypeHandling
+
+        [HttpGet]
+        public async Task<IActionResult> FuelTypes() {
+            return View(_context.FuelTypes);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateFuelType() {
+            return View("CreateEditFuelType", new FuelType());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditFuelType(int? id) {
+
+            if (id == null) {
+                return NotFound();
+            }
+
+            var fuelType = await _context.FuelTypes.FirstOrDefaultAsync(f => f.Id == id);
+
+            if (fuelType == null) {
+                return NotFound();
+            }
+
+            return View("CreateEditFuelType", fuelType);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateEditFuelType(FuelType fuelType) {
+
+            if (ModelState.IsValid) {
+                if (fuelType.Id == 0) {
+                    _context.Add(fuelType);
+                    await _context.SaveChangesAsync();
+                }
+                else {
+                    try {
+                        _context.Update(fuelType);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException) {
+                        if (!_context.FuelTypes.Any(f => f.Id == fuelType.Id)) {
+                            return NotFound();
+                        }
+                        else {
+                            throw;
+                        }
+                    }
+                }
+                return RedirectToAction(nameof(FuelTypes));
+            }
+            return View(fuelType);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteFuelType(int id) {
+            var fuelType = await _context.FuelTypes.FindAsync(id);
+            _context.FuelTypes.Remove(fuelType);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(FuelTypes));
+        }
+
+        #endregion
+
 
     }
 }
