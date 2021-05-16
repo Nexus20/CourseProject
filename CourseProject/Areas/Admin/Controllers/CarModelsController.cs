@@ -240,7 +240,7 @@ namespace CourseProject.Areas.Admin.Controllers
                         await _context.SaveChangesAsync();
                     }
                     catch (DbUpdateConcurrencyException) {
-                        if (!CarModelExists(brand.Id)) {
+                        if (!_context.Brands.Any(b => b.Id == brand.Id)) {
                             return NotFound();
                         }
                         else {

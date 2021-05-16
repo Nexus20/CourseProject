@@ -266,5 +266,72 @@ namespace CourseProject.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        #region BodyTypeHandling
+
+        [HttpGet]
+        public async Task<IActionResult> BodyTypes() {
+            return View(_context.BodyTypes);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateBodyType() {
+            return View("CreateEditBodyType", new BodyType());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditBodyType(int? id) {
+
+            if (id == null) {
+                return NotFound();
+            }
+
+            var bodyType = await _context.BodyTypes.FirstOrDefaultAsync(b => b.Id == id);
+
+            if (bodyType == null) {
+                return NotFound();
+            }
+
+            return View("CreateEditBodyType", bodyType);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateEditBodyType(BodyType bodyType) {
+
+            if (ModelState.IsValid) {
+                if (bodyType.Id == 0) {
+                    _context.Add(bodyType);
+                    await _context.SaveChangesAsync();
+                }
+                else {
+                    try {
+                        _context.Update(bodyType);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException) {
+                        if (!_context.BodyTypes.Any(b => b.Id == bodyType.Id)) {
+                            return NotFound();
+                        }
+                        else {
+                            throw;
+                        }
+                    }
+                }
+                return RedirectToAction(nameof(BodyTypes));
+            }
+            return View(bodyType);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteBodyType(int id) {
+            var bodyType = await _context.BodyTypes.FindAsync(id);
+            _context.BodyTypes.Remove(bodyType);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(BodyTypes));
+        }
+
+        #endregion
+
+
     }
 }
