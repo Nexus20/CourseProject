@@ -25,16 +25,13 @@ namespace CourseProject.Controllers {
         [HttpGet]
         public IActionResult Index(int? brandId, int? modelId, int[] fuelTypes, int[] bodyTypes, int[] transmissionTypes) {
 
-            ViewBag.TransmissionTypes = _context.TransmissionTypes;
-            ViewBag.BodyTypes = _context.BodyTypes;
-            ViewBag.FuelTypes = _context.FuelTypes;
-            ViewBag.Brands = new SelectList(_context.Brands, "Id", "Name");
-
             //var r = Request.Query;
 
             IQueryable<Car> cars = _context.Cars
                 .Include(c => c.Model)
                     .ThenInclude(cm => cm.Brand)
+                .Include(c => c.Model)
+                    .ThenInclude(cm => cm.Parent)
                 .Include(c => c.Model)
                 .Include(c => c.BodyType)
                 .Include(c => c.FuelType)
@@ -43,11 +40,15 @@ namespace CourseProject.Controllers {
 
             if (brandId != null) {
                 cars = cars.Where(c => c.Model.BrandId == brandId);
+                //ViewData["brandId"] = brandId;
             }
+            
 
             if (modelId != null) {
                 cars = cars.Where(c => c.ModelId == modelId);
+                //ViewData["modelId"] = modelId;
             }
+            
 
             if (fuelTypes.Length > 0) {
                 //cars = fuelTypes.Select((t, i) => i).Aggregate(cars,
@@ -60,6 +61,8 @@ namespace CourseProject.Controllers {
 
                 cars = cars2;
             }
+
+            //ViewData["fuelTypes"] = fuelTypes;
 
             if (bodyTypes.Length > 0) {
                 //cars = bodyTypes.Select((t, i) => i).Aggregate(cars,
@@ -96,6 +99,15 @@ namespace CourseProject.Controllers {
             //}
 
 
+            ViewBag.TransmissionTypes = _context.TransmissionTypes;
+            ViewBag.BodyTypes = _context.BodyTypes;
+            ViewBag.FuelTypes = _context.FuelTypes;
+            ViewBag.Brands = new SelectList(_context.Brands, "Id", "Name", brandId);
+            //if (brandId != null) {
+            //    ViewBag.Models = new SelectList();
+            //}
+
+
             return View(cars);
         }
 
@@ -111,7 +123,7 @@ namespace CourseProject.Controllers {
                 return Content("<option value=\"\"></option>", "text/html");
             }
 
-            var sb = new StringBuilder();
+            var sb = new StringBuilder("<option value=\"\"></option>");
 
             var carModels = _context.CarModels
                 .Include(cm => cm.Parent)

@@ -19,6 +19,7 @@
     Fuel type:
     @foreach (var fuelType in ViewBag.FuelTypes) {
         <label for="@fuelType.Name-checkbox">@fuelType.Name</label>
+
         <input id="@fuelType.Name-checkbox" type="checkbox" value="@fuelType.Id" name="fuelTypes">
 
     }
@@ -87,8 +88,8 @@
                         @Html.DisplayFor(modelItem => item.State)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Model.Name)
-                        @*@item.Model.Brand.Name @item.Model.Parent?.Name @item.Model.Name*@
+                        @*@Html.DisplayFor(modelItem => item.Model.Name)*@
+                        @item.Model.Brand.Name @item.Model.Parent?.Name @item.Model.Name
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.EngineVolume)
