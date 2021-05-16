@@ -34,6 +34,8 @@ namespace CourseProject.Areas.Admin.Controllers
                 .Include(c => c.FuelType)
                 .Include(c => c.Model)
                     .ThenInclude(cm => cm.Brand)
+                .Include(c => c.Model)
+                    .ThenInclude(cm => cm.Parent)
                 .Include(c => c.TransmissionType);
 
 
@@ -49,25 +51,6 @@ namespace CourseProject.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
-
-            //var car = (from c in _context.Cars
-            //           join bt in _context.BodyTypes on c.BodyTypeId equals bt.Id
-            //           join ft in _context.FuelTypes on c.FuelTypeId equals ft.Id
-            //           join tt in _context.TransmissionTypes on c.TransmissionTypeId equals tt.Id
-            //           join cm in _context.CarModels on c.ModelId equals cm.Id
-            //           select new {
-            //               Id = c.Id,
-            //               Year = c.Year,
-            //               Price = c.Price,
-            //               State = c.State,
-            //               EngineVolume = c.EngineVolume,
-            //               Mileage = c.Mileage,
-            //               Model = cm.Name,
-            //               BodyType = bt.Name,
-            //               FuelType = ft.Name,
-            //               TransmissionType = tt.Name,
-            //           }).FirstOrDefaultAsync(m => m.Id == id);
 
             var car = await _context.Cars
                .Include(c => c.BodyType)
