@@ -1,0 +1,37 @@
+﻿@model IEnumerable<TransmissionType>
+@{
+    ViewData["Title"] = "TransmissionTypes";
+}
+
+<h1>BodyTypes</h1>
+
+<p>
+    <a asp-action="CreateTransmissionType">Create New</a>
+</p>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                <a asp-action="EditTransmissionType" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> |
+                <form asp-action="DeleteTransmissionType">
+                    <input type="hidden" asp-for="@item.Id" name="id" />
+                    <input type="submit" value="Delete" class="btn btn-danger" /> |
+                    <a asp-action="TransmissionTypes">Back to List</a>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

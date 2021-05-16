@@ -396,6 +396,71 @@ namespace CourseProject.Areas.Admin.Controllers
         }
 
         #endregion
+        
+        #region TransmissionTypeHandling
+
+        [HttpGet]
+        public async Task<IActionResult> TransmissionTypes() {
+            return View(_context.TransmissionTypes);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateTransmissionType() {
+            return View("CreateEditTransmissionType", new TransmissionType());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditTransmissionType(int? id) {
+
+            if (id == null) {
+                return NotFound();
+            }
+
+            var transmissionType = await _context.TransmissionTypes.FirstOrDefaultAsync(t => t.Id == id);
+
+            if (transmissionType == null) {
+                return NotFound();
+            }
+
+            return View("CreateEditTransmissionType", transmissionType);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateEditTransmissionType(TransmissionType transmissionType) {
+
+            if (ModelState.IsValid) {
+                if (transmissionType.Id == 0) {
+                    _context.Add(transmissionType);
+                    await _context.SaveChangesAsync();
+                }
+                else {
+                    try {
+                        _context.Update(transmissionType);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException) {
+                        if (!_context.TransmissionTypes.Any(t => t.Id == transmissionType.Id)) {
+                            return NotFound();
+                        }
+                        else {
+                            throw;
+                        }
+                    }
+                }
+                return RedirectToAction(nameof(TransmissionTypes));
+            }
+            return View(transmissionType);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteTransmissionType(int id) {
+            var transmissionType = await _context.TransmissionTypes.FindAsync(id);
+            _context.TransmissionTypes.Remove(transmissionType);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(TransmissionTypes));
+        }
+
+        #endregion
 
 
     }
