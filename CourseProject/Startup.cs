@@ -6,9 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using CourseProject.Data;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 
 namespace CourseProject {
@@ -32,6 +34,16 @@ namespace CourseProject {
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+
+            var defaultCulture = new CultureInfo("es-UY");
+            var localizationOptions = new RequestLocalizationOptions() {
+                DefaultRequestCulture = new RequestCulture(defaultCulture),
+                SupportedCultures = new List<CultureInfo>() {defaultCulture},
+                SupportedUICultures = new List<CultureInfo>() {defaultCulture}
+            };
+            app.UseRequestLocalization(localizationOptions);
+
+
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
             }

@@ -76,11 +76,15 @@
                 @Html.DisplayFor(modelItem => item.TransmissionType.Name)
             </td>
             <td>
-                @{
+                @if (Directory.Exists(ViewBag.ImagesDirectory + $"{item.Id}")) {
+
                     var files = new DirectoryInfo(ViewBag.ImagesDirectory + $"{item.Id}").GetFiles();
-                }
-                @if(files.Length > 0) {
-                    <img src="/img/cars/@item.Id/@files[0].Name" alt="" style="width: 100px">
+
+                    if (files.Length > 0) {
+
+                        <img src="/img/cars/@item.Id/@files[0].Name" alt="" style="width: 100px">
+                    }
+
                 }
             </td>
             <td>
