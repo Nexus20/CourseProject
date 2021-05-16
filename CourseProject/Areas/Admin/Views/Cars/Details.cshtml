@@ -70,11 +70,12 @@
             </dl>
         </div>
         <div class="col-sm-6 fotorama" data-nav="thumbs">
-            @{
+            @if (Directory.Exists(ViewBag.ImagesDirectory)) {
                 var files = new DirectoryInfo(ViewBag.ImagesDirectory).GetFiles();
-            }
-            @foreach(var file in files) {
-                <img src="/img/cars/@Model.Id/@file.Name" alt="">
+                
+                foreach (var file in files) {
+                    <img src="/img/cars/@Model.Id/@file.Name" alt="">
+                }
             }
         </div>
     </div>

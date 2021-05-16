@@ -70,18 +70,20 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-<h3>Uploaded Images</h3>
-<form asp-action="RemoveImages" method="post">
-    <input type="hidden" name="carId" value="@Model.Id" />
-    @{
-        var files = new DirectoryInfo(ViewBag.ImagesDirectory).GetFiles();
-    }
-    @foreach (var file in files) {
-        <input type="checkbox" name="fileNames[]" value="@file.Name">
-        <img src="/img/cars/@Model.Id/@file.Name" alt="" style="width: 200px">
-    }
-    <input type="submit" value="Remove selected images"/>
-</form>
+@if (Directory.Exists(ViewBag.ImagesDirectory)) {
+    <h3>Uploaded Images</h3>
+    <form asp-action="RemoveImages" method="post">
+        <input type="hidden" name="carId" value="@Model.Id" />
+        @{
+            var files = new DirectoryInfo(ViewBag.ImagesDirectory).GetFiles();
+        }
+        @foreach (var file in files) {
+            <input type="checkbox" name="fileNames[]" value="@file.Name">
+            <img src="/img/cars/@Model.Id/@file.Name" alt="" style="width: 200px">
+        }
+        <input type="submit" value="Remove selected images" />
+    </form>
+}
 
 <h3>Select image</h3>
 <form asp-action="AddImages" asp-controller="Cars" method="post" enctype="multipart/form-data">
