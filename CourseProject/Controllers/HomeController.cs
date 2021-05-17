@@ -220,6 +220,7 @@ namespace CourseProject.Controllers {
             return View(car);
         }
 
+        [HttpGet]
         public async Task<IActionResult> CreatePurchaseRequest(int? id) {
             if (id == null) {
                 return NotFound();
@@ -231,8 +232,19 @@ namespace CourseProject.Controllers {
                 return NotFound();
             }
 
-            return View();
+            return View(new PurchaseRequest() { CarId = id.Value });
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> CreatePurchaseRequest([Bind("CarId,Firstname,Surname,Phone,Email")] PurchaseRequest request) {
+
+            if (ModelState.IsValid) {
+                _context.Add(request);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(request);
         }
 
     }
