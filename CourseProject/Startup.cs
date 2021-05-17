@@ -29,7 +29,9 @@ namespace CourseProject {
             services.AddDbContext<CarContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>(options => {
+                    options.User.RequireUniqueEmail = true;
+                })
                 .AddEntityFrameworkStores<CarContext>();
 
             services.AddDatabaseDeveloperPageExceptionFilter();
