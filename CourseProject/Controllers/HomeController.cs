@@ -23,9 +23,11 @@ namespace CourseProject.Controllers {
         }
 
         [HttpGet]
-        public IActionResult Index(int? brandId, int? modelId, int[] fuelTypes, int[] bodyTypes, int[] transmissionTypes) {
+        public async Task<IActionResult> Index(int? brandId, int? modelId, int[] fuelTypes, int[] bodyTypes, int[] transmissionTypes, int? newSearch, int? page) {
 
-            //var r = Request.Query;
+            //var r = string.Join("fuelTypes=", Request.Query["fuelTypes"].ToArray());
+
+            StringBuilder queryStringBuilder = new StringBuilder("?");
 
             IQueryable<Car> cars = _context.Cars
                 .Include(c => c.Model)
@@ -35,18 +37,26 @@ namespace CourseProject.Controllers {
                 .Include(c => c.Model)
                 .Include(c => c.BodyType)
                 .Include(c => c.FuelType)
-                .Include(c => c.TransmissionType)
-                .AsNoTracking();
+                .Include(c => c.TransmissionType);
+
+            if (newSearch != null) {
+                page = 1;
+            }
+
 
             if (brandId != null) {
                 cars = cars.Where(c => c.Model.BrandId == brandId);
-                //ViewData["brandId"] = brandId;
+                ViewData["brandId"] = brandId;
+                queryStringBuilder.Append($"brandId={brandId}&");
+                //
             }
             
+
 
             if (modelId != null) {
                 cars = cars.Where(c => c.ModelId == modelId);
                 //ViewData["modelId"] = modelId;
+                queryStringBuilder.Append($"modelId={modelId}&");
             }
             
 
@@ -60,6 +70,18 @@ namespace CourseProject.Controllers {
                 }
 
                 cars = cars2;
+
+                var sb = new StringBuilder();
+                foreach (var item in Request.Query["fuelTypes"].ToArray()) {
+                    sb.Append($"fuelTypes={item}&");
+                }
+
+                queryStringBuilder.Append(sb);
+
+                ViewBag.CheckedFuelTypes = Request.Query["fuelTypes"].ToArray();
+            }
+            else {
+                ViewBag.CheckedFuelTypes = null;
             }
 
             //ViewData["fuelTypes"] = fuelTypes;
@@ -76,6 +98,17 @@ namespace CourseProject.Controllers {
 
                 cars = cars2;
 
+                var sb = new StringBuilder();
+                foreach (var item in Request.Query["bodyTypes"].ToArray()) {
+                    sb.Append($"bodyTypes={item}&");
+                }
+
+                queryStringBuilder.Append(sb);
+
+                ViewBag.CheckedBodyTypes = Request.Query["bodyTypes"].ToArray();
+            }
+            else {
+                ViewBag.CheckedBodyTypes = null;
             }
 
             if (transmissionTypes.Length > 0) {
@@ -90,6 +123,17 @@ namespace CourseProject.Controllers {
 
                 cars = cars2;
 
+                var sb = new StringBuilder();
+                foreach (var item in Request.Query["transmissionTypes"].ToArray()) {
+                    sb.Append($"transmissionTypes={item}&");
+                }
+
+                queryStringBuilder.Append(sb);
+
+                ViewBag.CheckedTransmissionTypes = Request.Query["transmissionTypes"].ToArray();
+            }
+            else {
+                ViewBag.CheckedTransmissionTypes = null;
             }
 
 
@@ -98,17 +142,17 @@ namespace CourseProject.Controllers {
             //    cars = cars.Where(c => c.FuelTypeId == fuelTypes[i1]);
             //}
 
-
+            ViewBag.QueryString = queryStringBuilder.ToString();
             ViewBag.TransmissionTypes = _context.TransmissionTypes;
             ViewBag.BodyTypes = _context.BodyTypes;
             ViewBag.FuelTypes = _context.FuelTypes;
             ViewBag.Brands = new SelectList(_context.Brands, "Id", "Name", brandId);
-            //if (brandId != null) {
-            //    ViewBag.Models = new SelectList();
-            //}
 
+            ViewBag.CarModels = brandId != null ? new SelectList(_context.CarModels.Where(cm => cm.BrandId == brandId), "Id", "Name", modelId) : null;
 
-            return View(cars);
+            int pageSize = 10;
+
+            return View(await PaginatedList<Car>.CreateAsync(cars.AsNoTracking(), page ?? 1, pageSize));
         }
 
         public IActionResult GetModelsByBrand(int? brandId) {
