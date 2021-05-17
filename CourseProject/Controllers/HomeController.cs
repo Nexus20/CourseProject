@@ -8,17 +8,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CourseProject.Data;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace CourseProject.Controllers {
     public class HomeController : Controller {
 
+        private readonly IWebHostEnvironment _appEnvironment;
         private readonly ILogger<HomeController> _logger;
         private readonly CarContext _context;
 
-        public HomeController(CarContext context, ILogger<HomeController> logger) {
+        public HomeController(CarContext context, IWebHostEnvironment appEnvironment, ILogger<HomeController> logger) {
             _context = context;
+            _appEnvironment = appEnvironment;
             _logger = logger;
         }
 
@@ -190,5 +193,31 @@ namespace CourseProject.Controllers {
         public IActionResult Error() {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        // GET: Admin/Cars/Details/5
+        public async Task<IActionResult> Car(int? id) {
+            if (id == null) {
+                return NotFound();
+            }
+
+            var car = await _context.Cars
+                .Include(c => c.BodyType)
+                .Include(c => c.FuelType)
+                .Include(c => c.Model)
+                .ThenInclude(cm => cm.Brand)
+                .Include(c => c.Model)
+                .ThenInclude(cm => cm.Parent)
+                .Include(c => c.TransmissionType)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (car == null) {
+                return NotFound();
+            }
+
+            ViewBag.ImagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/{car.Id}";
+
+            return View(car);
+        }
+
     }
 }

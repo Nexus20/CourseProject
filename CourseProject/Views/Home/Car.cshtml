@@ -15,52 +15,52 @@
     <div class="row">
         <div class="col-sm-6">
             <dl class="row">
-                <dt class = "col-sm-4">
+                <dt class="col-sm-4">
                     @Html.DisplayNameFor(model => model.Year)
                 </dt>
-                <dd class = "col-sm-8">
+                <dd class="col-sm-8">
                     @Html.DisplayFor(model => model.Year)
                 </dd>
-                <dt class = "col-sm-4">
+                <dt class="col-sm-4">
                     @Html.DisplayNameFor(model => model.Price)
                 </dt>
-                <dd class = "col-sm-8">
+                <dd class="col-sm-8">
                     @Html.DisplayFor(model => model.Price)
                 </dd>
-                <dt class = "col-sm-4">
+                <dt class="col-sm-4">
                     @Html.DisplayNameFor(model => model.State)
                 </dt>
-                <dd class = "col-sm-8">
+                <dd class="col-sm-8">
                     @Html.DisplayFor(model => model.State)
                 </dd>
-                <dt class = "col-sm-4">
+                <dt class="col-sm-4">
                     @Html.DisplayNameFor(model => model.EngineVolume)
                 </dt>
-                <dd class = "col-sm-8">
+                <dd class="col-sm-8">
                     @Html.DisplayFor(model => model.EngineVolume)
                 </dd>
-                <dt class = "col-sm-4">
+                <dt class="col-sm-4">
                     @Html.DisplayNameFor(model => model.Mileage)
                 </dt>
-                <dd class = "col-sm-8">
+                <dd class="col-sm-8">
                     @Html.DisplayFor(model => model.Mileage)
                 </dd>
-                <dt class = "col-sm-4">
+                <dt class="col-sm-4">
                     @Html.DisplayNameFor(model => model.FuelType)
                 </dt>
-                <dd class = "col-sm-8">
+                <dd class="col-sm-8">
                     @Html.DisplayFor(model => model.FuelType.Name)
                 </dd>
-                <dt class = "col-sm-4">
+                <dt class="col-sm-4">
                     @Html.DisplayNameFor(model => model.BodyType)
                 </dt>
-                <dd class = "col-sm-8">
+                <dd class="col-sm-8">
                     @Html.DisplayFor(model => model.BodyType.Name)
                 </dd>
-                <dt class = "col-sm-4">
+                <dt class="col-sm-4">
                     @Html.DisplayNameFor(model => model.TransmissionType)
                 </dt>
-                <dd class = "col-sm-8">
+                <dd class="col-sm-8">
                     @Html.DisplayFor(model => model.TransmissionType.Name)
                 </dd>
             </dl>
@@ -68,17 +68,15 @@
         <div class="col-sm-6 fotorama" data-nav="thumbs">
             @if (Directory.Exists(ViewBag.ImagesDirectory)) {
                 var files = new DirectoryInfo(ViewBag.ImagesDirectory).GetFiles();
-                
+
                 foreach (var file in files) {
                     <img src="/img/cars/@Model.Id/@file.Name" alt="">
                 }
             }
         </div>
     </div>
-    
+
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="CreatePurchaseRequest" asp-route-id="@Model.Id">Leave a purchase request</a> |
     <a asp-action="Index">Back to List</a>
 </div>
