@@ -10,8 +10,10 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using CourseProject.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using CourseProject.Models;
 
 namespace CourseProject {
     public class Startup {
@@ -26,6 +28,9 @@ namespace CourseProject {
 
             services.AddDbContext<CarContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<CarContext>();
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -57,6 +62,7 @@ namespace CourseProject {
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => {

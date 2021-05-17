@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CourseProject.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CourseProject.Data {
-    public class CarContext : DbContext {
+    public class CarContext : IdentityDbContext<User> {
 
         public CarContext(DbContextOptions<CarContext> options) : base(options) {}
 
@@ -33,6 +34,9 @@ namespace CourseProject.Data {
             modelBuilder.Entity<FuelType>().ToTable("FuelType");
             modelBuilder.Entity<BodyType>().ToTable("BodyType");
             modelBuilder.Entity<TransmissionType>().ToTable("TransmissionType");
+
+
+            base.OnModelCreating(modelBuilder);
         }
 
 
