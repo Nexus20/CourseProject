@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CourseProject.Areas.Admin.Controllers {
 
+    [Authorize(Roles = "admin")]
     [Area("Admin")]
     public class RolesController : Controller {
         private readonly UserManager<User> _userManager;
