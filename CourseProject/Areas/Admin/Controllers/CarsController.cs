@@ -9,11 +9,13 @@ using Microsoft.EntityFrameworkCore;
 using CourseProject.Data;
 using CourseProject.Models;
 using CourseProject.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
 namespace CourseProject.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "admin, manager")]
     [Area("Admin")]
     public class CarsController : Controller
     {

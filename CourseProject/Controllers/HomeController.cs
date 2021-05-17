@@ -23,6 +23,7 @@ namespace CourseProject.Controllers {
             _context = context;
             _appEnvironment = appEnvironment;
             _logger = logger;
+            //DbInitializer.Initialize2(_context);
         }
 
         [HttpGet]
