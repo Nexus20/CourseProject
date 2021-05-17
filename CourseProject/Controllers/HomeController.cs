@@ -219,5 +219,20 @@ namespace CourseProject.Controllers {
             return View(car);
         }
 
+        public async Task<IActionResult> CreatePurchaseRequest(int? id) {
+            if (id == null) {
+                return NotFound();
+            }
+
+            var car = await _context.Cars.FirstOrDefaultAsync(c => c.Id == id);
+
+            if (car == null) {
+                return NotFound();
+            }
+
+            return View();
+
+        }
+
     }
 }
