@@ -1,4 +1,8 @@
-﻿@{
+﻿@using System.IO
+@using Microsoft.EntityFrameworkCore.Metadata.Conventions
+@*@model IEnumerable<Car>*@
+@model PaginatedList<Car>
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -6,3 +10,208 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+<form asp-action="Index" method="get">
+    <select asp-items="ViewBag.Brands" name="brandId" id="brands-list">
+        <option value=""></option>
+    </select>
+    <br>
+    <select name="modelId" id="models-list" asp-items="ViewBag.CarModels">
+        <option value=""></option>
+    </select>
+    <br>
+    Fuel type:
+    @foreach (var fuelType in ViewBag.FuelTypes) {
+
+        string state = "";
+
+        if (ViewBag.CheckedFuelTypes != null) {
+            foreach (var checkedFuelType in ViewBag.CheckedFuelTypes) {
+                if (checkedFuelType == fuelType.Id.ToString()) {
+                    state = "checked";
+                }
+            }
+        }
+
+        <label for="@fuelType.Name-checkbox">@fuelType.Name</label>
+        <input id="@fuelType.Name-checkbox" type="checkbox" value="@fuelType.Id" name="fuelTypes" @state>
+    }
+    <br>
+    Body type:
+    @foreach (var bodyType in ViewBag.BodyTypes) {
+
+        string state = "";
+
+        if (ViewBag.CheckedBodyTypes != null) {
+            foreach (var checkedBodyType in ViewBag.CheckedBodyTypes) {
+                if (checkedBodyType == bodyType.Id.ToString()) {
+                    state = "checked";
+                }
+            }
+        }
+
+        <label for="@bodyType.Name-checkbox">@bodyType.Name</label>
+        <input id="@bodyType.Name-checkbox" type="checkbox" value="@bodyType.Id" name="bodyTypes" @state>
+    }
+    <br>
+    Transmission type:
+    @foreach (var transmissionType in ViewBag.TransmissionTypes) {
+
+        string state = "";
+
+        if (ViewBag.CheckedTransmissionTypes != null) {
+            foreach (var checkedTransmissionType in ViewBag.CheckedTransmissionTypes) {
+                if (checkedTransmissionType == transmissionType.Id.ToString()) {
+                    state = "checked";
+                }
+            }
+        }
+
+        <label for="@transmissionType.Name-checkbox">@transmissionType.Name</label>
+        <input id="@transmissionType.Name-checkbox" type="checkbox" value="@transmissionType.Id" name="transmissionTypes" @state>
+    }
+    <br>
+    <input type="hidden" name="newSearch" value="1">
+    <input type="submit" value="Search" />
+</form>
+<br>
+<br>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Year)*@
+                Year
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Price)*@
+                Price
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.State)*@
+                State
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Model)*@
+                Car
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.EngineVolume)*@
+                Engine volume
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Mileage)*@
+                Mileage
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.FuelType)*@
+                Fuel
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.BodyType)*@
+                Body
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.TransmissionType)*@
+                Transmission
+            </th>
+            @*<th>Image</th>
+                <th></th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Year)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.State)
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.Model.Name)*@
+                    @item.Model.Brand.Name @item.Model.Parent?.Name @item.Model.Name
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EngineVolume)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mileage)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FuelType.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BodyType.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TransmissionType.Name)
+                </td>
+                @*<td>
+                        @if (Directory.Exists(ViewBag.ImagesDirectory + $"{item.Id}")) {
+
+                            var files = new DirectoryInfo(ViewBag.ImagesDirectory + $"{item.Id}").GetFiles();
+
+                            if (files.Length > 0) {
+
+                                <img src="/img/cars/@item.Id/@files[0].Name" alt="" style="width: 100px">
+                            }
+
+                        }
+                    </td>*@
+                <td>
+                    @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |*@
+                    <a asp-action="Car" asp-route-id="@item.Id">Details</a> |
+                    @*<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+@*<a asp-action="Index"
+   
+   asp-route-brandId="@ViewData["brandId"]"
+   asp-route-page="@(Model.PageIndex - 1)"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+
+<a asp-action="Index"
+   asp-route-brandId="@ViewData["brandId"]"
+   asp-route-page="@(Model.PageIndex + 1)"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>*@
+
+@*<a href="@Url.Action("Index")@ViewData["query"]"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>*@
+
+<a href="@Url.Action("Index")@ViewBag.QueryString@("page=" + (Model.PageIndex - 1))" class="btn btn-primary @prevDisabled">Next</a>
+<a href="@Url.Action("Index")@ViewBag.QueryString@("page=" + (Model.PageIndex + 1))" class="btn btn-primary @nextDisabled">Next</a>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(() => {
+            $('#brands-list').on('click', 'option', (e) => {
+                console.log(e.target.value);
+                let brandId = encodeURIComponent(e.target.value);
+
+                $('#models-list').load('@Url.Action("GetModelsByBrand", "Home")?brandId='+brandId);
+                $('#models-list').prepend('<option value=""></option>');
+            });
+        });
+    </script>
+}
