@@ -11,6 +11,18 @@
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
+@if (User.Identity.IsAuthenticated) {
+    <p>@User.Identity.Name</p>
+
+    <form method="post" asp-controller="Account" asp-action="Logout">
+        <input type="submit" value="Выход" />
+    </form>
+}
+else {
+    <a asp-controller="Account" asp-action="Login">Вход</a>
+    <a asp-controller="Account" asp-action="Register">Регистрация</a>
+}
+
 <form asp-action="Index" method="get">
     <select asp-items="ViewBag.Brands" name="brandId" id="brands-list">
         <option value=""></option>
@@ -180,24 +192,24 @@
 }
 
 @*<a asp-action="Index"
-   
-   asp-route-brandId="@ViewData["brandId"]"
-   asp-route-page="@(Model.PageIndex - 1)"
-   class="btn btn-primary @prevDisabled">
-    Previous
-</a>
 
-<a asp-action="Index"
-   asp-route-brandId="@ViewData["brandId"]"
-   asp-route-page="@(Model.PageIndex + 1)"
-   class="btn btn-primary @nextDisabled">
-    Next
-</a>*@
+       asp-route-brandId="@ViewData["brandId"]"
+       asp-route-page="@(Model.PageIndex - 1)"
+       class="btn btn-primary @prevDisabled">
+        Previous
+    </a>
+
+    <a asp-action="Index"
+       asp-route-brandId="@ViewData["brandId"]"
+       asp-route-page="@(Model.PageIndex + 1)"
+       class="btn btn-primary @nextDisabled">
+        Next
+    </a>*@
 
 @*<a href="@Url.Action("Index")@ViewData["query"]"
-   class="btn btn-primary @prevDisabled">
-    Previous
-</a>*@
+       class="btn btn-primary @prevDisabled">
+        Previous
+    </a>*@
 
 <a href="@Url.Action("Index")@ViewBag.QueryString@("page=" + (Model.PageIndex - 1))" class="btn btn-primary @prevDisabled">Next</a>
 <a href="@Url.Action("Index")@ViewBag.QueryString@("page=" + (Model.PageIndex + 1))" class="btn btn-primary @nextDisabled">Next</a>
