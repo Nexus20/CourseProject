@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using CourseProject.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace CourseProject.Data {
     public static class DbInitializer {
@@ -36,6 +37,31 @@ namespace CourseProject.Data {
 
         }
 
+        public static async Task InitializeRolesAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager) {
+            var adminEmail = "jack.gelder0804@gmail.com";
+            var password = "ABCabc123_";
+
+            if (await roleManager.FindByNameAsync("admin") == null) {
+                await roleManager.CreateAsync(new IdentityRole("admin"));
+            }
+            if (await roleManager.FindByNameAsync("manager") == null) {
+                await roleManager.CreateAsync(new IdentityRole("manager"));
+            }
+            if (await roleManager.FindByNameAsync("user") == null) {
+                await roleManager.CreateAsync(new IdentityRole("user"));
+            }
+
+            if (await userManager.FindByEmailAsync(adminEmail) == null) {
+                var admin = new User() {
+                    UserName = "admin",
+                    Email = adminEmail
+                };
+                IdentityResult result = await userManager.CreateAsync(admin, password);
+                if (result.Succeeded) {
+                    await userManager.AddToRoleAsync(admin, "admin");
+                }
+            }
+        }
 
         public static void Initialize(CarContext context) {
 

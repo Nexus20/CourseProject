@@ -16,14 +16,16 @@ namespace CourseProject.Controllers {
             _userManager = userManager;
             _signInManager = signInManager;
         }
+
         [HttpGet]
         public IActionResult Register() {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model) {
             if (ModelState.IsValid) {
-                User user = new User { UserName = model.UserName, Email = model.Email};
+                User user = new User {UserName = model.UserName, Email = model.Email};
                 // добавляем пользователя
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded) {
@@ -37,13 +39,14 @@ namespace CourseProject.Controllers {
                     }
                 }
             }
+
             return View(model);
         }
 
 
         [HttpGet]
         public IActionResult Login(string returnUrl = null) {
-            return View(new LoginViewModel { ReturnUrl = returnUrl });
+            return View(new LoginViewModel {ReturnUrl = returnUrl});
         }
 
         [HttpPost]
@@ -65,6 +68,7 @@ namespace CourseProject.Controllers {
                     ModelState.AddModelError("", "Incorrect login or password");
                 }
             }
+
             return View(model);
         }
 
@@ -75,6 +79,5 @@ namespace CourseProject.Controllers {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
-
     }
 }

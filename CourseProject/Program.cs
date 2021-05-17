@@ -7,20 +7,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CourseProject.Data;
+using CourseProject.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseProject {
     public class Program {
 
-        public static void Main(string[] args) {
+        public static async Task Main(string[] args) {
             var host = CreateHostBuilder(args).Build();
 
-            CreateDbIfNotExists(host);
+            await CreateDbIfNotExists(host);
 
             host.Run();
         }
 
-        private static void CreateDbIfNotExists(IHost host) {
+        private static async Task CreateDbIfNotExists(IHost host) {
 
             using (var scope = host.Services.CreateScope()) {
 
@@ -28,7 +30,10 @@ namespace CourseProject {
 
                 try {
                     var context = services.GetRequiredService<CarContext>();
+                    var userManager = services.GetRequiredService<UserManager<User>>();
+                    var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                     DbInitializer.Initialize(context);
+                    await DbInitializer.InitializeRolesAsync(userManager, rolesManager);
                 }
                 catch(Exception ex) {
                     var logger = services.GetRequiredService<ILogger<Program>>();
