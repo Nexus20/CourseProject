@@ -1,0 +1,19 @@
+﻿@model User
+
+<h1>Personal info</h1>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-4">
+        @Html.DisplayNameFor(model => model.UserName)
+    </dt>
+    <dd class="col-sm-8">
+        @Html.DisplayFor(model => model.UserName)
+    </dd>
+    <dt class="col-sm-4">
+        @Html.DisplayNameFor(model => model.Email)
+    </dt>
+    <dd class="col-sm-8">
+        @Html.DisplayFor(model => model.Email)
+    </dd>
+</dl>

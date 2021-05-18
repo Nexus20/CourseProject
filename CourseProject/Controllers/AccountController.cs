@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using CourseProject.Models;
 using CourseProject.Models.ViewModels;
@@ -73,10 +74,13 @@ namespace CourseProject.Controllers {
             return View(model);
         }
 
-        //[Authorize(Roles = "admin, manager, user")]
-        //public async Task<IActionResult> Cabinet() {
+        [Authorize(Roles = "admin, manager, user")]
+        public async Task<IActionResult> Cabinet() {
 
-        //}
+            var user = await _userManager.GetUserAsync(this.User);
+
+            return View(user);
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
