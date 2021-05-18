@@ -1,2 +1,38 @@
-﻿@{
+﻿@model PurchaseRequest
+
+@{
+    ViewData["Title"] = "New purchase request";
 }
+
+<h1>New purchase request</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreatePurchaseRequest" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CarId" />
+            <div class="form-group">
+                <label asp-for="@Model.Firstname" class="control-label"></label>
+                <input asp-for="@Model.Firstname" class="form-control" />
+                <span asp-validation-for="@Model.Firstname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Surname" class="control-label"></label>
+                <input asp-for="@Model.Surname" class="form-control" />
+                <span asp-validation-for="@Model.Surname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Phone" class="control-label"></label>
+                <input asp-for="@Model.Phone" class="form-control" type="tel" />
+                <span asp-validation-for="@Model.Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Email" class="control-label"></label>
+                <input asp-for="@Model.Email" class="form-control" type="email" />
+                <span asp-validation-for="@Model.Email" class="text-danger"></span>
+            </div>
+            <input type="submit" value="Submit" />
+        </form>
+    </div>
+</div>

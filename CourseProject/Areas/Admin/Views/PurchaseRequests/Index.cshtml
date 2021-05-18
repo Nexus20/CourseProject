@@ -1,0 +1,110 @@
+﻿@using System.Web.Mvc.Ajax
+@model IEnumerable<PurchaseRequest>
+
+@{
+    ViewData["Title"] = "Purchase requests";
+}
+
+<h1>Requests</h1>
+
+<table class="table" id="requests-table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                Car
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.State)
+            </th>
+            @*<th>Image</th>*@
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @item.Car.Model.Brand.Name @item.Car.Model.Parent?.Name @item.Car.Model.Name
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                @*<td>
+                        @if (Directory.Exists(ViewBag.ImagesDirectory + $"{item.Id}")) {
+
+                            var files = new DirectoryInfo(ViewBag.ImagesDirectory + $"{item.Id}").GetFiles();
+
+                            if (files.Length > 0) {
+
+                                <img src="/img/cars/@item.Id/@files[0].Name" alt="" style="width: 100px">
+                            }
+
+                        }
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.State)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                </td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton-@item.Id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @Html.DisplayFor(modelItem => item.State)
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-@item.Id">
+                            @foreach (var elem in ViewBag.PurchaseRequestStates) {
+                                <button class="dropdown-item" data-id="@item.Id" data-state="@elem.Key">@elem.Value</button>
+                            }
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(() => {
+            $('#requests-table').on('click',
+                '.dropdown-item',
+                (e) => {
+                    console.log(e.target);
+
+                    const requestId = e.target.dataset['id'];
+                    const newState = e.target.dataset['state'];
+
+                    $.ajax({
+                        url: '@Url.Action("ChangeRequestState", "PurchaseRequests")',
+                        data: {requestId: requestId, newState: newState}
+                    }).done((data) => {
+                        console.log(data);
+                        $(`#dropdownMenuButton-${requestId}`).text(data);
+                    });
+                });
+        });
+    </script>
+}
