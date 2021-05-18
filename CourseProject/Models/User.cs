@@ -9,5 +9,7 @@ namespace CourseProject.Models {
 
         public ICollection<FeaturedCar> FeaturedCars;
 
+        public ICollection<PurchaseRequest> PurchaseRequests;
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,6 +31,14 @@ namespace CourseProject.Models {
         public RequestState State { get; set; }
 
         public string FullName => $"{Firstname} {Surname}";
+
+        public string ClientId { get; set; }
+        [ForeignKey("ClientId")]
+        public User Client { get; set; }
+
+        public string ManagerId { get; set; }
+        [ForeignKey("ManagerId")]
+        public User Manager { get; set; }
 
         public PurchaseRequest() {
             State = RequestState.New;
