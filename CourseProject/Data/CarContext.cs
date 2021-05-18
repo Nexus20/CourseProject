@@ -12,6 +12,7 @@ namespace CourseProject.Data {
         public CarContext(DbContextOptions<CarContext> options) : base(options) {}
 
         public DbSet<Car> Cars { get; set; }
+        public DbSet<CarImage> CarImages { get; set; }
 
         public DbSet<CarModel> CarModels { get; set; }
         public DbSet<Brand> Brands { get; set; }
@@ -24,6 +25,7 @@ namespace CourseProject.Data {
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<Car>().ToTable("Car");
             modelBuilder.Entity<CarModel>().ToTable("CarModel");
+            modelBuilder.Entity<CarImage>().ToTable("CarImages");
             //modelBuilder.Entity<CarModel>()
             //    .HasOne(cm => cm.Parent)
             //    .WithMany(cm => cm.Children)

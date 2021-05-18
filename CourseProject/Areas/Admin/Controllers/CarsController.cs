@@ -38,10 +38,12 @@ namespace CourseProject.Areas.Admin.Controllers
                     .ThenInclude(cm => cm.Brand)
                 .Include(c => c.Model)
                     .ThenInclude(cm => cm.Parent)
-                .Include(c => c.TransmissionType);
+                .Include(c => c.TransmissionType)
+                .Include(c => c.CarImages)
+                .AsNoTracking();
 
 
-            ViewBag.ImagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/";
+            //ViewBag.ImagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/";
 
             return View(await carContext.ToListAsync());
         }
@@ -62,6 +64,7 @@ namespace CourseProject.Areas.Admin.Controllers
                .Include(c => c.Model)
                    .ThenInclude(cm => cm.Parent)
                .Include(c => c.TransmissionType)
+               .Include(c => c.CarImages)
                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (car == null)
@@ -69,7 +72,7 @@ namespace CourseProject.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            ViewBag.ImagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/{car.Id}";
+            //ViewBag.ImagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/{car.Id}";
 
             return View(car);
         }
@@ -92,11 +95,30 @@ namespace CourseProject.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Year,Price,State,ModelId,EngineVolume,Mileage,FuelTypeId,BodyTypeId,TransmissionTypeId")] Car car)
+        public async Task<IActionResult> Create([Bind("Id,Year,Price,State,ModelId,EngineVolume,Mileage,FuelTypeId,BodyTypeId,TransmissionTypeId")] Car car, IFormFileCollection uploadedImages)
         {
             if (ModelState.IsValid) {
                 _context.Add(car);
                 await _context.SaveChangesAsync();
+
+                var directoryPath = _appEnvironment.WebRootPath + $"/img/cars/{car.Id}";
+                if (!Directory.Exists(directoryPath)) {
+                    DirectoryInfo dirInfo = new(directoryPath);
+                    dirInfo.Create();
+                }
+
+                foreach (var uploadedImage in uploadedImages) {
+                    var path = $"/img/cars/{car.Id}/{uploadedImage.FileName}";
+
+                    using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create)) {
+                        await uploadedImage.CopyToAsync(fileStream);
+                    }
+
+                    _context.CarImages.Add(new CarImage() {CarId = car.Id, Path = path});
+                }
+
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["State"] = new SelectList(Enum.GetNames(typeof(Car.CarState)), car.State);
@@ -209,7 +231,11 @@ namespace CourseProject.Areas.Admin.Controllers
                 .Include(c => c.BodyType)
                 .Include(c => c.FuelType)
                 .Include(c => c.Model)
+                    .ThenInclude(cm => cm.Brand)
+                .Include(c => c.Model)
+                    .ThenInclude(cm => cm.Parent)
                 .Include(c => c.TransmissionType)
+                .Include(c => c.CarImages)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (car == null)
             {

@@ -41,5 +41,7 @@ namespace CourseProject.Models {
         [Display(Name = "Transmission")]
         public TransmissionType TransmissionType { get; set; }
 
+        public ICollection<CarImage> CarImages { get; set; }
+
     }
 }

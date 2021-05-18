@@ -195,7 +195,7 @@ namespace CourseProject.Controllers {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        // GET: Admin/Cars/Details/5
+        // GET: Admin/Cars/Car/5
         public async Task<IActionResult> Car(int? id) {
             if (id == null) {
                 return NotFound();
@@ -205,10 +205,11 @@ namespace CourseProject.Controllers {
                 .Include(c => c.BodyType)
                 .Include(c => c.FuelType)
                 .Include(c => c.Model)
-                .ThenInclude(cm => cm.Brand)
+                    .ThenInclude(cm => cm.Brand)
                 .Include(c => c.Model)
-                .ThenInclude(cm => cm.Parent)
+                    .ThenInclude(cm => cm.Parent)
                 .Include(c => c.TransmissionType)
+                .Include(c => c.CarImages)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (car == null) {
