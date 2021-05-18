@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using CourseProject.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace CourseProject.Data {
     public static class DbInitializer {
@@ -15,7 +16,7 @@ namespace CourseProject.Data {
 
             Random random = new Random();
 
-            for (var i = 0; i < 100; i++) {
+            for (var i = 0; i < 45; i++) {
                 cars.Add(new Car() {
                     BodyTypeId = 1,
                     EngineVolume = 1.6,
@@ -24,7 +25,7 @@ namespace CourseProject.Data {
                     ModelId = random.Next(1, 5),
                     State = Car.CarState.New,
                     TransmissionTypeId = 1,
-                    Price = 100000M,
+                    Price = Convert.ToDecimal(random.Next(10000, 1000000)),
                     Year = random.Next(1980, 2022)
                 });
             }

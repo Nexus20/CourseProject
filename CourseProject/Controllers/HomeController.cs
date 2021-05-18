@@ -4,10 +4,12 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CourseProject.Data;
+using CourseProject.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -27,9 +29,7 @@ namespace CourseProject.Controllers {
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int? brandId, int? modelId, int[] fuelTypes, int[] bodyTypes, int[] transmissionTypes, int? newSearch, int? page) {
-
-            //var r = string.Join("fuelTypes=", Request.Query["fuelTypes"].ToArray());
+        public async Task<IActionResult> Index(int? brandId, int? modelId, int[] fuelTypes, int[] bodyTypes, int[] transmissionTypes, int? priceFrom, int? priceTo, int? newSearch, int? page) {
 
             StringBuilder queryStringBuilder = new StringBuilder("?");
 
@@ -54,21 +54,15 @@ namespace CourseProject.Controllers {
                 cars = cars.Where(c => c.Model.BrandId == brandId);
                 ViewData["brandId"] = brandId;
                 queryStringBuilder.Append($"brandId={brandId}&");
-                //
             }
             
-
-
             if (modelId != null) {
                 cars = cars.Where(c => c.ModelId == modelId);
-                //ViewData["modelId"] = modelId;
                 queryStringBuilder.Append($"modelId={modelId}&");
             }
             
 
             if (fuelTypes.Length > 0) {
-                //cars = fuelTypes.Select((t, i) => i).Aggregate(cars,
-                //    (current, i1) => current.Where(c => c.FuelTypeId == fuelTypes[i1]));
                 IQueryable<Car> cars2 = cars.Where(c => c.FuelTypeId == fuelTypes[0]);
                 for (var i = 1; i < fuelTypes.Length; i++) {
                     var i1 = i;
@@ -90,11 +84,7 @@ namespace CourseProject.Controllers {
                 ViewBag.CheckedFuelTypes = null;
             }
 
-            //ViewData["fuelTypes"] = fuelTypes;
-
             if (bodyTypes.Length > 0) {
-                //cars = bodyTypes.Select((t, i) => i).Aggregate(cars,
-                //    (current, i1) => current.Where(c => c.BodyTypeId == bodyTypes[i1]));
 
                 IQueryable<Car> cars2 = cars.Where(c => c.BodyTypeId == bodyTypes[0]);
                 for (var i = 1; i < bodyTypes.Length; i++) {
@@ -118,8 +108,6 @@ namespace CourseProject.Controllers {
             }
 
             if (transmissionTypes.Length > 0) {
-                //cars = transmissionTypes.Select((t, i) => i).Aggregate(cars,
-                //    (current, i1) => current.Where(c => c.TransmissionTypeId == transmissionTypes[i1]));
 
                 IQueryable<Car> cars2 = cars.Where(c => c.TransmissionTypeId == transmissionTypes[0]);
                 for (var i = 1; i < transmissionTypes.Length; i++) {
@@ -142,11 +130,15 @@ namespace CourseProject.Controllers {
                 ViewBag.CheckedTransmissionTypes = null;
             }
 
+            if ((priceFrom != null && priceTo != null) 
+                && (priceFrom.Value <= priceTo.Value)
+                && (priceFrom.Value >=0 && priceTo.Value >= 0)) {
+                
+                cars = cars.Where(c => c.Price >= priceFrom && c.Price <= priceTo);
+                queryStringBuilder.Append($"priceFrom={priceFrom}&priceTo={priceTo}&");
+                
+            }
 
-            //for (var i = 0; i < fuelTypes.Length; i++) {
-            //    var i1 = i;
-            //    cars = cars.Where(c => c.FuelTypeId == fuelTypes[i1]);
-            //}
 
             ViewBag.QueryString = queryStringBuilder.ToString();
             ViewBag.TransmissionTypes = _context.TransmissionTypes;
@@ -248,6 +240,49 @@ namespace CourseProject.Controllers {
             }
 
             return View(request);
+        }
+
+        private static Dictionary<int, Car> _carsToCompare = new();
+
+        public IActionResult AddToCompare(int? carId) {
+            if (carId == null) {
+                return NotFound();
+            }
+
+            var car = _context.Cars
+                .Include(c => c.BodyType)
+                .Include(c => c.FuelType)
+                .Include(c => c.Model)
+                .ThenInclude(cm => cm.Brand)
+                .Include(c => c.Model)
+                .ThenInclude(cm => cm.Parent)
+                .Include(c => c.TransmissionType)
+                .Include(c => c.CarImages)
+                .FirstOrDefault(m => m.Id == carId);
+
+            if (car == null) {
+                return NotFound();
+            }
+
+            string res = "";
+            if (_carsToCompare.ContainsKey(car.Id)) {
+                _carsToCompare.Remove(car.Id);
+                res = "removed";
+            }
+            else {
+                _carsToCompare.Add(car.Id, car);
+                res = "added";
+            }
+            HttpContext.Session.Set("CarsToCompare", _carsToCompare);
+
+            return Content(res);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Compare() {
+
+            return View();
+
         }
 
     }

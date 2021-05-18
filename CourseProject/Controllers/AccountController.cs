@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CourseProject.Models;
 using CourseProject.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 namespace CourseProject.Controllers {
@@ -71,6 +72,11 @@ namespace CourseProject.Controllers {
 
             return View(model);
         }
+
+        //[Authorize(Roles = "admin, manager, user")]
+        //public async Task<IActionResult> Cabinet() {
+
+        //}
 
         [HttpPost]
         [ValidateAntiForgeryToken]
