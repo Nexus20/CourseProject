@@ -1,10 +1,8 @@
 ﻿using CourseProject.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -244,7 +242,7 @@ namespace CourseProject.Controllers {
 
         private static Dictionary<int, Car> _carsToCompare = new();
 
-        public IActionResult AddToCompare(int? carId) {
+        public IActionResult AddRemoveToCompare(int? carId) {
             if (carId == null) {
                 return NotFound();
             }
@@ -281,7 +279,10 @@ namespace CourseProject.Controllers {
         [HttpGet]
         public async Task<IActionResult> Compare() {
 
-            return View();
+            var carsToCompare = HttpContext.Session.Get<Dictionary<int, Car>>("CarsToCompare");
+
+
+            return View(carsToCompare);
 
         }
 

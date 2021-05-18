@@ -16,7 +16,6 @@ namespace CourseProject.Models {
         public int BrandId { get; set; }
         public Brand Brand { get; set; }
 
-        //[ForeignKey("Parent")]
         public int? ParentId { get; set; }
 
         [Display(Name = "Parent Model")]

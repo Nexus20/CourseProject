@@ -189,7 +189,7 @@ else {
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
 
-<a href="@Url.Action("Index")@ViewBag.QueryString@("page=" + (Model.PageIndex - 1))" class="btn btn-primary @prevDisabled">Next</a>
+<a href="@Url.Action("Index")@ViewBag.QueryString@("page=" + (Model.PageIndex - 1))" class="btn btn-primary @prevDisabled">Prev</a>
 <a href="@Url.Action("Index")@ViewBag.QueryString@("page=" + (Model.PageIndex + 1))" class="btn btn-primary @nextDisabled">Next</a>
 
 @section Scripts {
@@ -198,7 +198,7 @@ else {
             $('#brands-list').on('click',
                 'option',
                 (e) => {
-                    console.log(e.target.value);
+                    //console.log(e.target.value);
                     let brandId = encodeURIComponent(e.target.value);
 
                     $('#models-list').load('@Url.Action("GetModelsByBrand", "Home")?brandId=' + brandId);
@@ -213,7 +213,7 @@ else {
                     const carId = e.target.dataset['id'];
 
                     $.ajax({
-                        url: '@Url.Action("AddToCompare", "Home")',
+                        url: '@Url.Action("AddRemoveToCompare", "Home")',
                         data: { carId: carId }
                     }).done((data) => {
                         console.log(data);
