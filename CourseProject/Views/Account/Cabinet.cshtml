@@ -19,38 +19,21 @@
 </dl>
 
 <h2>Featured Cars</h2>
+<hr />
 
 @if (Model.FeaturedCars != null && Model.FeaturedCars.Count > 0) {
     <table class="table" id="featured-cars-table">
         <thead>
             <tr>
-                <th>
-                    Car
-                </th>
-                <th>
-                    Price
-                </th>
-                <th>
-                    Year
-                </th>
-                <th>
-                    State
-                </th>
-                <th>
-                    Mileage
-                </th>
-                <th>
-                    Engine Volume
-                </th>
-                <th>
-                    Fuel
-                </th>
-                <th>
-                    Body Type
-                </th>
-                <th>
-                    Transmission
-                </th>
+                <th>Car</th>
+                <th>Price</th>
+                <th>Year</th>
+                <th>State</th>
+                <th>Mileage</th>
+                <th>Engine Volume</th>
+                <th>Fuel</th>
+                <th>Body Type</th>
+                <th>Transmission</th>
                 <th>Image</th>
                 <th></th>
             </tr>
@@ -103,30 +86,71 @@ else {
     <p>There are no featured cars</p>
 }
 
+@if (Model.PurchaseRequests != null && Model.PurchaseRequests.Count > 0) {
+    <h2>Purchase requests</h2>
+    <hr />
+    <table class="table" id="requests-table">
+        <thead>
+            <tr>
+                <th>
+                    Request Id
+                </th>
+                <th>
+                    Car
+                </th>
+                <th>
+                    Request state
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.PurchaseRequests) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @item.Car.Model.Brand.Name @item.Car.Model.Parent?.Name @item.Car.Model.Name
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.State)
+                    </td>
+                    <td>
+                        <a asp-controller="Home" asp-action="Car" asp-route-id="@item.CarId">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else {
+    <p>There are no requests yet</p>
+}
 @section Scripts {
     <script type="text/javascript">
-        $(document).ready(() => {
-            $('#featured-cars-table').on('click',
-                '.btn-remove-from-featured',
-                (e) => {
-                    console.log(e.target.parentNode.parentNode);
+    $(document).ready(() => {
+        $('#featured-cars-table').on('click',
+            '.btn-remove-from-featured',
+            (e) => {
+                console.log(e.target.parentNode.parentNode);
 
-                    const carId = e.target.dataset['id'];
+                const carId = e.target.dataset['id'];
 
-                    $.ajax({
-                        url: '@Url.Action("AddRemoveFeatured", "Home")',
-                        data: { carId: carId }
-                    }).done(() => {
-                        $(e.target.parentNode.parentNode).remove();
+                $.ajax({
+                    url: '@Url.Action("AddRemoveFeatured", "Home")',
+                    data: { carId: carId }
+                }).done(() => {
+                    $(e.target.parentNode.parentNode).remove();
 
-                        if ($('#featured-cars-table tr').length == 1) {
-                            $('#featured-cars-table').before('<p>There are no featured cars</p>');
-                            $('#featured-cars-table').remove();
-                        }
-                    });
-
+                    if ($('#featured-cars-table tr').length == 1) {
+                        $('#featured-cars-table').before('<p>There are no featured cars</p>');
+                        $('#featured-cars-table').remove();
+                    }
                 });
 
-        });
+            });
+
+    });
     </script>
 }

@@ -100,6 +100,16 @@ namespace CourseProject.Controllers {
                     .ThenInclude(c => c.CarImages)
                 .Where(fc => fc.UserId == user.Id).ToListAsync();
 
+            user.PurchaseRequests = await _context.PurchaseRequests
+                .Include(pr => pr.Car)
+                    .ThenInclude(c => c.Model)
+                        .ThenInclude(cm => cm.Brand)
+                .Include(pr => pr.Car)
+                    .ThenInclude(c => c.Model)
+                        .ThenInclude(cm => cm.Parent)
+                .Where(pr => pr.ClientId == user.Id)
+                .ToListAsync();
+
             return View(user);
         }
 

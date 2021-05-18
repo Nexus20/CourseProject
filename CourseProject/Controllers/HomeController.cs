@@ -244,6 +244,11 @@ namespace CourseProject.Controllers {
         public async Task<IActionResult> CreatePurchaseRequest([Bind("CarId,Firstname,Surname,Phone,Email")] PurchaseRequest request) {
 
             if (ModelState.IsValid) {
+
+                if (User.Identity.IsAuthenticated) {
+                    request.ClientId = _userManager.GetUserId(User);
+                }
+
                 _context.Add(request);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
