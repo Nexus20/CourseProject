@@ -176,7 +176,13 @@ else {
                     <a asp-action="Car" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
                     <button data-id="@item.Id" class="btn btn-primary btn-add-compare">Add to compare</button>
                     @if (User.Identity.IsAuthenticated) {
-                        <button data-id="@item.Id" class="btn btn-primary btn-add-featured">Add to featured</button>
+
+                        bool isFeatured = false;
+                        if (ViewBag.FeaturedCars.Count > 0) {
+                            isFeatured = ViewBag.FeaturedCars.Contains(item.Id);
+                        }
+
+                        <button data-id="@item.Id" class="btn btn-primary btn-add-featured">@Html.Raw(isFeatured ? "Remove from " : "Add to ")featured</button>
                     }
                 </div>
             </div>

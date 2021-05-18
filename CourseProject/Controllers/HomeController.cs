@@ -151,6 +151,11 @@ namespace CourseProject.Controllers {
 
             int pageSize = 10;
 
+            if (User.Identity.IsAuthenticated) {
+                var userId = _userManager.GetUserId(User);
+                ViewBag.FeaturedCars = _context.FeaturedCars.Where(fc => fc.UserId == userId).Select(fc => fc.CarId).ToList();
+            }
+
             return View(await PaginatedList<Car>.CreateAsync(cars.AsNoTracking(), page ?? 1, pageSize));
         }
 

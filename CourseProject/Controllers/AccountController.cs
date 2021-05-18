@@ -4,17 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using CourseProject.Data;
 using CourseProject.Models;
 using CourseProject.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace CourseProject.Controllers {
     public class AccountController : Controller {
+
+        private readonly CarContext _context;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager) {
+        public AccountController(CarContext context, UserManager<User> userManager, SignInManager<User> signInManager) {
+            _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
         }
@@ -78,6 +83,22 @@ namespace CourseProject.Controllers {
         public async Task<IActionResult> Cabinet() {
 
             var user = await _userManager.GetUserAsync(this.User);
+            user.FeaturedCars = await _context.FeaturedCars
+                .Include(fc => fc.Car)
+                    .ThenInclude(c => c.Model)
+                        .ThenInclude(cm => cm.Brand)
+                .Include(fc => fc.Car)
+                    .ThenInclude(c => c.Model)
+                        .ThenInclude(cm => cm.Parent)
+                .Include(fc => fc.Car)
+                    .ThenInclude(c => c.FuelType)
+                .Include(fc => fc.Car)
+                    .ThenInclude(c => c.BodyType)
+                .Include(fc => fc.Car)
+                    .ThenInclude(c => c.TransmissionType)
+                .Include(fc => fc.Car)
+                    .ThenInclude(c => c.CarImages)
+                .Where(fc => fc.UserId == user.Id).ToListAsync();
 
             return View(user);
         }
