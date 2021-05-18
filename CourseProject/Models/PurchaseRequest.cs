@@ -7,6 +7,13 @@ using System.Threading.Tasks;
 namespace CourseProject.Models {
     public class PurchaseRequest {
 
+        public enum RequestState {
+            New,
+            Processing,
+            Closed,
+            Canceled
+        }
+
         public int Id { get; set; }
 
         public int CarId { get; set; }
@@ -19,6 +26,14 @@ namespace CourseProject.Models {
         [Required]
         public string Phone { get; set; }
         public string Email { get; set; }
+
+        public RequestState State { get; set; }
+
+        public string FullName => $"{Firstname} {Surname}";
+
+        public PurchaseRequest() {
+            State = RequestState.New;
+        }
 
     }
 }
