@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 namespace CourseProject.Models {
     public class User : IdentityUser {
 
-        
+        public ICollection<FeaturedCar> FeaturedCars;
 
     }
 }

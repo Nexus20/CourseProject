@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using CourseProject.Data;
 using CourseProject.Extensions;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,11 +19,13 @@ namespace CourseProject.Controllers {
         private readonly IWebHostEnvironment _appEnvironment;
         private readonly ILogger<HomeController> _logger;
         private readonly CarContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public HomeController(CarContext context, IWebHostEnvironment appEnvironment, ILogger<HomeController> logger) {
+        public HomeController(CarContext context, IWebHostEnvironment appEnvironment, UserManager<User> userManager, ILogger<HomeController> logger) {
             _context = context;
             _appEnvironment = appEnvironment;
             _logger = logger;
+            _userManager = userManager;
             //DbInitializer.Initialize2(_context);
         }
 
@@ -284,6 +287,38 @@ namespace CourseProject.Controllers {
 
             return View(carsToCompare);
 
+        }
+
+        [HttpGet]
+        public IActionResult AddRemoveFeatured(int? carId) {
+
+            if (carId == null) {
+                return NotFound();
+            }
+
+            var car = _context.Cars.FirstOrDefault(c => c.Id == carId);
+
+            if (car == null) {
+                return NotFound();
+            }
+
+            var featuredCar = _context.FeaturedCars.FirstOrDefault(fc =>
+                fc.CarId == carId && fc.UserId == _userManager.GetUserId(this.User));
+
+            string res = "";
+
+            if (featuredCar != null) {
+                _context.FeaturedCars.Remove(featuredCar);
+                res = "removed";
+            }
+            else {
+                _context.FeaturedCars.Add(new FeaturedCar()
+                    {CarId = carId.Value, UserId = _userManager.GetUserId(this.User)});
+                res = "added";
+            }
+            _context.SaveChanges();
+
+            return Content(res);
         }
 
     }

@@ -1,7 +1,4 @@
-﻿@using System.IO
-@using Microsoft.EntityFrameworkCore.Metadata.Conventions
-@*@model IEnumerable<Car>*@
-@model PaginatedList<Car>
+﻿@model PaginatedList<Car>
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -178,6 +175,9 @@ else {
                     </dl>
                     <a asp-action="Car" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
                     <button data-id="@item.Id" class="btn btn-primary btn-add-compare">Add to compare</button>
+                    @if (User.Identity.IsAuthenticated) {
+                        <button data-id="@item.Id" class="btn btn-primary btn-add-featured">Add to featured</button>
+                    }
                 </div>
             </div>
         </div>
@@ -204,6 +204,28 @@ else {
                     $('#models-list').load('@Url.Action("GetModelsByBrand", "Home")?brandId=' + brandId);
                     $('#models-list').prepend('<option value=""></option>');
                 });
+
+            $('.car-card').on('click',
+                '.btn-add-featured',
+                (e) => {
+                    console.log(e.target);
+
+                    const carId = e.target.dataset['id'];
+
+                    $.ajax({
+                        url: '@Url.Action("AddRemoveFeatured", "Home")',
+                        data: { carId: carId }
+                    }).done((data) => {
+                        console.log(data);
+                        if (data === 'added') {
+                            $(e.target).text("Remove from featured");
+                        } else if (data === 'removed') {
+                            $(e.target).text("Add to featured");
+                        }
+                    });
+
+                });
+
 
             $('.car-card').on('click',
                 '.btn-add-compare',
