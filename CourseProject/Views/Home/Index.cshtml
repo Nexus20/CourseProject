@@ -89,127 +89,69 @@ else {
 <br>
 <br>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @*@Html.DisplayNameFor(model => model.Year)*@
-                Year
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.Price)*@
-                Price
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.State)*@
-                State
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.Model)*@
-                Car
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.EngineVolume)*@
-                Engine volume
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.Mileage)*@
-                Mileage
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.FuelType)*@
-                Fuel
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.BodyType)*@
-                Body
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.TransmissionType)*@
-                Transmission
-            </th>
-            @*<th>Image</th>
-                <th></th>*@
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Year)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.State)
-                </td>
-                <td>
-                    @*@Html.DisplayFor(modelItem => item.Model.Name)*@
-                    @item.Model.Brand.Name @item.Model.Parent?.Name @item.Model.Name
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EngineVolume)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Mileage)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FuelType.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BodyType.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TransmissionType.Name)
-                </td>
-                @*<td>
-                        @if (Directory.Exists(ViewBag.ImagesDirectory + $"{item.Id}")) {
+<div class="row">
 
-                            var files = new DirectoryInfo(ViewBag.ImagesDirectory + $"{item.Id}").GetFiles();
+    @foreach (var item in Model) {
+        <div class="col-sm-12">
+            <div class="card" style="margin: 15px;">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Model.Brand.Name @item.Model.Parent?.Name @item.Model.Name @item.Year</h5>
+                    <div class="row">
+                        <div class="col-sm-12 fotorama" data-nav="thumbs" style="display: flex; -o-justify-content: center; -webkit-justify-content: center; justify-content: center;">
+                            @if (item.CarImages.Count > 0) {
 
-                            if (files.Length > 0) {
-
-                                <img src="/img/cars/@item.Id/@files[0].Name" alt="" style="width: 100px">
+                                @foreach (var image in item.CarImages) {
+                                    <img src="@image.Path" alt="">
+                                }
                             }
-
-                        }
-                    </td>*@
-                <td>
-                    @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |*@
-                    <a asp-action="Car" asp-route-id="@item.Id">Details</a> |
-                    @*<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
+                            else {
+                                <img src="/img/no-image.jpg" alt="" style="height: 300px">
+                            }
+                        </div>
+                    </div>
+                    <dl class="row">
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => item.Price)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => item.Price)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => item.State)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => item.State)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => item.Mileage)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => item.Mileage)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => item.FuelType)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => item.FuelType.Name)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => item.TransmissionType)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => item.TransmissionType.Name)
+                        </dd>
+                    </dl>
+                    <a asp-action="Car" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
 
 @{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
-
-@*<a asp-action="Index"
-
-       asp-route-brandId="@ViewData["brandId"]"
-       asp-route-page="@(Model.PageIndex - 1)"
-       class="btn btn-primary @prevDisabled">
-        Previous
-    </a>
-
-    <a asp-action="Index"
-       asp-route-brandId="@ViewData["brandId"]"
-       asp-route-page="@(Model.PageIndex + 1)"
-       class="btn btn-primary @nextDisabled">
-        Next
-    </a>*@
-
-@*<a href="@Url.Action("Index")@ViewData["query"]"
-       class="btn btn-primary @prevDisabled">
-        Previous
-    </a>*@
 
 <a href="@Url.Action("Index")@ViewBag.QueryString@("page=" + (Model.PageIndex - 1))" class="btn btn-primary @prevDisabled">Next</a>
 <a href="@Url.Action("Index")@ViewBag.QueryString@("page=" + (Model.PageIndex + 1))" class="btn btn-primary @nextDisabled">Next</a>
