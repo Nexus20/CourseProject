@@ -174,10 +174,21 @@ else {
                         </dd>
                     </dl>
                     <a asp-action="Car" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
-                    <button data-id="@item.Id" class="btn btn-primary btn-add-compare">Add to compare</button>
+
+                    @{
+                        var isCompared = false;
+                        if (ViewBag.ComparedCars.Count > 0) {
+                            isCompared = ViewBag.ComparedCars.Contains(item.Id);
+                        }
+                        
+                        <button data-id="@item.Id" class="btn btn-primary btn-add-compare">@Html.Raw(isCompared ? "Remove from " : "Add to ") compare</button>
+                    }
+
+
+
                     @if (User.Identity.IsAuthenticated) {
 
-                        bool isFeatured = false;
+                        var isFeatured = false;
                         if (ViewBag.FeaturedCars.Count > 0) {
                             isFeatured = ViewBag.FeaturedCars.Contains(item.Id);
                         }

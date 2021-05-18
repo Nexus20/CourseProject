@@ -21,6 +21,8 @@ namespace CourseProject.Controllers {
         private readonly CarContext _context;
         private readonly UserManager<User> _userManager;
 
+        private static readonly Dictionary<int, Car> _carsToCompare = new();
+
         public HomeController(CarContext context, IWebHostEnvironment appEnvironment, UserManager<User> userManager, ILogger<HomeController> logger) {
             _context = context;
             _appEnvironment = appEnvironment;
@@ -151,6 +153,8 @@ namespace CourseProject.Controllers {
 
             int pageSize = 10;
 
+            ViewBag.ComparedCars = _carsToCompare.Keys.ToList();
+
             if (User.Identity.IsAuthenticated) {
                 var userId = _userManager.GetUserId(User);
                 ViewBag.FeaturedCars = _context.FeaturedCars.Where(fc => fc.UserId == userId).Select(fc => fc.CarId).ToList();
@@ -248,7 +252,7 @@ namespace CourseProject.Controllers {
             return View(request);
         }
 
-        private static Dictionary<int, Car> _carsToCompare = new();
+        
 
         public IActionResult AddRemoveToCompare(int? carId) {
             if (carId == null) {
