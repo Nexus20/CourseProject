@@ -38,10 +38,12 @@ namespace CourseProject.Areas.Admin.Controllers
                     .ThenInclude(cm => cm.Brand)
                 .Include(c => c.Model)
                     .ThenInclude(cm => cm.Parent)
-                .Include(c => c.TransmissionType);
+                .Include(c => c.TransmissionType)
+                .Include(c => c.CarImages)
+                .AsNoTracking();
 
 
-            ViewBag.ImagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/";
+            //ViewBag.ImagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/";
 
             return View(await carContext.ToListAsync());
         }
@@ -62,6 +64,7 @@ namespace CourseProject.Areas.Admin.Controllers
                .Include(c => c.Model)
                    .ThenInclude(cm => cm.Parent)
                .Include(c => c.TransmissionType)
+               .Include(c => c.CarImages)
                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (car == null)
@@ -69,7 +72,7 @@ namespace CourseProject.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            ViewBag.ImagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/{car.Id}";
+            //ViewBag.ImagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/{car.Id}";
 
             return View(car);
         }
@@ -228,7 +231,11 @@ namespace CourseProject.Areas.Admin.Controllers
                 .Include(c => c.BodyType)
                 .Include(c => c.FuelType)
                 .Include(c => c.Model)
+                    .ThenInclude(cm => cm.Brand)
+                .Include(c => c.Model)
+                    .ThenInclude(cm => cm.Parent)
                 .Include(c => c.TransmissionType)
+                .Include(c => c.CarImages)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (car == null)
             {
