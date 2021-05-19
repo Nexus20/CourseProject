@@ -1,4 +1,5 @@
-﻿using CourseProject.Models;
+﻿using System;
+using CourseProject.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -246,6 +247,7 @@ namespace CourseProject.Controllers {
 
             if (ModelState.IsValid) {
 
+                request.ApplicationDate = DateTime.Now;
                 if (User.Identity.IsAuthenticated) {
                     request.ClientId = _userManager.GetUserId(User);
                 }

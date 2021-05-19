@@ -26,6 +26,9 @@
                 @Html.DisplayNameFor(model => model.Phone)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.ApplicationDate)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.State)
             </th>
             @*<th>Image</th>*@
@@ -63,6 +66,9 @@
 
                         }
                     </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApplicationDate)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.State)
                 </td>
