@@ -23,7 +23,14 @@ namespace CourseProject.Areas.Admin.Controllers
         // GET: Admin/SupplyRequests
         public async Task<IActionResult> Index()
         {
-            var carContext = _context.SupplyRequests.Include(s => s.Car).Include(s => s.Dealer);
+            var carContext = _context.SupplyRequests
+                .Include(s => s.Car)
+                    .ThenInclude(c => c.Model)
+                        .ThenInclude(cm => cm.Brand)
+                .Include(s => s.Car)
+                    .ThenInclude(c => c.Model)
+                        .ThenInclude(cm => cm.Parent)
+                .Include(s => s.Dealer);
             return View(await carContext.ToListAsync());
         }
 
@@ -61,7 +68,7 @@ namespace CourseProject.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            ViewData["DealerId"] = new SelectList(_context.Dealers, "Id", "Id");
+            ViewData["DealerId"] = new SelectList(_context.Dealers, "Id", "Name");
             return View(new SupplyRequest() {CarId = carId.Value});
         }
 

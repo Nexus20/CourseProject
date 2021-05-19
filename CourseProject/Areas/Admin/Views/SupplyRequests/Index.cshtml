@@ -1,40 +1,43 @@
 ﻿@model IEnumerable<CourseProject.Models.SupplyRequest>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Supply requests";
 }
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Dealer)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Car)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Count)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.State)
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Dealer)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Car)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Count)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.State)
+        </th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+    @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Dealer.Id)
+                @Html.DisplayFor(modelItem => item.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Car.Id)
+                @Html.DisplayFor(modelItem => item.Dealer.Name)
+            </td>
+            <td>
+                @item.Car.Model.Brand.Name @item.Car.Model.Parent?.Name @item.Car.Model.Name
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Count)
@@ -48,6 +51,6 @@
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
-}
+    }
     </tbody>
 </table>
