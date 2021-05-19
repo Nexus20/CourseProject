@@ -44,6 +44,9 @@ namespace CourseProject.Models {
         [Display(Name = "Application date")]
         public DateTime ApplicationDate { get; set; }
 
+        [Display(Name = "Car available")]
+        public bool CarAvailability { get; set; }
+
         public PurchaseRequest() {
             State = RequestState.New;
         }

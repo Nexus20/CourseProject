@@ -253,14 +253,16 @@ namespace CourseProject.Controllers {
                 }
 
                 _context.Add(request);
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
 
                 var car = await _context.Cars.FirstOrDefaultAsync(c => c.Id == request.CarId);
                 if (car.Count > 0) {
+                    request.CarAvailability = true;
                     car.Count--;
                 }
                 if(car.Count <= 0) {
                     car.Count = 0;
+                    request.CarAvailability = false;
                     if (car.State == Models.Car.CarState.New) {
                         car.Presence = Models.Car.CarPresence.AwaitingDelivery;
                     }
