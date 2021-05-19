@@ -180,7 +180,7 @@ else {
                         if (ViewBag.ComparedCars.Count > 0) {
                             isCompared = ViewBag.ComparedCars.Contains(item.Id);
                         }
-                        
+
                         <button data-id="@item.Id" class="btn btn-primary btn-add-compare">@Html.Raw(isCompared ? "Remove from " : "Add to ") compare</button>
                     }
 

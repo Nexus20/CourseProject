@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace CourseProject.Controllers {
     public class HomeController : Controller {
 
@@ -251,6 +252,20 @@ namespace CourseProject.Controllers {
 
                 _context.Add(request);
                 await _context.SaveChangesAsync();
+
+                var car = await _context.Cars.FirstOrDefaultAsync(c => c.Id == request.CarId);
+                if (car.Count > 0) {
+                    car.Count--;
+                }
+                if(car.Count <= 0) {
+                    car.Count = 0;
+                    if (car.State == Models.Car.CarState.New) {
+                        car.Presence = Models.Car.CarPresence.AwaitingDelivery;
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
 

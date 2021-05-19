@@ -46,6 +46,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Count)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Presence)
+            </th>
             <th>Image</th>
             <th></th>
         </tr>
@@ -86,6 +89,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Count)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Presence)
             </td>
             <td>
                 @if (item.CarImages.Count > 0) {

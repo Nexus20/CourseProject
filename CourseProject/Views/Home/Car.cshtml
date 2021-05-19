@@ -75,5 +75,12 @@
 </div>
 <div>
     <a asp-action="Index">Back to List</a>
+    @if (Model.Presence == Car.CarPresence.AwaitingDelivery) {
+        <div class="alert alert-warning">
+            At the moment, all cars of this model have already been sold or booked for sale.
+            Our managers have already sent a request to the dealer for a new batch of these machines. 
+            You can leave a purchase request, but it will take more time to buy a car.
+        </div>
+    }
     <a asp-action="CreatePurchaseRequest" asp-route-id="@Model.Id">Leave a purchase request</a> |
 </div>

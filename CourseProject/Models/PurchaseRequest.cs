@@ -40,6 +40,10 @@ namespace CourseProject.Models {
         [ForeignKey("ManagerId")]
         public User Manager { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:f}")]
+        [Display(Name = "Application date")]
+        public DateTime ApplicationDate { get; set; }
+
         public PurchaseRequest() {
             State = RequestState.New;
         }
