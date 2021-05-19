@@ -14,5 +14,8 @@ namespace CourseProject.Models {
 
         public string Phone { get; set; }
 
+        public int BrandId { get; set; }
+        public Brand Brand { get; set; }
+
     }
 }

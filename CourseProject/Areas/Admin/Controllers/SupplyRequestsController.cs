@@ -62,13 +62,20 @@ namespace CourseProject.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var car = await _context.Cars.FirstOrDefaultAsync(c => c.Id == carId);
+            var car = await _context.Cars
+                .Include(c => c.Model)
+                .FirstOrDefaultAsync(c => c.Id == carId);
 
             if (car == null) {
                 return NotFound();
             }
 
-            ViewData["DealerId"] = new SelectList(_context.Dealers, "Id", "Name");
+            var dealers = await _context.Dealers
+                .Where(d => d.BrandId == car.Model.BrandId)
+                .AsNoTracking()
+                .ToListAsync();
+
+            ViewData["DealerId"] = new SelectList(dealers, "Id", "Name");
             return View(new SupplyRequest() {CarId = carId.Value});
         }
 

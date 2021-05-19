@@ -10,5 +10,7 @@ namespace CourseProject.Models {
 
         public string Name { get; set; }
 
+        public ICollection<Dealer> Dealers { get; set; }
+
     }
 }
