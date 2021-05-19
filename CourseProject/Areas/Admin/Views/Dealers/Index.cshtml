@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<CourseProject.Models.Dealer>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Dealers";
 }
 
 <h1>Index</h1>
@@ -40,7 +40,7 @@
                 @Html.DisplayFor(modelItem => item.Phone)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Brand.Id)
+                @Html.DisplayFor(modelItem => item.Brand.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

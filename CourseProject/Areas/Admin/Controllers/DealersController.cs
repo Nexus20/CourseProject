@@ -23,8 +23,8 @@ namespace CourseProject.Areas.Admin.Controllers
         // GET: Admin/Dealers
         public async Task<IActionResult> Index()
         {
-            var carContext = _context.Dealers.Include(d => d.Brand);
-            return View(await carContext.ToListAsync());
+            var dealers = _context.Dealers.Include(d => d.Brand);
+            return View(await dealers.ToListAsync());
         }
 
         // GET: Admin/Dealers/Details/5
@@ -49,7 +49,7 @@ namespace CourseProject.Areas.Admin.Controllers
         // GET: Admin/Dealers/Create
         public IActionResult Create()
         {
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Id");
+            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name");
             return View();
         }
 
