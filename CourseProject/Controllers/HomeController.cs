@@ -151,7 +151,7 @@ namespace CourseProject.Controllers {
 
             ViewBag.CarModels = brandId != null ? new SelectList(_context.CarModels.Where(cm => cm.BrandId == brandId), "Id", "Name", modelId) : null;
 
-            int pageSize = 10;
+            int pageSize = 5;
 
             ViewBag.ComparedCars = _carsToCompare.Keys.ToList();
 

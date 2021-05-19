@@ -10,7 +10,11 @@ namespace CourseProject.Models {
 
         public int Id { get; set; }
 
-        public int Year { get; set; }
+        public int? Year { get; set; }
+
+        public string Color { get; set; }
+
+        public int Count { get; set; }
 
         [Column(TypeName = "money")]
         public decimal Price { get; set; }
@@ -21,6 +25,14 @@ namespace CourseProject.Models {
         }
 
         public CarState State { get; set; }
+
+        public enum CarPresence {
+            InStock,
+            Sold,
+            AwaitingDelivery
+        }
+
+        public CarPresence Presence { get; set; }
 
         public int ModelId { get; set; }
         public CarModel Model { get; set; }
@@ -42,6 +54,10 @@ namespace CourseProject.Models {
         public TransmissionType TransmissionType { get; set; }
 
         public ICollection<CarImage> CarImages { get; set; }
+
+        public Car() {
+            Presence = CarPresence.InStock;
+        }
 
     }
 }

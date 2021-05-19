@@ -26,7 +26,8 @@ namespace CourseProject.Data {
                     State = Car.CarState.New,
                     TransmissionTypeId = 1,
                     Price = Convert.ToDecimal(random.Next(10000, 1000000)),
-                    Year = random.Next(1980, 2022)
+                    Count = random.Next(1, 4),
+                    Color = "black"
                 });
             }
 
@@ -137,15 +138,15 @@ namespace CourseProject.Data {
             var cars = new Car[] {
                 new() {
                     BodyTypeId = 1, EngineVolume = 1.6, FuelTypeId = 1, Mileage = 0,
-                    ModelId = 1, State = Car.CarState.New, TransmissionTypeId = 1, Price = 100000M, Year = 2006
+                    ModelId = 1, State = Car.CarState.New, TransmissionTypeId = 1, Price = 100000M, Count = 3, Color = "black"
                 },
                 new() {
                     BodyTypeId = 1, EngineVolume = 1.6, FuelTypeId = 2, Mileage = 0,
-                    ModelId = 2, State = Car.CarState.New, TransmissionTypeId = 1, Price = 100000M, Year = 2007
+                    ModelId = 2, State = Car.CarState.New, TransmissionTypeId = 1, Price = 100000M, Count = 3, Color = "black"
                 },
                 new() {
                     BodyTypeId = 1, EngineVolume = 1.6, FuelTypeId = 1, Mileage = 0,
-                    ModelId = 3, State = Car.CarState.New, TransmissionTypeId = 1, Price = 100000M, Year = 2008
+                    ModelId = 3, State = Car.CarState.New, TransmissionTypeId = 1, Price = 100000M, Count = 3, Color = "black"
                 },
             };
 
