@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using CourseProject.Data;
@@ -34,7 +35,7 @@ namespace CourseProject.Controllers {
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int? brandId, int? modelId, int[] fuelTypes, int[] bodyTypes, int[] transmissionTypes, int? priceFrom, int? priceTo, int? newSearch, int? page) {
+        public async Task<IActionResult> Index(int? brandId, int? modelId, int[] fuelTypes, int[] bodyTypes, int[] transmissionTypes, int[] carStates, int? priceFrom, int? priceTo, int? newSearch, int? page) {
 
             StringBuilder queryStringBuilder = new StringBuilder("?");
 
@@ -136,6 +137,29 @@ namespace CourseProject.Controllers {
                 ViewBag.CheckedTransmissionTypes = null;
             }
 
+            if (carStates.Length > 0) {
+
+                IQueryable<Car> cars2 = cars.Where(c => c.State == (Car.CarState)carStates[0]);
+                for (var i = 1; i < carStates.Length; i++) {
+                    var i1 = i;
+                    cars2 = cars2.Concat(cars.Where(c => c.State == (Car.CarState)carStates[i1]));
+                }
+
+                cars = cars2;
+
+                var sb = new StringBuilder();
+                foreach (var item in Request.Query["carStates"].ToArray()) {
+                    sb.Append($"carStates={item}&");
+                }
+
+                queryStringBuilder.Append(sb);
+
+                ViewBag.CheckedCarStates = Request.Query["carStates"].ToArray();
+            }
+            else {
+                ViewBag.CheckedTransmissionTypes = null;
+            }
+
             if ((priceFrom != null && priceTo != null) 
                 && (priceFrom.Value <= priceTo.Value)
                 && (priceFrom.Value >=0 && priceTo.Value >= 0)) {
@@ -151,6 +175,9 @@ namespace CourseProject.Controllers {
             ViewBag.BodyTypes = _context.BodyTypes;
             ViewBag.FuelTypes = _context.FuelTypes;
             ViewBag.Brands = new SelectList(_context.Brands, "Id", "Name", brandId);
+
+            ViewBag.CarStates = Enum.GetValues(typeof(Car.CarState)).Cast<Car.CarState>()
+                .ToDictionary(t => (int) t, t => t.ToString());
 
             ViewBag.CarModels = brandId != null ? new SelectList(_context.CarModels.Where(cm => cm.BrandId == brandId), "Id", "Name", modelId) : null;
 

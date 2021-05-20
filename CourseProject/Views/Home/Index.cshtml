@@ -103,6 +103,28 @@ else {
         </div>
     </div>
 
+    <div class="form-group">
+        <div class="form-check form-check-inline">
+            State: &nbsp;
+            <br>
+            @foreach (var carState in ViewBag.CarStates) {
+
+                string state = "";
+
+                if (ViewBag.CheckedCarStates != null) {
+                    foreach (var checkedCarState in ViewBag.CheckedCarStates) {
+                        if (checkedCarState == carState.Key) {
+                            state = "checked";
+                        }
+                    }
+                }
+
+                <input class="form-check-input" id="@carState.Value-checkbox" type="checkbox" value="@carState.Key" name="carStates" @state>
+                <label class="form-check-label" for="@carState.Value-checkbox">@carState.Value</label> @Html.Raw(" &nbsp; ")
+            }
+        </div>
+    </div>
+
     Price:
     <div class="form-row">
         <div class="form-group col-sm-6">
