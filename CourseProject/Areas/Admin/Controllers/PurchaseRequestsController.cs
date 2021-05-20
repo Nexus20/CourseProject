@@ -8,6 +8,7 @@ using CourseProject.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 namespace CourseProject.Areas.Admin.Controllers {
@@ -92,6 +93,36 @@ namespace CourseProject.Areas.Admin.Controllers {
             }
 
             await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CancelRequest(int id) {
+            var purchaseRequest = await _context.PurchaseRequests.FindAsync(id);
+
+            purchaseRequest.State = PurchaseRequest.RequestState.Canceled;
+            _context.Update(purchaseRequest);
+
+            var anotherPurchaseRequest = await _context.PurchaseRequests
+                .Where(pr => pr.Id != purchaseRequest.Id && pr.CarId == purchaseRequest.CarId)
+                .FirstOrDefaultAsync();
+
+            if (anotherPurchaseRequest != null) {
+                anotherPurchaseRequest.CarAvailability = true;
+                _context.Update(anotherPurchaseRequest);
+            }
+            else {
+                var car = await _context.Cars.FindAsync(purchaseRequest.CarId);
+                car.Count++;
+                if (car.Presence == Car.CarPresence.BookedOrSold) {
+                    car.Presence = Car.CarPresence.InStock;
+                }
+
+                _context.Update(car);
+            }
+
+            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 

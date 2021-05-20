@@ -267,13 +267,14 @@ namespace CourseProject.Controllers {
 
                 if (car.Count <= 0) {
                     car.Count = 0;
-                    if (car.State == Models.Car.CarState.New) {
-                        car.Presence = Models.Car.CarPresence.BookedOrSold;
-                    }
+                    car.Presence = Models.Car.CarPresence.BookedOrSold;
                     // TODO add state displaying for second hand cars
                 }
 
                 await _context.SaveChangesAsync();
+
+                if (User.Identity.IsAuthenticated)
+                    return RedirectToAction("Cabinet", "Account");
 
                 return RedirectToAction(nameof(Index));
             }
