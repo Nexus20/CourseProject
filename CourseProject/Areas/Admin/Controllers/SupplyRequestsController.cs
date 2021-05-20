@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CourseProject.Data;
 using CourseProject.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CourseProject.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "admin, manager")]
     [Area("Admin")]
     public class SupplyRequestsController : Controller
     {

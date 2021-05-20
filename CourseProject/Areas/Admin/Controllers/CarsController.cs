@@ -95,7 +95,7 @@ namespace CourseProject.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Year,Price,State,ModelId,EngineVolume,Mileage,FuelTypeId,BodyTypeId,TransmissionTypeId")] Car car, IFormFileCollection uploadedImages)
+        public async Task<IActionResult> Create([Bind("Id,Year,Color,Count,Price,State,ModelId,EngineVolume,Mileage,FuelTypeId,BodyTypeId,TransmissionTypeId")] Car car, IFormFileCollection uploadedImages)
         {
             if (ModelState.IsValid) {
                 _context.Add(car);

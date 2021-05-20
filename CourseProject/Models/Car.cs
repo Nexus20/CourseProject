@@ -31,7 +31,6 @@ namespace CourseProject.Models {
             Sold,
             AwaitingDelivery,
             BookedOrSold,
-            // TODO add changing state to "AwaitingDelivery" only after creating and sending supply request
         }
 
         public CarPresence Presence { get; set; }
@@ -41,7 +40,7 @@ namespace CourseProject.Models {
 
         [Display(Name = "Engine Volume")]
         public double? EngineVolume { get; set; }
-        public double Mileage { get; set; }
+        public double? Mileage { get; set; }
 
         public int FuelTypeId { get; set; }
         [Display(Name = "Fuel")]
