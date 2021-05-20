@@ -30,7 +30,7 @@ namespace CourseProject.Models {
             InStock,
             Sold,
             AwaitingDelivery,
-            // TODO maybe we need one more state called "BookedOrSold"
+            BookedOrSold,
             // TODO add changing state to "AwaitingDelivery" only after creating and sending supply request
         }
 

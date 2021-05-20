@@ -113,6 +113,9 @@ namespace CourseProject.Areas.Admin.Controllers
             var supplyRequest = await _context.SupplyRequests.FindAsync(id);
             supplyRequest.State = SupplyRequest.SupplyRequestState.Sent;
             _context.Update(supplyRequest);
+            var car = await _context.Cars.FindAsync(supplyRequest.CarId);
+            car.Presence = Car.CarPresence.AwaitingDelivery;
+            _context.Update(car);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -171,7 +174,7 @@ namespace CourseProject.Areas.Admin.Controllers
             }
 
             if (car.Count == 0) {
-                car.Presence = Car.CarPresence.AwaitingDelivery;
+                car.Presence = Car.CarPresence.BookedOrSold;
             }
 
             _context.Update(car);

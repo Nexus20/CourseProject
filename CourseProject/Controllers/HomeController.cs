@@ -40,14 +40,15 @@ namespace CourseProject.Controllers {
 
             IQueryable<Car> cars = _context.Cars
                 .Include(c => c.Model)
-                .ThenInclude(cm => cm.Brand)
+                    .ThenInclude(cm => cm.Brand)
                 .Include(c => c.Model)
-                .ThenInclude(cm => cm.Parent)
+                    .ThenInclude(cm => cm.Parent)
                 .Include(c => c.Model)
                 .Include(c => c.BodyType)
                 .Include(c => c.FuelType)
                 .Include(c => c.TransmissionType)
                 .Include(c => c.CarImages)
+                .Where(c => c.Presence != Models.Car.CarPresence.Sold)
                 .AsNoTracking();
 
             if (newSearch != null) {
@@ -267,7 +268,7 @@ namespace CourseProject.Controllers {
                 if (car.Count <= 0) {
                     car.Count = 0;
                     if (car.State == Models.Car.CarState.New) {
-                        car.Presence = Models.Car.CarPresence.AwaitingDelivery;
+                        car.Presence = Models.Car.CarPresence.BookedOrSold;
                     }
                     // TODO add state displaying for second hand cars
                 }
