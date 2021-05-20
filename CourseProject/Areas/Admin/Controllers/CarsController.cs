@@ -264,7 +264,7 @@ namespace CourseProject.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AddImages(int carId, IFormFileCollection uploadedImages) {
 
-            var car = _context.Cars.FirstOrDefaultAsync(car => car.Id == carId);
+            var car = _context.Cars.FirstOrDefaultAsync(c => c.Id == carId);
 
             if (car == null) {
                 return NotFound();
@@ -278,12 +278,15 @@ namespace CourseProject.Areas.Admin.Controllers
 
             foreach (var uploadedImage in uploadedImages) {
                 var path = $"/img/cars/{carId}/{uploadedImage.FileName}";
-
+                
                 using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create)) {
                     await uploadedImage.CopyToAsync(fileStream);
-                }
 
+                    _context.CarImages.Add(new CarImage() {CarId = carId, Path = path});
+                }
             }
+
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
