@@ -251,6 +251,21 @@ namespace CourseProject.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var car = await _context.Cars.FindAsync(id);
+
+            var imagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/{id}";
+
+            if (Directory.Exists(imagesDirectory)) {
+                DirectoryInfo dirInfo = new(imagesDirectory);
+                dirInfo.Delete(true);
+
+                var carImages = await _context.CarImages.Where(ci => ci.CarId == id).ToListAsync();
+
+                if (carImages.Count > 0) {
+                    _context.RemoveRange(carImages);
+                }
+
+            }
+
             _context.Cars.Remove(car);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -297,9 +312,15 @@ namespace CourseProject.Areas.Admin.Controllers
             foreach (var fileName in fileNames) {
                 var path = $"{_appEnvironment.WebRootPath}/img/cars/{carId}/{fileName}";
                 if (System.IO.File.Exists(path)) {
+
+                    var carImage = await _context.CarImages.FirstAsync(ci => ci.CarId == carId);
+                    _context.CarImages.Remove(carImage);
+
                     System.IO.File.Delete(path);
                 }
             }
+
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
