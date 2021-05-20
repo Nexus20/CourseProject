@@ -7,6 +7,7 @@ using CourseProject.Data;
 using CourseProject.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace CourseProject.Areas.Admin.Controllers {
@@ -17,10 +18,14 @@ namespace CourseProject.Areas.Admin.Controllers {
 
         private readonly CarContext _context;
         private readonly IWebHostEnvironment _appEnvironment;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public PurchaseRequestsController(CarContext context, IWebHostEnvironment appEnvironment) {
+        public PurchaseRequestsController(CarContext context, IWebHostEnvironment appEnvironment, UserManager<User> userManager, RoleManager<IdentityRole> roleManager) {
             _context = context;
             _appEnvironment = appEnvironment;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task<IActionResult> Index() {
@@ -33,6 +38,8 @@ namespace CourseProject.Areas.Admin.Controllers {
                 .ThenInclude(c => c.Model)
                 .ThenInclude(cm => cm.Parent)
                 .AsNoTracking();
+
+            ViewBag.ManagerId = _userManager.GetUserId(User);
 
             ViewBag.PurchaseRequestStates = Enum.GetValues(typeof(PurchaseRequest.RequestState)).Cast<int>().ToDictionary(key => key, key => Enum.GetName(typeof(PurchaseRequest.RequestState), key));
             
@@ -68,6 +75,25 @@ namespace CourseProject.Areas.Admin.Controllers {
             ViewBag.PurchaseRequestStates = Enum.GetValues(typeof(PurchaseRequest.RequestState)).Cast<int>().ToDictionary(key => key, key => Enum.GetName(typeof(PurchaseRequest.RequestState), key));
 
             return View(request);
+        }
+
+        public IActionResult AssignManagerToRequest(int? requestId) {
+            if (requestId == null) {
+                return NotFound();
+            }
+
+            var request = _context.PurchaseRequests.FirstOrDefault(pr => pr.Id == requestId);
+
+            if (request == null) {
+                return NotFound();
+            }
+
+            request.ManagerId = _userManager.GetUserId(User);
+            request.State = PurchaseRequest.RequestState.Processing;
+            _context.Update(request);
+            _context.SaveChanges();
+
+            return Content("OK");
         }
 
         public IActionResult ChangeRequestState(int? requestId, int? newState) {
