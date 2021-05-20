@@ -40,6 +40,15 @@
             <th>
                 @Html.DisplayNameFor(model => model.TransmissionType)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Color)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Count)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Presence)
+            </th>
             <th>Image</th>
             <th></th>
         </tr>
@@ -76,6 +85,15 @@
                 @Html.DisplayFor(modelItem => item.TransmissionType.Name)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Color)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Count)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Presence)
+            </td>
+            <td>
                 @if (item.CarImages.Count > 0) {
                     <img src="@item.CarImages.First().Path" alt="" style="width: 100px">
                 }
@@ -83,6 +101,9 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                @if(item.State == Car.CarState.New) {
+                    <a asp-controller="SupplyRequests" asp-action="Create" asp-route-carId="@item.Id">Create supply request</a>
+                }
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>

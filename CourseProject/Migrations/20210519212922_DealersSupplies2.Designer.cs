@@ -4,14 +4,16 @@ using CourseProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CourseProject.Migrations
 {
     [DbContext(typeof(CarContext))]
-    partial class CarContextModelSnapshot : ModelSnapshot
+    [Migration("20210519212922_DealersSupplies2")]
+    partial class DealersSupplies2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,9 +159,6 @@ namespace CourseProject.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("BrandId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
@@ -170,8 +169,6 @@ namespace CourseProject.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BrandId");
 
                     b.ToTable("Dealers");
                 });
@@ -564,17 +561,6 @@ namespace CourseProject.Migrations
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("CourseProject.Models.Dealer", b =>
-                {
-                    b.HasOne("CourseProject.Models.Brand", "Brand")
-                        .WithMany("Dealers")
-                        .HasForeignKey("BrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Brand");
-                });
-
             modelBuilder.Entity("CourseProject.Models.FeaturedCar", b =>
                 {
                     b.HasOne("CourseProject.Models.Car", "Car")
@@ -683,11 +669,6 @@ namespace CourseProject.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("CourseProject.Models.Brand", b =>
-                {
-                    b.Navigation("Dealers");
                 });
 
             modelBuilder.Entity("CourseProject.Models.Car", b =>

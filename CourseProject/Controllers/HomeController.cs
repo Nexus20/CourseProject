@@ -1,4 +1,5 @@
-﻿using CourseProject.Models;
+﻿using System;
+using CourseProject.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace CourseProject.Controllers {
     public class HomeController : Controller {
@@ -38,14 +40,15 @@ namespace CourseProject.Controllers {
 
             IQueryable<Car> cars = _context.Cars
                 .Include(c => c.Model)
-                .ThenInclude(cm => cm.Brand)
+                    .ThenInclude(cm => cm.Brand)
                 .Include(c => c.Model)
-                .ThenInclude(cm => cm.Parent)
+                    .ThenInclude(cm => cm.Parent)
                 .Include(c => c.Model)
                 .Include(c => c.BodyType)
                 .Include(c => c.FuelType)
                 .Include(c => c.TransmissionType)
                 .Include(c => c.CarImages)
+                .Where(c => c.Presence != Models.Car.CarPresence.Sold)
                 .AsNoTracking();
 
             if (newSearch != null) {
@@ -151,7 +154,7 @@ namespace CourseProject.Controllers {
 
             ViewBag.CarModels = brandId != null ? new SelectList(_context.CarModels.Where(cm => cm.BrandId == brandId), "Id", "Name", modelId) : null;
 
-            int pageSize = 10;
+            int pageSize = 5;
 
             ViewBag.ComparedCars = _carsToCompare.Keys.ToList();
 
@@ -245,13 +248,32 @@ namespace CourseProject.Controllers {
 
             if (ModelState.IsValid) {
 
+                request.ApplicationDate = DateTime.Now;
                 if (User.Identity.IsAuthenticated) {
                     request.ClientId = _userManager.GetUserId(User);
                 }
 
                 _context.Add(request);
+                //await _context.SaveChangesAsync();
+
+                var car = await _context.Cars.FirstOrDefaultAsync(c => c.Id == request.CarId);
+                if (car.Count > 0) {
+                    request.CarAvailability = true;
+                    car.Count--;
+                }
+                else {
+                    request.CarAvailability = false;
+                }
+
+                if (car.Count <= 0) {
+                    car.Count = 0;
+                    car.Presence = Models.Car.CarPresence.BookedOrSold;
+                    // TODO add state displaying for second hand cars
+                }
+
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                return User.Identity.IsAuthenticated ? RedirectToAction("Cabinet", "Account") : RedirectToAction(nameof(Index));
             }
 
             return View(request);

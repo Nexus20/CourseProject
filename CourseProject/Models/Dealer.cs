@@ -4,13 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace CourseProject.Models {
-    public class Brand {
+    public class Dealer {
 
         public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public ICollection<Dealer> Dealers { get; set; }
+        public string Email { get; set; }
+
+        public string Phone { get; set; }
+
+        public int BrandId { get; set; }
+        public Brand Brand { get; set; }
 
     }
 }

@@ -1,0 +1,63 @@
+﻿@model CourseProject.Models.SupplyRequest
+
+@{
+    ViewData["Title"] = "Send request";
+}
+
+<h1>Send request #@Model.Id</h1>
+
+<div>
+    <h4>Check your request before sending</h4>
+    <hr />
+    <h4>Car</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Car)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Car.Model.Brand.Name @Model.Car.Model.Parent?.Name @Model.Car.Model.Name @Model.Car.Year
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Car.BodyType)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Car.BodyType.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Car.FuelType)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Car.FuelType.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Car.TransmissionType)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Car.TransmissionType.Name)
+        </dd>
+    </dl>
+    <h4>Dealer</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Dealer)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Dealer.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Count)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Count)
+        </dd>
+    </dl>
+</div>
+<div>
+    <form asp-action="SendRequest">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Send request" class="btn btn-primary" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

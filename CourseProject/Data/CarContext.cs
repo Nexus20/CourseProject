@@ -23,6 +23,9 @@ namespace CourseProject.Data {
         public DbSet<PurchaseRequest> PurchaseRequests { get; set; }
         public DbSet<FeaturedCar> FeaturedCars { get; set; }
 
+        public DbSet<Dealer> Dealers { get; set; }
+        public DbSet<SupplyRequest> SupplyRequests { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<Car>().ToTable("Car");
             modelBuilder.Entity<CarModel>().ToTable("CarModel");
@@ -40,6 +43,9 @@ namespace CourseProject.Data {
             modelBuilder.Entity<TransmissionType>().ToTable("TransmissionType");
             modelBuilder.Entity<PurchaseRequest>().ToTable("PurchaseRequest");
             modelBuilder.Entity<FeaturedCar>().ToTable("FeaturedCar");
+
+            modelBuilder.Entity<Dealer>().ToTable("Dealers");
+            modelBuilder.Entity<SupplyRequest>().ToTable("SupplyRequests");
 
             base.OnModelCreating(modelBuilder);
         }
