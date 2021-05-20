@@ -273,10 +273,7 @@ namespace CourseProject.Controllers {
 
                 await _context.SaveChangesAsync();
 
-                if (User.Identity.IsAuthenticated)
-                    return RedirectToAction("Cabinet", "Account");
-
-                return RedirectToAction(nameof(Index));
+                return User.Identity.IsAuthenticated ? RedirectToAction("Cabinet", "Account") : RedirectToAction(nameof(Index));
             }
 
             return View(request);
