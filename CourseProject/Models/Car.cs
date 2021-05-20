@@ -29,7 +29,9 @@ namespace CourseProject.Models {
         public enum CarPresence {
             InStock,
             Sold,
-            AwaitingDelivery
+            AwaitingDelivery,
+            // TODO maybe we need one more state called "BookedOrSold"
+            // TODO add changing state to "AwaitingDelivery" only after creating and sending supply request
         }
 
         public CarPresence Presence { get; set; }

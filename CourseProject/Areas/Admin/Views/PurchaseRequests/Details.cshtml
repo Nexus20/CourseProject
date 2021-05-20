@@ -5,7 +5,7 @@
 }
 
 <h1>Request № @Model.Id</h1>
-Status:
+@*Status:
 <div id="statuses-dropdown" class="dropdown">
     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         @Html.DisplayFor(model => model.State)
@@ -15,7 +15,7 @@ Status:
             <button class="dropdown-item" data-id="@Model.Id" data-state="@elem.Key">@elem.Value</button>
         }
     </div>
-</div>
+</div>*@
 <h3>Client</h3>
 <hr />
 <dl class="row">
@@ -104,7 +104,13 @@ Status:
     </dd>
 </dl>
 
-@section Scripts {
+<form asp-action="Details">
+    <input type="hidden" asp-for="Id" />
+    <input type="submit" value="Close request" class="btn btn-primary" /> |
+    <a asp-action="Index">Back to List</a>
+</form>
+
+@*@section Scripts {
     <script type="text/javascript">
         $(document).ready(() => {
             $('#statuses-dropdown').on('click',
@@ -125,4 +131,4 @@ Status:
                 });
         });
     </script>
-}
+}*@

@@ -260,12 +260,16 @@ namespace CourseProject.Controllers {
                     request.CarAvailability = true;
                     car.Count--;
                 }
-                if(car.Count <= 0) {
-                    car.Count = 0;
+                else {
                     request.CarAvailability = false;
+                }
+
+                if (car.Count <= 0) {
+                    car.Count = 0;
                     if (car.State == Models.Car.CarState.New) {
                         car.Presence = Models.Car.CarPresence.AwaitingDelivery;
                     }
+                    // TODO add state displaying for second hand cars
                 }
 
                 await _context.SaveChangesAsync();

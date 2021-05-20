@@ -46,6 +46,7 @@ namespace CourseProject.Areas.Admin.Controllers {
             return View(await requests.ToListAsync());
         }
 
+        [HttpGet]
         public async Task<IActionResult> Details(int? id) {
 
             if (id == null) {
@@ -77,6 +78,23 @@ namespace CourseProject.Areas.Admin.Controllers {
             return View(request);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Details(int id) {
+            var purchaseRequest = await _context.PurchaseRequests.FindAsync(id);
+
+            purchaseRequest.State = PurchaseRequest.RequestState.Closed;
+            _context.Update(purchaseRequest);
+
+            var car = await _context.Cars.FindAsync(purchaseRequest.CarId);
+            if (car.State == Car.CarState.SecondHand) {
+                car.Presence = Car.CarPresence.Sold;
+                _context.Update(car);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
         public IActionResult AssignManagerToRequest(int? requestId) {
             if (requestId == null) {
                 return NotFound();
@@ -96,24 +114,24 @@ namespace CourseProject.Areas.Admin.Controllers {
             return Content("OK");
         }
 
-        public IActionResult ChangeRequestState(int? requestId, int? newState) {
+        //public IActionResult ChangeRequestState(int? requestId, int? newState) {
 
-            if (requestId == null || newState == null) {
-                return NotFound();
-            }
+        //    if (requestId == null || newState == null) {
+        //        return NotFound();
+        //    }
 
-            var request = _context.PurchaseRequests.FirstOrDefault(pr => pr.Id == requestId);
+        //    var request = _context.PurchaseRequests.FirstOrDefault(pr => pr.Id == requestId);
 
-            if (request == null) {
-                return NotFound();
-            }
+        //    if (request == null) {
+        //        return NotFound();
+        //    }
 
-            request.State = (PurchaseRequest.RequestState)newState.Value;
-            _context.Update(request);
-            _context.SaveChanges();
+        //    request.State = (PurchaseRequest.RequestState)newState.Value;
+        //    _context.Update(request);
+        //    _context.SaveChanges();
 
-            return Content(Enum.GetName(typeof(PurchaseRequest.RequestState), (PurchaseRequest.RequestState)newState.Value));
-        }
+        //    return Content(Enum.GetName(typeof(PurchaseRequest.RequestState), (PurchaseRequest.RequestState)newState.Value));
+        //}
 
     }
 }

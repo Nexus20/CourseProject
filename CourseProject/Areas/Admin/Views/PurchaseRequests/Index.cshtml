@@ -125,11 +125,12 @@
                         console.log(data); 
                         $(e.target).text('Assigned');
                         $(e.target).before(`<a href="@Url.Action("Details")?id=${requestId}">Details</a>`);
+                        $(e.target).remove();
                     });
                 });
 
 
-            $('#requests-table').on('click',
+            @*$('#requests-table').on('click',
                 '.dropdown-item',
                 (e) => {
                     console.log(e.target);
@@ -144,7 +145,7 @@
                         console.log(data);
                         $(`#dropdownMenuButton-${requestId}`).text(data);
                     });
-                });
+                });*@
         });
     </script>
 }
