@@ -169,7 +169,6 @@ namespace CourseProject.Controllers {
                 
             }
 
-
             ViewBag.QueryString = queryStringBuilder.ToString();
             ViewBag.TransmissionTypes = _context.TransmissionTypes;
             ViewBag.BodyTypes = _context.BodyTypes;

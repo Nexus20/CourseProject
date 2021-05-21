@@ -105,7 +105,7 @@ namespace CourseProject.Areas.Admin.Controllers {
 
             var anotherPurchaseRequest = await _context.PurchaseRequests
                 .Where(pr => pr.Id != purchaseRequest.Id 
-                             && pr.CarId == purchaseRequest.CarId
+                             && pr.CarId == purchaseRequest.CarId && pr.CarAvailability == false
                              && (pr.State == PurchaseRequest.RequestState.New || pr.State == PurchaseRequest.RequestState.Processing))
                 .OrderBy(pr => pr.ApplicationDate)
                 .FirstOrDefaultAsync();
