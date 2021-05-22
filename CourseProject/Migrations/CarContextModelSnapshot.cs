@@ -95,6 +95,7 @@ namespace CourseProject.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("Year")
+                        .HasMaxLength(4)
                         .HasColumnType("int");
 
                     b.HasKey("Id");

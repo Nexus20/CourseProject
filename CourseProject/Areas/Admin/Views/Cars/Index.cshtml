@@ -102,7 +102,7 @@
                     }
                 </td>
                 <td>
-                    
+
                     <div class="dropdown">
                         <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton-@item.Id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Actions
@@ -117,10 +117,10 @@
                             <a asp-action="Delete" asp-route-id="@item.Id" class="dropdown-item">Delete</a>
                         </div>
                     </div>
-                    
-                    
 
-                    
+
+
+
                 </td>
             </tr>
         }
@@ -134,3 +134,25 @@
 
 <a href="@Url.Action("Index")@ViewBag.QueryString@("page=" + (Model.PageIndex - 1))" class="btn btn-primary @prevDisabled">Prev</a>
 <a href="@Url.Action("Index")@ViewBag.QueryString@("page=" + (Model.PageIndex + 1))" class="btn btn-primary @nextDisabled">Next</a>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(() => {
+            $('#brands-list').on('click',
+                'option',
+                (e) => {
+                    console.log(e.target.value);
+                    let brandId = encodeURIComponent(e.target.value);
+
+                    $('#models-list').load('@Url.Action("GetModelsByBrand", "Home", new {Area = ""})?brandId=' + brandId);
+                    $('#models-list').prepend('<option value=""></option>');
+                });
+
+            
+
+
+            
+
+        });
+    </script>
+}

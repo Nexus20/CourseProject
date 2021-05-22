@@ -1,43 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using CourseProject.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace CourseProject.Data {
     public static class DbInitializer {
-
-        public static void Initialize2(CarContext context) {
-
-            List<Car> cars = new List<Car>();
-
-            Random random = new Random();
-
-            for (var i = 0; i < 45; i++) {
-                cars.Add(new Car() {
-                    BodyTypeId = 1,
-                    EngineVolume = 1.6,
-                    FuelTypeId = 1,
-                    Mileage = 0,
-                    ModelId = random.Next(1, 5),
-                    State = Car.CarState.New,
-                    TransmissionTypeId = 1,
-                    Price = Convert.ToDecimal(random.Next(10000, 1000000)),
-                    Count = random.Next(1, 4),
-                    Color = "black"
-                });
-            }
-
-            foreach (var car in cars) {
-                context.Cars.Add(car);
-            }
-
-            context.SaveChanges();
-
-        }
 
         public static async Task InitializeRolesAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager) {
             var adminEmail = "jack.gelder0804@gmail.com";
@@ -135,23 +104,42 @@ namespace CourseProject.Data {
 
             context.SaveChanges();
 
-            var cars = new Car[] {
-                new() {
-                    BodyTypeId = 1, EngineVolume = 1.6, FuelTypeId = 1, Mileage = 0,
-                    ModelId = 1, State = Car.CarState.New, TransmissionTypeId = 1, Price = 100000M, Count = 3, Color = "black"
-                },
-                new() {
-                    BodyTypeId = 1, EngineVolume = 1.6, FuelTypeId = 2, Mileage = 0,
-                    ModelId = 2, State = Car.CarState.New, TransmissionTypeId = 1, Price = 100000M, Count = 3, Color = "black"
-                },
-                new() {
-                    BodyTypeId = 1, EngineVolume = 1.6, FuelTypeId = 1, Mileage = 0,
-                    ModelId = 3, State = Car.CarState.New, TransmissionTypeId = 1, Price = 100000M, Count = 3, Color = "black"
-                },
-            };
+            List<Car> cars = new List<Car>();
+
+            Random random = new Random();
+
+            for (var i = 0; i < 45; i++) {
+                cars.Add(new Car() {
+                    BodyTypeId = 1,
+                    EngineVolume = 1.6,
+                    FuelTypeId = 1,
+                    Mileage = 0,
+                    ModelId = random.Next(1, 5),
+                    State = Car.CarState.New,
+                    TransmissionTypeId = 1,
+                    Price = Convert.ToDecimal(random.Next(10000, 1000000)),
+                    Count = random.Next(1, 4),
+                    Color = "black"
+                });
+            }
 
             foreach (var car in cars) {
                 context.Cars.Add(car);
+            }
+
+            context.SaveChanges();
+
+            var dealers = new Dealer[] {
+                new() {Name = "dealer audi", BrandId = 1, Email = "audi@audi.com", Phone = "+123456789000"},
+                new() {Name = "dealer skoda", BrandId = 2, Email = "skoda@skoda.com", Phone = "+123456789001"},
+                new() {
+                    Name = "dealer volkswagen", BrandId = 3, Email = "volkswagen@volkswagen.com",
+                    Phone = "+123456789002"
+                },
+            };
+
+            foreach (var dealer in dealers) {
+                context.Dealers.Add(dealer);
             }
 
             context.SaveChanges();

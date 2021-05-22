@@ -118,6 +118,24 @@ namespace CourseProject.Areas.Admin.Controllers
                 ViewBag.CheckedTransmissionTypes = null;
             }
 
+            ViewBag.Colors = _context.Cars.Where(c => c.Count > 0).Select(c => c.Color).Distinct().ToList();
+
+            if (carSearch.Colors != null && carSearch.Colors.Length > 0) {
+
+                IQueryable<Car> cars2 = cars.Where(c => c.Color == carSearch.Colors[0]);
+                for (var i = 1; i < carSearch.Colors.Length; i++) {
+                    var i1 = i;
+                    cars2 = cars2.Concat(cars.Where(c => c.Color == carSearch.Colors[i1]));
+                }
+
+                cars = cars2;
+
+                ViewBag.CheckedColors = Request.Query["colors"].ToArray();
+            }
+            else {
+                ViewBag.CheckedColors = null;
+            }
+
             if ((carSearch.PriceFrom != null && carSearch.PriceTo != null)
                 && (carSearch.PriceFrom.Value <= carSearch.PriceTo.Value)
                 && (carSearch.PriceFrom.Value >= 0 && carSearch.PriceTo.Value >= 0)) {
@@ -197,7 +215,7 @@ namespace CourseProject.Areas.Admin.Controllers
             if (car.State == Car.CarState.SecondHand){
                 if (car.Year == null) {
                     ModelState.AddModelError("Year", "For used machines, enter the year");
-                } else if (car.Year < 1886 || car.Year > new DateTime().Year) {
+                } else if (car.Year < 1886 || car.Year > DateTime.Now.Year) {
                     ModelState.AddModelError("Year", $"The car cannot be older than 1886 and newer than {new DateTime().Year}");
                 }
             } 
@@ -333,7 +351,7 @@ namespace CourseProject.Areas.Admin.Controllers
         }
 
         // GET: Admin/Cars/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, bool? linkedEntitiesError)
         {
             if (id == null)
             {
@@ -354,34 +372,70 @@ namespace CourseProject.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewBag.ImagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/{car.Id}";
+            //ViewBag.ImagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/{car.Id}";
+
+            if (linkedEntitiesError.GetValueOrDefault()) {
+                ViewData["HasLinkedEntities"] =
+                    "You cannot delete this entry now, because other entities are associated with it.";
+            }
+
+
             return View(car);
         }
 
         // POST: Admin/Cars/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(Car car)
         {
-            var car = await _context.Cars.FindAsync(id);
 
-            var imagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/{id}";
+            try {
+                if (await _context.Cars.AnyAsync(c => c.Id == car.Id)) {
 
-            if (Directory.Exists(imagesDirectory)) {
-                DirectoryInfo dirInfo = new(imagesDirectory);
-                dirInfo.Delete(true);
+                    var imagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/{car.Id}";
 
-                var carImages = await _context.CarImages.Where(ci => ci.CarId == id).ToListAsync();
+                    if (Directory.Exists(imagesDirectory)) {
+                        DirectoryInfo dirInfo = new(imagesDirectory);
+                        dirInfo.Delete(true);
 
-                if (carImages.Count > 0) {
-                    _context.RemoveRange(carImages);
+                        var carImages = await _context.CarImages.Where(ci => ci.CarId == car.Id).ToListAsync();
+
+                        if (carImages.Count > 0) {
+                            _context.RemoveRange(carImages);
+                        }
+
+                    }
+
+                    _context.Cars.Remove(car);
+                    await _context.SaveChangesAsync();
                 }
 
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception) {
+                return RedirectToAction(nameof(Delete), new { id = car.Id, linkedEntitiesError = true });
             }
 
-            _context.Cars.Remove(car);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            //var car = await _context.Cars.FindAsync(id);
+
+            //var imagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/{id}";
+
+            //if (Directory.Exists(imagesDirectory)) {
+            //    DirectoryInfo dirInfo = new(imagesDirectory);
+            //    dirInfo.Delete(true);
+
+            //    var carImages = await _context.CarImages.Where(ci => ci.CarId == id).ToListAsync();
+
+            //    if (carImages.Count > 0) {
+            //        _context.RemoveRange(carImages);
+            //    }
+
+            //}
+
+            //_context.Cars.Remove(car);
+            //await _context.SaveChangesAsync();
+            //return RedirectToAction(nameof(Index));
         }
 
         private bool CarExists(int id)

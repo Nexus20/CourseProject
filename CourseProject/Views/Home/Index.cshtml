@@ -106,7 +106,7 @@
             $('#brands-list').on('click',
                 'option',
                 (e) => {
-                    //console.log(e.target.value);
+                    console.log(e.target.value);
                     let brandId = encodeURIComponent(e.target.value);
 
                     $('#models-list').load('@Url.Action("GetModelsByBrand", "Home")?brandId=' + brandId);

@@ -30,12 +30,6 @@ namespace CourseProject.Data {
             modelBuilder.Entity<Car>().ToTable("Car");
             modelBuilder.Entity<CarModel>().ToTable("CarModel");
             modelBuilder.Entity<CarImage>().ToTable("CarImages");
-            //modelBuilder.Entity<CarModel>()
-            //    .HasOne(cm => cm.Parent)
-            //    .WithMany(cm => cm.Children)
-            //    .HasForeignKey(cm => cm.ParentModelID)
-            //    .IsRequired(false);
-
 
             modelBuilder.Entity<Brand>().ToTable("Brand");
             modelBuilder.Entity<FuelType>().ToTable("FuelType");

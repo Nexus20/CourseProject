@@ -145,7 +145,7 @@ namespace CourseProject.Controllers {
                 ViewBag.CheckedColors = Request.Query["colors"].ToArray();
             }
             else {
-                ViewBag.CheckedTransmissionTypes = null;
+                ViewBag.CheckedColors = null;
             }
 
 
@@ -322,7 +322,8 @@ namespace CourseProject.Controllers {
                 .Include(c => c.Model)
                 .ThenInclude(cm => cm.Parent)
                 .Include(c => c.TransmissionType)
-                .Include(c => c.CarImages)
+                //.Include(c => c.CarImages)
+                .AsNoTracking()
                 .FirstOrDefault(m => m.Id == carId);
 
             if (car == null) {
@@ -347,7 +348,9 @@ namespace CourseProject.Controllers {
         public async Task<IActionResult> Compare() {
 
             var carsToCompare = HttpContext.Session.Get<Dictionary<int, Car>>("CarsToCompare");
-
+            foreach (var carToCompare in carsToCompare) {
+                carToCompare.Value.CarImages = _context.CarImages.Where(ci => ci.CarId == carToCompare.Key).AsNoTracking().ToList();
+            }
 
             return View(carsToCompare);
 

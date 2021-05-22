@@ -1,11 +1,12 @@
-﻿@using System.IO
-@model CourseProject.Models.Car
+﻿@model CourseProject.Models.Car
 
 @{
     ViewData["Title"] = "Delete";
 }
 
 <h1>Delete</h1>
+
+<p class="text-danger">@ViewData["HasLinkedEntities"]</p>
 
 <h3>Are you sure you want to delete this?</h3>
 <div>

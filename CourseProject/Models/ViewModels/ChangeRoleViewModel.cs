@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CourseProject.Migrations;
 using Microsoft.AspNetCore.Identity;
 
 namespace CourseProject.Models.ViewModels {
