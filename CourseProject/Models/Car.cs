@@ -17,6 +17,7 @@ namespace CourseProject.Models {
         [Required]
         public int Count { get; set; }
 
+        [Required]
         [Column(TypeName = "money")]
         public decimal Price { get; set; }
 

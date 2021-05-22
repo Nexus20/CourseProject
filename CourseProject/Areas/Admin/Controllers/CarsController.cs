@@ -193,6 +193,22 @@ namespace CourseProject.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Year,Color,Count,Price,State,ModelId,EngineVolume,Mileage,FuelTypeId,BodyTypeId,TransmissionTypeId")] Car car, IFormFileCollection uploadedImages)
         {
+
+            if (car.State == Car.CarState.SecondHand){
+                if (car.Year == null) {
+                    ModelState.AddModelError("Year", "For used machines, enter the year");
+                } else if (car.Year < 1886 || car.Year > new DateTime().Year) {
+                    ModelState.AddModelError("Year", $"The car cannot be older than 1886 and newer than {new DateTime().Year}");
+                }
+            } 
+            if (car.Count < 1) {
+                ModelState.AddModelError("Count", "You can't add zero cars");
+            }
+
+            if (car.Price < 0) {
+                ModelState.AddModelError("Price", "Price can't be less than zero");
+            }
+
             if (ModelState.IsValid) {
                 _context.Add(car);
                 await _context.SaveChangesAsync();
@@ -486,8 +502,8 @@ namespace CourseProject.Areas.Admin.Controllers
         }
 
         [AcceptVerbs("Get", "Post")]
-        public IActionResult CheckBodyType(string bodyType) {
-            return Json(_context.BodyTypes.FirstOrDefault(bt => bt.Name == bodyType) == null);
+        public IActionResult CheckBodyType(string name) {
+            return Json(_context.BodyTypes.FirstOrDefault(bt => bt.Name == name) == null);
         }
 
         #endregion
@@ -556,8 +572,8 @@ namespace CourseProject.Areas.Admin.Controllers
         }
 
         [AcceptVerbs("Get", "Post")]
-        public IActionResult CheckFuelType(string fuelType) {
-            return Json(_context.FuelTypes.FirstOrDefault(ft => ft.Name == fuelType) == null);
+        public IActionResult CheckFuelType(string name) {
+            return Json(_context.FuelTypes.FirstOrDefault(ft => ft.Name == name) == null);
         }
 
         #endregion
@@ -626,8 +642,8 @@ namespace CourseProject.Areas.Admin.Controllers
         }
 
         [AcceptVerbs("Get", "Post")]
-        public IActionResult CheckTransmissionType(string transmissionType) {
-            return Json(_context.TransmissionTypes.FirstOrDefault(tt => tt.Name == transmissionType) == null);
+        public IActionResult CheckTransmissionType(string name) {
+            return Json(_context.TransmissionTypes.FirstOrDefault(tt => tt.Name == name) == null);
         }
 
         #endregion

@@ -263,5 +263,10 @@ namespace CourseProject.Areas.Admin.Controllers
             return RedirectToAction(nameof(Brands));
         }
 
+        [AcceptVerbs("Get", "Post")]
+        public IActionResult CheckBrand(string name) {
+            return Json(_context.Brands.FirstOrDefault(b => b.Name == name) == null);
+        }
+
     }
 }
