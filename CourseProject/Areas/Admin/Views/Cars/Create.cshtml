@@ -52,7 +52,7 @@
                 @if (ViewBag.Colors != null) {
                     <datalist id="colors">
                         @foreach (var color in ViewBag.Colors) {
-                            <option>@(color.Substring(1, color.Length - 2))</option> 
+                            <option>@color</option> 
                         }
                     </datalist>
                 }

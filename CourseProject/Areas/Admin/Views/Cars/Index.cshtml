@@ -102,12 +102,25 @@
                     }
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    @if (item.State == Car.CarState.New) {
-                        <a asp-controller="SupplyRequests" asp-action="Create" asp-route-carId="@item.Id">Create supply request</a>
-                    }
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton-@item.Id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Actions
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-@item.Id">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="dropdown-item">Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="dropdown-item">Details</a>
+                            @if (item.State == Car.CarState.New) {
+                                <a asp-controller="SupplyRequests" asp-action="Create" asp-route-carId="@item.Id" class="dropdown-item">Create supply request</a>
+                            }
+                            <div class="dropdown-divider"></div>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="dropdown-item">Delete</a>
+                        </div>
+                    </div>
+                    
+                    
+
+                    
                 </td>
             </tr>
         }

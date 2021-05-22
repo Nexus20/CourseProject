@@ -43,7 +43,7 @@
                         <dd class="col-sm-8">
                             @Html.DisplayFor(model => item.State)
                         </dd>
-                        @if (item.Mileage != 0) {
+                        @if (item.State == Car.CarState.SecondHand) {
                             <dt class="col-sm-4">
                                 @Html.DisplayNameFor(model => item.Mileage)
                             </dt>

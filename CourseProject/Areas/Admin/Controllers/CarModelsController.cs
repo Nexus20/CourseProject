@@ -80,6 +80,9 @@ namespace CourseProject.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,BrandId,ParentId")] CarModel carModel)
         {
+            if (_context.CarModels.FirstOrDefault(cm => cm.Name == carModel.Name) != null) {
+                ModelState.AddModelError("Name", "This model already exists");
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(carModel);
@@ -201,11 +204,6 @@ namespace CourseProject.Areas.Admin.Controllers
         private bool CarModelExists(int id)
         {
             return _context.CarModels.Any(e => e.Id == id);
-        }
-
-        [AcceptVerbs("Get", "Post")]
-        public IActionResult CheckModel(string name) {
-            return Json(_context.CarModels.FirstOrDefault(cm => cm.Name == name) == null);
         }
 
         public async Task<IActionResult> Brands() {

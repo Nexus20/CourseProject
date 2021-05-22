@@ -13,7 +13,6 @@ namespace CourseProject.Models {
 
         [Required]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "String length must be between 3 and 30 characters")]
-        [Remote(action: "CheckModel", controller: "CarModels", areaName: "Admin", ErrorMessage = "This model already exists")]
         public string Name { get; set; }
 
         [Required]
