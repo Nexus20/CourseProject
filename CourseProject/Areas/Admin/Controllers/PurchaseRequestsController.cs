@@ -9,6 +9,7 @@ using CourseProject.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,11 +39,12 @@ namespace CourseProject.Areas.Admin.Controllers {
 
             var requests = _context.PurchaseRequests
                 .Include(pr => pr.Car)
-                .ThenInclude(c => c.Model)
-                .ThenInclude(cm => cm.Brand)
+                    .ThenInclude(c => c.Model)
+                        .ThenInclude(cm => cm.Brand)
                 .Include(pr => pr.Car)
-                .ThenInclude(c => c.Model)
-                .ThenInclude(cm => cm.Parent)
+                    .ThenInclude(c => c.Model)
+                        .ThenInclude(cm => cm.Parent)
+                .Include(pr => pr.Manager)
                 .AsNoTracking();
 
 
@@ -97,14 +99,21 @@ namespace CourseProject.Areas.Admin.Controllers {
 
             ViewBag.QueryString = purchaseRequestSearch.CreateRequest();
 
-            ViewBag.ManagerId = _userManager.GetUserId(User);
+            var managerId = _userManager.GetUserId(User);
 
             ViewBag.RequestStates = Enum.GetValues(typeof(PurchaseRequest.RequestState)).Cast<int>().ToDictionary(key => key, key => Enum.GetName(typeof(PurchaseRequest.RequestState), key));
 
-            
-            ViewBag.UserId = _userManager.GetUserId(User);
-            
-            
+            if (User.IsInRole("admin")) {
+                var allManagers = await _userManager.GetUsersInRoleAsync("manager");
+                allManagers.Remove(await _userManager.GetUserAsync(User));
+                ViewBag.ManagersList = allManagers;
+            }
+            else {
+                ViewBag.ManagersList = null;
+            }
+
+            ViewBag.ManagerId = managerId;
+
             return View(await requests.ToListAsync());
         }
 
@@ -190,7 +199,7 @@ namespace CourseProject.Areas.Admin.Controllers {
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult AssignManagerToRequest(int? requestId) {
+        public IActionResult AssignManagerToRequest(int? requestId, string managerId) {
             if (requestId == null) {
                 return NotFound();
             }
@@ -201,7 +210,16 @@ namespace CourseProject.Areas.Admin.Controllers {
                 return NotFound();
             }
 
-            request.ManagerId = _userManager.GetUserId(User);
+            if (User.IsInRole("admin")) {
+                if (string.IsNullOrEmpty(managerId)) {
+                    return NotFound();
+                }
+                request.ManagerId = managerId;
+            }
+            else {
+                request.ManagerId = _userManager.GetUserId(User);
+            }
+
             request.State = PurchaseRequest.RequestState.Processing;
             _context.Update(request);
             _context.SaveChanges();

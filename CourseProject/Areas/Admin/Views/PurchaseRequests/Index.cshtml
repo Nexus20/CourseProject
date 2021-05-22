@@ -31,7 +31,7 @@
         <label for="input-owner-all" class="control-label">All: </label>
         <input id="input-owner-all" type="radio" name="owner" class="" value="" checked>
         <label for="input-owner-all" class="control-label">My requests: </label>
-        <input id="input-owner-@ViewBag.UserId" type="radio" name="owner" class="" value="@ViewBag.UserId">
+        <input id="input-owner-@ViewBag.ManagerId" type="radio" name="owner" class="" value="@ViewBag.ManagerId">
     </div>
     <div class="form-group">
         <div class="form-check form-check-inline">
@@ -91,6 +91,9 @@
                 @Html.DisplayNameFor(model => model.CarAvailability)
             </td>
             <th>
+                @Html.DisplayNameFor(model => model.Manager)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.State)
             </th>
             <th></th>
@@ -121,28 +124,33 @@
                 @(item.CarAvailability ? "Yes" : "No")
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Manager.UserName)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.State)
             </td>
             <td>
-                
+
                 @if (item.State == PurchaseRequest.RequestState.New) {
-                    <button class="btn btn-primary btn-assign" data-id="@item.Id">Assign myself</button>
+                    <button class="btn btn-primary btn-assign" data-request="@item.Id">Assign myself</button>
                 }
-                
+
                 @if (!string.IsNullOrEmpty(item.ManagerId) && ViewBag.ManagerId == item.ManagerId) {
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                 }
 
-                @*<div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton-@item.Id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        @Html.DisplayFor(modelItem => item.State)
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-@item.Id">
-                        @foreach (var elem in ViewBag.PurchaseRequestStates) {
-                            <button class="dropdown-item" data-id="@item.Id" data-state="@elem.Key">@elem.Value</button>
-                        }
+                @if (User.IsInRole("admin") && ViewBag.ManagersList != null && (item.State == PurchaseRequest.RequestState.New || item.State == PurchaseRequest.RequestState.Processing)) {
+                    <div class="dropdown dropdown-managers">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton-@item.Id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Assign to
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-@item.Id">
+                            @foreach (var manager in ViewBag.ManagersList) {
+                                <button class="dropdown-item" data-request="@item.Id" data-manager="@manager.Id">@manager.UserName</button>
+                            }
+                        </div>
                     </div>
-                </div>*@
+                }
             </td>
         </tr>
         }
@@ -158,19 +166,23 @@
                 (e) => {
                     console.log(e.target);
 
-                    const requestId = e.target.dataset['id'];
+                    const requestId = e.target.dataset['request'];
 
                     $.ajax({
                         url: '@Url.Action("AssignManagerToRequest", "PurchaseRequests")',
-                        data: {requestId: requestId}
+                        data: { requestId: requestId }
                     }).done((data) => {
-                        console.log(data); 
+                        console.log(data);
                         $(e.target).text('Assigned');
                         $(e.target).before(`<a href="@Url.Action("Details")?id=${requestId}">Details</a>`);
                         $(e.target.parentNode).prev().text('Processing');
                         $(e.target).remove();
                     });
                 });
+
+
+            
+
 
 
             @*$('#requests-table').on('click',
@@ -191,4 +203,28 @@
                 });*@
         });
     </script>
+    @if (User.IsInRole("admin") && ViewBag.ManagersList != null) {
+        <script type="text/javascript">
+            $(document).ready(() => {
+                $('.dropdown-managers').on('click',
+                    '.dropdown-item',
+                    (e) => {
+                        console.log(e.target.dataset);
+                        const requestId = e.target.dataset['request'];
+                        const managerId = encodeURIComponent(e.target.dataset['manager']);
+                        console.log(requestId, managerId);
+                        $.ajax({
+                            url: '@Url.Action("AssignManagerToRequest", "PurchaseRequests")',
+                            data: {
+                                requestId: requestId,
+                                managerId: managerId
+                            }
+                        }).done((data) => {
+                            console.log(data);
+                        });
+                    });
+            });
+            
+        </script>
+    }
 }
