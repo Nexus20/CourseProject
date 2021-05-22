@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using CourseProject.Data;
 using CourseProject.Models;
@@ -110,15 +111,16 @@ namespace CourseProject.Areas.Admin.Controllers {
 
             ViewBag.RequestStates = Enum.GetValues(typeof(PurchaseRequest.RequestState)).Cast<int>().ToDictionary(key => key, key => Enum.GetName(typeof(PurchaseRequest.RequestState), key));
 
+            var allManagers = new List<User>();
+
             if (User.IsInRole("admin")) {
-                var allManagers = await _userManager.GetUsersInRoleAsync("manager");
-                //allManagers.Remove(await _userManager.GetUserAsync(User));
-                ViewBag.ManagersList = allManagers;
+                allManagers.AddRange(await _userManager.GetUsersInRoleAsync("manager"));
             }
             else {
-                //ViewBag.ManagersList = null;
-                ViewBag.ManagersList = await _userManager.GetUserAsync(User);
+                allManagers.Add(await _userManager.GetUserAsync(User));
             }
+
+            ViewBag.ManagersList = allManagers;
 
             ViewBag.ManagerId = managerId;
 
