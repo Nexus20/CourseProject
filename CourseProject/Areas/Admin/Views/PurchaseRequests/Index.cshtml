@@ -1,5 +1,4 @@
-﻿@using System.Web.Mvc.Ajax
-@model IEnumerable<PurchaseRequest>
+﻿@model IEnumerable<PurchaseRequest>
 
 @{
     ViewData["Title"] = "Purchase requests";
@@ -7,17 +6,76 @@
 
 <h1>Requests</h1>
 
+<form asp-action="Index" method="get">
+    <div class="form-group">
+        <label for="input-id" class="control-label">Id: </label>
+        <input id="input-id" type="text" name="id" class="form-control" value="@ViewBag.RequestId">
+    </div>
+    <div class="form-group">
+        <label for="input-surname" class="control-label">Surname: </label>
+        <input id="input-surname" type="text" name="surname" class="form-control" value="@ViewBag.Surname">
+    </div>
+    <div class="form-group">
+        <label for="input-email" class="control-label">Email: </label>
+        <input id="input-email" type="email" name="email" class="form-control" value="@ViewBag.Email">
+    </div>
+    <div class="form-group">
+        <label for="input-car-available-all" class="control-label">All: </label>
+        <input id="input-car-available-all" type="radio" name="carAvailable" class="" value="0" checked>
+        <label for="input-car-available-yes" class="control-label">Yes: </label>
+        <input id="input-car-available-yes" type="radio" name="carAvailable" class="" value="1">
+        <label for="input-car-available-no" class="control-label">No: </label>
+        <input id="input-car-available-no" type="radio" name="carAvailable" class="" value="2">
+    </div>
+    <div class="form-group">
+        <label for="input-owner-all" class="control-label">All: </label>
+        <input id="input-owner-all" type="radio" name="owner" class="" value="" checked>
+        <label for="input-owner-all" class="control-label">My requests: </label>
+        <input id="input-owner-@ViewBag.UserId" type="radio" name="owner" class="" value="@ViewBag.UserId">
+    </div>
+    <div class="form-group">
+        <div class="form-check form-check-inline">
+            State: &nbsp;
+            <br>
+            @foreach (var requestState in ViewBag.RequestStates) {
+
+                string state = "";
+
+                if (ViewBag.CheckedRequestStates != null) {
+                    foreach (var checkedRequestState in ViewBag.CheckedRequestStates) {
+                        if (checkedRequestState == requestState.Key.ToString()) {
+                            state = "checked";
+                        }
+                    }
+                }
+
+                <input class="form-check-input" id="@requestState.Value-checkbox" type="checkbox" value="@requestState.Key" name="requestStates" @state>
+                <label class="form-check-label" for="@requestState.Value-checkbox">@requestState.Value</label> @Html.Raw(" &nbsp; ")
+            }
+        </div>
+    </div>
+    <input type="hidden" name="newSearch" value="1">
+    <div class="form-group">
+        <input type="submit" value="Search" class="btn btn-primary btn-lg" />
+    </div>
+</form>
+
+
 <table class="table" id="requests-table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Id)
+                @*@Html.DisplayNameFor(model => model.Id)*@
+
+                <a href="@Url.Action("Index")@ViewBag.QueryString@("sortOrder=" + ViewBag.IdSort)">Id</a>
+
             </th>
             <th>
                 Car
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FullName)
+                @*@Html.DisplayNameFor(model => model.FullName)*@
+                <a href="@Url.Action("Index")@ViewBag.QueryString@("sortOrder=" + ViewBag.NameSort)">Full name</a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Email)
@@ -26,7 +84,8 @@
                 @Html.DisplayNameFor(model => model.Phone)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ApplicationDate)
+                @*@Html.DisplayNameFor(model => model.ApplicationDate)*@
+                <a href="@Url.Action("Index")@ViewBag.QueryString@("sortOrder=" + ViewBag.AppDateSort)">Application date</a>
             </th>
             <td>
                 @Html.DisplayNameFor(model => model.CarAvailability)

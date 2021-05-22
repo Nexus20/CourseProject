@@ -29,9 +29,9 @@ namespace CourseProject.Areas.Admin.Controllers
         }
 
         // GET: Admin/Cars
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(CarSearchViewModel carSearch, int? newSearch, int? page)
         {
-            var carContext = _context.Cars
+            var cars = _context.Cars
                 .Include(c => c.BodyType)
                 .Include(c => c.FuelType)
                 .Include(c => c.Model)
@@ -43,9 +43,105 @@ namespace CourseProject.Areas.Admin.Controllers
                 .AsNoTracking();
 
 
-            //ViewBag.ImagesDirectory = $"{_appEnvironment.WebRootPath}/img/cars/";
+            if (newSearch != null) {
+                page = 1;
+            }
 
-            return View(await carContext.ToListAsync());
+            if (carSearch.BrandId != null) {
+                cars = cars.Where(c => c.Model.BrandId == carSearch.BrandId);
+            }
+
+            if (carSearch.ModelId != null) {
+                cars = cars.Where(c => c.ModelId == carSearch.ModelId);
+            }
+
+            if (carSearch.FuelTypes != null && carSearch.FuelTypes.Length > 0) {
+                IQueryable<Car> cars2 = cars.Where(c => c.FuelTypeId == carSearch.FuelTypes[0]);
+                for (var i = 1; i < carSearch.FuelTypes.Length; i++) {
+                    var i1 = i;
+                    cars2 = cars2.Concat(cars.Where(c => c.FuelTypeId == carSearch.FuelTypes[i1]));
+                }
+
+                cars = cars2;
+
+                ViewBag.CheckedFuelTypes = Request.Query["fuelTypes"].ToArray();
+            }
+            else {
+                ViewBag.CheckedFuelTypes = null;
+            }
+
+            if (carSearch.BodyTypes != null && carSearch.BodyTypes.Length > 0) {
+
+                IQueryable<Car> cars2 = cars.Where(c => c.BodyTypeId == carSearch.BodyTypes[0]);
+                for (var i = 1; i < carSearch.BodyTypes.Length; i++) {
+                    var i1 = i;
+                    cars2 = cars2.Concat(cars.Where(c => c.BodyTypeId == carSearch.BodyTypes[i1]));
+                }
+
+                cars = cars2;
+
+                ViewBag.CheckedBodyTypes = Request.Query["bodyTypes"].ToArray();
+            }
+            else {
+                ViewBag.CheckedBodyTypes = null;
+            }
+
+            if (carSearch.TransmissionTypes != null && carSearch.TransmissionTypes.Length > 0) {
+
+                IQueryable<Car> cars2 = cars.Where(c => c.TransmissionTypeId == carSearch.TransmissionTypes[0]);
+                for (var i = 1; i < carSearch.TransmissionTypes.Length; i++) {
+                    var i1 = i;
+                    cars2 = cars2.Concat(cars.Where(c => c.TransmissionTypeId == carSearch.TransmissionTypes[i1]));
+                }
+
+                cars = cars2;
+
+                ViewBag.CheckedTransmissionTypes = Request.Query["transmissionTypes"].ToArray();
+            }
+            else {
+                ViewBag.CheckedTransmissionTypes = null;
+            }
+
+            if (carSearch.CarStates != null && carSearch.CarStates.Length > 0) {
+
+                IQueryable<Car> cars2 = cars.Where(c => c.State == (Car.CarState)carSearch.CarStates[0]);
+                for (var i = 1; i < carSearch.CarStates.Length; i++) {
+                    var i1 = i;
+                    cars2 = cars2.Concat(cars.Where(c => c.State == (Car.CarState)carSearch.CarStates[i1]));
+                }
+
+                cars = cars2;
+
+                ViewBag.CheckedCarStates = Request.Query["carStates"].ToArray();
+            }
+            else {
+                ViewBag.CheckedTransmissionTypes = null;
+            }
+
+            if ((carSearch.PriceFrom != null && carSearch.PriceTo != null)
+                && (carSearch.PriceFrom.Value <= carSearch.PriceTo.Value)
+                && (carSearch.PriceFrom.Value >= 0 && carSearch.PriceTo.Value >= 0)) {
+
+                cars = cars.Where(c => c.Price >= carSearch.PriceFrom && c.Price <= carSearch.PriceTo);
+            }
+
+            //ViewBag.QueryString = queryStringBuilder.ToString();
+            ViewBag.CarSearchModel = carSearch;
+            ViewBag.QueryString = carSearch.CreateRequest();
+            ViewBag.TransmissionTypes = _context.TransmissionTypes;
+            ViewBag.BodyTypes = _context.BodyTypes;
+            ViewBag.FuelTypes = _context.FuelTypes;
+            ViewBag.Brands = new SelectList(_context.Brands, "Id", "Name", carSearch.BrandId);
+
+            ViewBag.CarStates = Enum.GetValues(typeof(Car.CarState)).Cast<Car.CarState>()
+                .ToDictionary(t => (int)t, t => t.ToString());
+
+            ViewBag.CarModels = carSearch.BrandId != null ? new SelectList(_context.CarModels.Where(cm => cm.BrandId == carSearch.BrandId), "Id", "Name", carSearch.ModelId) : null;
+
+
+            int pageSize = 5;
+
+            return View(await PaginatedList<Car>.CreateAsync(cars.AsNoTracking(), page ?? 1, pageSize));
         }
 
         // GET: Admin/Cars/Details/5

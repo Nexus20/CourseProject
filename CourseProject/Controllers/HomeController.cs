@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CourseProject.Data;
 using CourseProject.Extensions;
+using CourseProject.Models.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -35,9 +36,9 @@ namespace CourseProject.Controllers {
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int? brandId, int? modelId, int[] fuelTypes, int[] bodyTypes, int[] transmissionTypes, int[] carStates, int? priceFrom, int? priceTo, int? newSearch, int? page) {
+        public async Task<IActionResult> Index(CarSearchViewModel carSearch, int? newSearch, int? page) {
 
-            StringBuilder queryStringBuilder = new StringBuilder("?");
+            //StringBuilder queryStringBuilder = new StringBuilder("?");
 
             IQueryable<Car> cars = _context.Cars
                 .Include(c => c.Model)
@@ -56,34 +57,22 @@ namespace CourseProject.Controllers {
                 page = 1;
             }
 
-
-            if (brandId != null) {
-                cars = cars.Where(c => c.Model.BrandId == brandId);
-                ViewData["brandId"] = brandId;
-                queryStringBuilder.Append($"brandId={brandId}&");
+            if (carSearch.BrandId != null) {
+                cars = cars.Where(c => c.Model.BrandId == carSearch.BrandId);
             }
-            
-            if (modelId != null) {
-                cars = cars.Where(c => c.ModelId == modelId);
-                queryStringBuilder.Append($"modelId={modelId}&");
-            }
-            
 
-            if (fuelTypes.Length > 0) {
-                IQueryable<Car> cars2 = cars.Where(c => c.FuelTypeId == fuelTypes[0]);
-                for (var i = 1; i < fuelTypes.Length; i++) {
+            if (carSearch.ModelId != null) {
+                cars = cars.Where(c => c.ModelId == carSearch.ModelId);
+            }
+
+            if (carSearch.FuelTypes != null && carSearch.FuelTypes.Length > 0) {
+                IQueryable<Car> cars2 = cars.Where(c => c.FuelTypeId == carSearch.FuelTypes[0]);
+                for (var i = 1; i < carSearch.FuelTypes.Length; i++) {
                     var i1 = i;
-                    cars2 = cars2.Concat(cars.Where(c => c.FuelTypeId == fuelTypes[i1]));
+                    cars2 = cars2.Concat(cars.Where(c => c.FuelTypeId == carSearch.FuelTypes[i1]));
                 }
 
                 cars = cars2;
-
-                var sb = new StringBuilder();
-                foreach (var item in Request.Query["fuelTypes"].ToArray()) {
-                    sb.Append($"fuelTypes={item}&");
-                }
-
-                queryStringBuilder.Append(sb);
 
                 ViewBag.CheckedFuelTypes = Request.Query["fuelTypes"].ToArray();
             }
@@ -91,22 +80,15 @@ namespace CourseProject.Controllers {
                 ViewBag.CheckedFuelTypes = null;
             }
 
-            if (bodyTypes.Length > 0) {
+            if (carSearch.BodyTypes != null && carSearch.BodyTypes.Length > 0) {
 
-                IQueryable<Car> cars2 = cars.Where(c => c.BodyTypeId == bodyTypes[0]);
-                for (var i = 1; i < bodyTypes.Length; i++) {
+                IQueryable<Car> cars2 = cars.Where(c => c.BodyTypeId == carSearch.BodyTypes[0]);
+                for (var i = 1; i < carSearch.BodyTypes.Length; i++) {
                     var i1 = i;
-                    cars2 = cars2.Concat(cars.Where(c => c.BodyTypeId == bodyTypes[i1]));
+                    cars2 = cars2.Concat(cars.Where(c => c.BodyTypeId == carSearch.BodyTypes[i1]));
                 }
 
                 cars = cars2;
-
-                var sb = new StringBuilder();
-                foreach (var item in Request.Query["bodyTypes"].ToArray()) {
-                    sb.Append($"bodyTypes={item}&");
-                }
-
-                queryStringBuilder.Append(sb);
 
                 ViewBag.CheckedBodyTypes = Request.Query["bodyTypes"].ToArray();
             }
@@ -114,22 +96,15 @@ namespace CourseProject.Controllers {
                 ViewBag.CheckedBodyTypes = null;
             }
 
-            if (transmissionTypes.Length > 0) {
+            if (carSearch.TransmissionTypes != null && carSearch.TransmissionTypes.Length > 0) {
 
-                IQueryable<Car> cars2 = cars.Where(c => c.TransmissionTypeId == transmissionTypes[0]);
-                for (var i = 1; i < transmissionTypes.Length; i++) {
+                IQueryable<Car> cars2 = cars.Where(c => c.TransmissionTypeId == carSearch.TransmissionTypes[0]);
+                for (var i = 1; i < carSearch.TransmissionTypes.Length; i++) {
                     var i1 = i;
-                    cars2 = cars2.Concat(cars.Where(c => c.TransmissionTypeId == transmissionTypes[i1]));
+                    cars2 = cars2.Concat(cars.Where(c => c.TransmissionTypeId == carSearch.TransmissionTypes[i1]));
                 }
 
                 cars = cars2;
-
-                var sb = new StringBuilder();
-                foreach (var item in Request.Query["transmissionTypes"].ToArray()) {
-                    sb.Append($"transmissionTypes={item}&");
-                }
-
-                queryStringBuilder.Append(sb);
 
                 ViewBag.CheckedTransmissionTypes = Request.Query["transmissionTypes"].ToArray();
             }
@@ -137,22 +112,15 @@ namespace CourseProject.Controllers {
                 ViewBag.CheckedTransmissionTypes = null;
             }
 
-            if (carStates.Length > 0) {
+            if (carSearch.CarStates != null && carSearch.CarStates.Length > 0) {
 
-                IQueryable<Car> cars2 = cars.Where(c => c.State == (Car.CarState)carStates[0]);
-                for (var i = 1; i < carStates.Length; i++) {
+                IQueryable<Car> cars2 = cars.Where(c => c.State == (Car.CarState)carSearch.CarStates[0]);
+                for (var i = 1; i < carSearch.CarStates.Length; i++) {
                     var i1 = i;
-                    cars2 = cars2.Concat(cars.Where(c => c.State == (Car.CarState)carStates[i1]));
+                    cars2 = cars2.Concat(cars.Where(c => c.State == (Car.CarState)carSearch.CarStates[i1]));
                 }
 
                 cars = cars2;
-
-                var sb = new StringBuilder();
-                foreach (var item in Request.Query["carStates"].ToArray()) {
-                    sb.Append($"carStates={item}&");
-                }
-
-                queryStringBuilder.Append(sb);
 
                 ViewBag.CheckedCarStates = Request.Query["carStates"].ToArray();
             }
@@ -160,27 +128,25 @@ namespace CourseProject.Controllers {
                 ViewBag.CheckedTransmissionTypes = null;
             }
 
-            if ((priceFrom != null && priceTo != null) 
-                && (priceFrom.Value <= priceTo.Value)
-                && (priceFrom.Value >=0 && priceTo.Value >= 0)) {
-                
-                cars = cars.Where(c => c.Price >= priceFrom && c.Price <= priceTo);
-                queryStringBuilder.Append($"priceFrom={priceFrom}&priceTo={priceTo}&");
-                
+            if ((carSearch.PriceFrom != null && carSearch.PriceTo != null)
+                && (carSearch.PriceFrom.Value <= carSearch.PriceTo.Value)
+                && (carSearch.PriceFrom.Value >= 0 && carSearch.PriceTo.Value >= 0)) {
+
+                cars = cars.Where(c => c.Price >= carSearch.PriceFrom && c.Price <= carSearch.PriceTo);
             }
 
-            ViewBag.QueryString = queryStringBuilder.ToString();
+            //ViewBag.QueryString = queryStringBuilder.ToString();
+            ViewBag.CarSearchModel = carSearch;
+            ViewBag.QueryString = carSearch.CreateRequest();
             ViewBag.TransmissionTypes = _context.TransmissionTypes;
             ViewBag.BodyTypes = _context.BodyTypes;
             ViewBag.FuelTypes = _context.FuelTypes;
-            ViewBag.Brands = new SelectList(_context.Brands, "Id", "Name", brandId);
+            ViewBag.Brands = new SelectList(_context.Brands, "Id", "Name", carSearch.BrandId);
 
             ViewBag.CarStates = Enum.GetValues(typeof(Car.CarState)).Cast<Car.CarState>()
                 .ToDictionary(t => (int) t, t => t.ToString());
 
-            ViewBag.CarModels = brandId != null ? new SelectList(_context.CarModels.Where(cm => cm.BrandId == brandId), "Id", "Name", modelId) : null;
-
-            int pageSize = 5;
+            ViewBag.CarModels = carSearch.BrandId != null ? new SelectList(_context.CarModels.Where(cm => cm.BrandId == carSearch.BrandId), "Id", "Name", carSearch.ModelId) : null;
 
             ViewBag.ComparedCars = _carsToCompare.Keys.ToList();
 
@@ -188,6 +154,8 @@ namespace CourseProject.Controllers {
                 var userId = _userManager.GetUserId(User);
                 ViewBag.FeaturedCars = _context.FeaturedCars.Where(fc => fc.UserId == userId).Select(fc => fc.CarId).ToList();
             }
+
+            int pageSize = 5;
 
             return View(await PaginatedList<Car>.CreateAsync(cars.AsNoTracking(), page ?? 1, pageSize));
         }

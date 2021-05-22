@@ -1,111 +1,123 @@
-﻿@using System.IO
-@model IEnumerable<CourseProject.Models.Car>
+﻿@using CourseProject.Models.ViewModels
+@model PaginatedList<Car>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Cars list";
 }
 
-<h1>Index</h1>
+<h1>Cars</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+
+@{await Html.RenderPartialAsync("_CarSearchForm", (CarSearchViewModel)ViewBag.CarSearchModel);}
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Year)
+                @Html.DisplayNameFor(model => model[0].Year)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                @Html.DisplayNameFor(model => model[0].Price)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.State)
+                @Html.DisplayNameFor(model => model[0].State)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Model)
+                @Html.DisplayNameFor(model => model[0].Model)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EngineVolume)
+                @Html.DisplayNameFor(model => model[0].EngineVolume)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Mileage)
+                @Html.DisplayNameFor(model => model[0].Mileage)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FuelType)
+                @Html.DisplayNameFor(model => model[0].FuelType)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BodyType)
+                @Html.DisplayNameFor(model => model[0].BodyType)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TransmissionType)
+                @Html.DisplayNameFor(model => model[0].TransmissionType)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Color)
+                @Html.DisplayNameFor(model => model[0].Color)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Count)
+                @Html.DisplayNameFor(model => model[0].Count)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Presence)
+                @Html.DisplayNameFor(model => model[0].Presence)
             </th>
             <th>Image</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Year)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.State)
-            </td>
-            <td>
-                @item.Model.Brand.Name @item.Model.Parent?.Name @item.Model.Name
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EngineVolume)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Mileage)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FuelType.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BodyType.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TransmissionType.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Color)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Count)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Presence)
-            </td>
-            <td>
-                @if (item.CarImages.Count > 0) {
-                    <img src="@item.CarImages.First().Path" alt="" style="width: 100px">
-                }
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                @if(item.State == Car.CarState.New) {
-                    <a asp-controller="SupplyRequests" asp-action="Create" asp-route-carId="@item.Id">Create supply request</a>
-                }
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Year)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.State)
+                </td>
+                <td>
+                    @item.Model.Brand.Name @item.Model.Parent?.Name @item.Model.Name
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EngineVolume)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mileage)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FuelType.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BodyType.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TransmissionType.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Color)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Count)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Presence)
+                </td>
+                <td>
+                    @if (item.CarImages.Count > 0) {
+                        <img src="@item.CarImages.First().Path" alt="" style="width: 100px">
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    @if (item.State == Car.CarState.New) {
+                        <a asp-controller="SupplyRequests" asp-action="Create" asp-route-carId="@item.Id">Create supply request</a>
+                    }
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a href="@Url.Action("Index")@ViewBag.QueryString@("page=" + (Model.PageIndex - 1))" class="btn btn-primary @prevDisabled">Prev</a>
+<a href="@Url.Action("Index")@ViewBag.QueryString@("page=" + (Model.PageIndex + 1))" class="btn btn-primary @nextDisabled">Next</a>

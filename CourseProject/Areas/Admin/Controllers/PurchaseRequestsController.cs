@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CourseProject.Data;
 using CourseProject.Models;
+using CourseProject.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -29,7 +30,11 @@ namespace CourseProject.Areas.Admin.Controllers {
             _roleManager = roleManager;
         }
 
-        public async Task<IActionResult> Index() {
+        public async Task<IActionResult> Index(PurchaseRequestSearchViewModel purchaseRequestSearch, string sortOrder) {
+
+            ViewBag.IdSort = string.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
+            ViewBag.NameSort = sortOrder == "name_asc" ? "name_desc" : "name_asc";
+            ViewBag.AppDateSort = sortOrder == "app_date_asc" ? "app_date_desc" : "app_date_asc";
 
             var requests = _context.PurchaseRequests
                 .Include(pr => pr.Car)
@@ -40,9 +45,65 @@ namespace CourseProject.Areas.Admin.Controllers {
                 .ThenInclude(cm => cm.Parent)
                 .AsNoTracking();
 
+
+            if (purchaseRequestSearch.Id != null) {
+                requests = requests.Where(pr => pr.Id == purchaseRequestSearch.Id);
+            }
+            ViewBag.RequestId = purchaseRequestSearch.Id;
+
+            if (purchaseRequestSearch.CarAvailable != null && purchaseRequestSearch.CarAvailable.Value != 0) {
+                requests = requests.Where(pr => pr.CarAvailability == (purchaseRequestSearch.CarAvailable == 1));
+            }
+            ViewBag.CarAvailable = purchaseRequestSearch.CarAvailable;
+
+            if (!string.IsNullOrEmpty(purchaseRequestSearch.Owner)) {
+                requests = requests.Where(pr => pr.ManagerId == purchaseRequestSearch.Owner);
+            }
+
+            if (!string.IsNullOrEmpty(purchaseRequestSearch.Surname)) {
+                requests = requests.Where(pr => pr.Surname.Contains(purchaseRequestSearch.Surname));
+            }
+            ViewBag.Surname = purchaseRequestSearch.Surname;
+
+            if (!string.IsNullOrEmpty(purchaseRequestSearch.Email)) {
+                requests = requests.Where(pr => pr.Email == purchaseRequestSearch.Email);
+            }
+            ViewBag.Email = purchaseRequestSearch.Email;
+
+            if (purchaseRequestSearch.RequestStates != null && purchaseRequestSearch.RequestStates.Length > 0) {
+
+                IQueryable<PurchaseRequest> requests2 = requests.Where(pr => pr.State == (PurchaseRequest.RequestState)purchaseRequestSearch.RequestStates[0]);
+                for (var i = 1; i < purchaseRequestSearch.RequestStates.Length; i++) {
+                    var i1 = i;
+                    requests2 = requests2.Concat(requests.Where(pr => pr.State == (PurchaseRequest.RequestState)purchaseRequestSearch.RequestStates[i1]));
+                }
+
+                requests = requests2;
+
+                ViewBag.CheckedRequestStates = Request.Query["requestStates"].ToArray();
+            }
+            else {
+                ViewBag.CheckedRequestStates = null;
+            }
+
+            requests = sortOrder switch {
+                "id_desc" => requests.OrderByDescending(r => r.Id),
+                "name_asc" => requests.OrderBy(r => r.Surname),
+                "name_desc" => requests.OrderByDescending(r => r.Surname),
+                "app_date_asc" => requests.OrderBy(r => r.ApplicationDate),
+                "app_date_desc" => requests.OrderByDescending(r => r.ApplicationDate),
+                _ => requests.OrderBy(r => r.Id)
+            };
+
+            ViewBag.QueryString = purchaseRequestSearch.CreateRequest();
+
             ViewBag.ManagerId = _userManager.GetUserId(User);
 
-            ViewBag.PurchaseRequestStates = Enum.GetValues(typeof(PurchaseRequest.RequestState)).Cast<int>().ToDictionary(key => key, key => Enum.GetName(typeof(PurchaseRequest.RequestState), key));
+            ViewBag.RequestStates = Enum.GetValues(typeof(PurchaseRequest.RequestState)).Cast<int>().ToDictionary(key => key, key => Enum.GetName(typeof(PurchaseRequest.RequestState), key));
+
+            
+            ViewBag.UserId = _userManager.GetUserId(User);
+            
             
             return View(await requests.ToListAsync());
         }
