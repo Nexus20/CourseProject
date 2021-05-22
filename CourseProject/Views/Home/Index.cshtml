@@ -1,11 +1,11 @@
-﻿@model PaginatedList<Car>
+﻿@using CourseProject.Models.ViewModels
+@model PaginatedList<Car>
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
 @if (User.Identity.IsAuthenticated) {
@@ -16,132 +16,11 @@
     </form>
 }
 else {
-    <a asp-controller="Account" asp-action="Login">Вход</a>
-    <a asp-controller="Account" asp-action="Register">Регистрация</a>
+    <a asp-controller="Account" asp-action="Login">Login</a>
+    <a asp-controller="Account" asp-action="Register">Register</a>
 }
 
-<form asp-action="Index" method="get">
-
-    <div class="form-row">
-        <div class="form-group col-sm-6">
-            <label for="brands-list">Brands:</label>
-            <select asp-items="ViewBag.Brands" name="brandId" id="brands-list" class="form-control">
-                <option value=""></option>
-            </select>
-        </div>
-
-        <div class="form-group col-sm-6">
-            <label for="models-list">Models:</label>
-            <select name="modelId" id="models-list" asp-items="ViewBag.CarModels" class="form-control">
-                <option value=""></option>
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="form-check form-check-inline">
-            Fuel type: &nbsp;
-            @foreach (var fuelType in ViewBag.FuelTypes) {
-
-                string state = "";
-
-                if (ViewBag.CheckedFuelTypes != null) {
-                    foreach (var checkedFuelType in ViewBag.CheckedFuelTypes) {
-                        if (checkedFuelType == fuelType.Id.ToString()) {
-                            state = "checked";
-                        }
-                    }
-                }
-
-                <input class="form-check-input" id="@fuelType.Name-checkbox" type="checkbox" value="@fuelType.Id" name="fuelTypes" @state>
-                <label class="form-check-label" for="@fuelType.Name-checkbox">@fuelType.Name</label> @Html.Raw(" &nbsp; ")
-            }
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="form-check form-check-inline">
-            Body type: &nbsp;
-            <br>
-            @foreach (var bodyType in ViewBag.BodyTypes) {
-
-                string state = "";
-
-                if (ViewBag.CheckedBodyTypes != null) {
-                    foreach (var checkedBodyType in ViewBag.CheckedBodyTypes) {
-                        if (checkedBodyType == bodyType.Id.ToString()) {
-                            state = "checked";
-                        }
-                    }
-                }
-
-                <input class="form-check-input" id="@bodyType.Name-checkbox" type="checkbox" value="@bodyType.Id" name="bodyTypes" @state>
-                <label class="form-check-label" for="@bodyType.Name-checkbox">@bodyType.Name</label> @Html.Raw(" &nbsp; ")
-            }
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="form-check form-check-inline">
-            Transmission type: &nbsp;
-            <br>
-            @foreach (var transmissionType in ViewBag.TransmissionTypes) {
-
-                string state = "";
-
-                if (ViewBag.CheckedTransmissionTypes != null) {
-                    foreach (var checkedTransmissionType in ViewBag.CheckedTransmissionTypes) {
-                        if (checkedTransmissionType == transmissionType.Id.ToString()) {
-                            state = "checked";
-                        }
-                    }
-                }
-
-                <input class="form-check-input" id="@transmissionType.Name-checkbox" type="checkbox" value="@transmissionType.Id" name="transmissionTypes" @state>
-                <label class="form-check-label" for="@transmissionType.Name-checkbox">@transmissionType.Name</label> @Html.Raw(" &nbsp; ")
-            }
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="form-check form-check-inline">
-            State: &nbsp;
-            <br>
-            @foreach (var carState in ViewBag.CarStates) {
-
-                string state = "";
-
-                if (ViewBag.CheckedCarStates != null) {
-                    foreach (var checkedCarState in ViewBag.CheckedCarStates) {
-                        if (checkedCarState == carState.Key) {
-                            state = "checked";
-                        }
-                    }
-                }
-
-                <input class="form-check-input" id="@carState.Value-checkbox" type="checkbox" value="@carState.Key" name="carStates" @state>
-                <label class="form-check-label" for="@carState.Value-checkbox">@carState.Value</label> @Html.Raw(" &nbsp; ")
-            }
-        </div>
-    </div>
-
-    Price:
-    <div class="form-row">
-        <div class="form-group col-sm-6">
-            <input class="form-control" type="text" name="priceFrom" value="" placeholder="From" min="0" />
-        </div>
-        <div class="form-group col-sm-6">
-            <input class="form-control" type="text" name="priceTo" value="" placeholder="To" min="0" />
-        </div>
-    </div>
-
-    <input type="hidden" name="newSearch" value="1">
-    <div class="form-group">
-        <input type="submit" value="Search" class="btn btn-primary btn-lg" />
-    </div>
-</form>
-<br>
-<br>
+@{await Html.RenderPartialAsync("_CarSearchForm", (CarSearchViewModel)ViewBag.CarSearchModel);}
 
 <div class="row">
 
