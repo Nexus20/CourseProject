@@ -249,6 +249,7 @@ namespace CourseProject.Areas.Admin.Controllers
             var carModels = _context.CarModels
                 .Include(carModel => carModel.Brand)
                 .Include(carModel => carModel.Parent)
+                //.Where(carModel => carModel.Children.Count == 0)
                 .AsNoTracking();
 
             var viewModel = new List<CarBrandModel>();

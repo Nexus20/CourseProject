@@ -153,6 +153,8 @@ namespace CourseProject.Areas.Admin.Controllers {
                     .ThenInclude(c => c.FuelType)
                 .Include(pr => pr.Car)
                     .ThenInclude(c => c.TransmissionType)
+                .Include(pr => pr.Car)
+                    .ThenInclude(c => c.CarImages)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(pr => pr.Id == id);
 

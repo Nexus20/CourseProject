@@ -5,17 +5,6 @@
 }
 
 <h1>Request № @Model.Id</h1>
-@*Status:
-<div id="statuses-dropdown" class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        @Html.DisplayFor(model => model.State)
-    </button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        @foreach (var elem in ViewBag.PurchaseRequestStates) {
-            <button class="dropdown-item" data-id="@Model.Id" data-state="@elem.Key">@elem.Value</button>
-        }
-    </div>
-</div>*@
 <h3>Client</h3>
 <hr />
 <dl class="row">
@@ -47,62 +36,72 @@
 
 <h3>Car</h3>
 <hr />
-<dl class="row">
-    <dt class="col-sm-4">
-        Model
-    </dt>
-    <dd class="col-sm-8">
-        @Model.Car.Model.Brand.Name @Model.Car.Model.Parent?.Name @Model.Car.Model.Name
-    </dd>
-    <dt class="col-sm-4">
-        @Html.DisplayNameFor(model => model.Car.Year)
-    </dt>
-    <dd class="col-sm-8">
-        @Html.DisplayFor(model => model.Car.Year)
-    </dd>
-    <dt class="col-sm-4">
-        @Html.DisplayNameFor(model => model.Car.Price)
-    </dt>
-    <dd class="col-sm-8">
-        @Html.DisplayFor(model => model.Car.Price)
-    </dd>
-    <dt class="col-sm-4">
-        @Html.DisplayNameFor(model => model.Car.State)
-    </dt>
-    <dd class="col-sm-8">
-        @Html.DisplayFor(model => model.Car.State)
-    </dd>
-    <dt class="col-sm-4">
-        @Html.DisplayNameFor(model => model.Car.EngineVolume)
-    </dt>
-    <dd class="col-sm-8">
-        @Html.DisplayFor(model => model.Car.EngineVolume)
-    </dd>
-    <dt class="col-sm-4">
-        @Html.DisplayNameFor(model => model.Car.Mileage)
-    </dt>
-    <dd class="col-sm-8">
-        @Html.DisplayFor(model => model.Car.Mileage)
-    </dd>
-    <dt class="col-sm-4">
-        @Html.DisplayNameFor(model => model.Car.FuelType)
-    </dt>
-    <dd class="col-sm-8">
-        @Html.DisplayFor(model => model.Car.FuelType.Name)
-    </dd>
-    <dt class="col-sm-4">
-        @Html.DisplayNameFor(model => model.Car.BodyType)
-    </dt>
-    <dd class="col-sm-8">
-        @Html.DisplayFor(model => model.Car.BodyType.Name)
-    </dd>
-    <dt class="col-sm-4">
-        @Html.DisplayNameFor(model => model.Car.TransmissionType)
-    </dt>
-    <dd class="col-sm-8">
-        @Html.DisplayFor(model => model.Car.TransmissionType.Name)
-    </dd>
-</dl>
+<div class="row">
+    <div class="col-sm-6">
+        <dl class="row">
+            <dt class="col-sm-4">
+                Model
+            </dt>
+            <dd class="col-sm-8">
+                @Model.Car.Model.Brand.Name @Model.Car.Model.Parent?.Name @Model.Car.Model.Name
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Car.Year)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Car.Year)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Car.Price)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Car.Price)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Car.State)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Car.State)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Car.EngineVolume)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Car.EngineVolume)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Car.Mileage)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Car.Mileage)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Car.FuelType)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Car.FuelType.Name)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Car.BodyType)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Car.BodyType.Name)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Car.TransmissionType)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Car.TransmissionType.Name)
+            </dd>
+        </dl>
+
+    </div>
+    <div class="col-sm-6 fotorama" data-nav="thumbs">
+        @foreach (var image in Model.Car.CarImages) {
+            <img src="@image.Path" alt="">
+        }
+    </div>
+</div>
 
 <form asp-action="Details">
     <input type="hidden" asp-for="Id" />

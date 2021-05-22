@@ -43,12 +43,14 @@
                         <dd class="col-sm-8">
                             @Html.DisplayFor(model => item.State)
                         </dd>
-                        <dt class="col-sm-4">
-                            @Html.DisplayNameFor(model => item.Mileage)
-                        </dt>
-                        <dd class="col-sm-8">
-                            @Html.DisplayFor(model => item.Mileage)
-                        </dd>
+                        @if (item.Mileage != 0) {
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => item.Mileage)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => item.Mileage)
+                            </dd>
+                        }
                         <dt class="col-sm-4">
                             @Html.DisplayNameFor(model => item.FuelType)
                         </dt>

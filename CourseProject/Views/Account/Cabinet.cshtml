@@ -42,6 +42,9 @@
             @foreach (var item in Model.FeaturedCars) {
                 <tr>
                     <td>
+                        @if (item.Car.Presence == Car.CarPresence.Sold) {
+                            <span style="color: red; font-weight: bold; font-size: 20px; text-transform: uppercase">Sold!</span>
+                        }
                         @item.Car.Model.Brand.Name @item.Car.Model.Parent?.Name @item.Car.Model.Name
                     </td>
                     <td>
@@ -101,6 +104,7 @@ else {
                 <th>
                     Request state
                 </th>
+                <th>Image</th>
                 <th></th>
             </tr>
         </thead>
@@ -111,10 +115,18 @@ else {
                         @Html.DisplayFor(modelItem => item.Id)
                     </td>
                     <td>
+                        @if (item.Car.Presence == Car.CarPresence.Sold) {
+                            <span style="color: red; font-weight: bold; font-size: 20px; text-transform: uppercase">Sold!</span>
+                        }
                         @item.Car.Model.Brand.Name @item.Car.Model.Parent?.Name @item.Car.Model.Name
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.State)
+                    </td>
+                    <td>
+                        @if (item.Car.CarImages.Count > 0) {
+                            <img src="@item.Car.CarImages.First().Path" alt="" style="width: 100px">
+                        }
                     </td>
                     <td>
                         <a asp-controller="Home" asp-action="Car" asp-route-id="@item.CarId">Details</a>

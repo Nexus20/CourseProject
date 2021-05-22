@@ -108,6 +108,8 @@ namespace CourseProject.Controllers {
                 .Include(pr => pr.Car)
                     .ThenInclude(c => c.Model)
                         .ThenInclude(cm => cm.Parent)
+                .Include(pr => pr.Car)
+                    .ThenInclude(c => c.CarImages)
                 .Where(pr => pr.ClientId == user.Id)
                 .ToListAsync();
 

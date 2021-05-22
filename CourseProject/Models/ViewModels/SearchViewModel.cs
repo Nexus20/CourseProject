@@ -33,7 +33,7 @@ namespace CourseProject.Models.ViewModels {
                     queryStringBuilder.Append($"{property.Name}={propertyValue}&");
                 }
             }
-            
+
             return queryStringBuilder.ToString();
         }
 

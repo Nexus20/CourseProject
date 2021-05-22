@@ -11,6 +11,14 @@
     <h4>
         @Model.Model.Brand.Name @Model.Model.Parent?.Name @Model.Model.Name
     </h4>
+    <div>
+        @if (Model.Presence == Car.CarPresence.Sold) {
+            <div class="alert alert-danger">
+                Unfortunately, this car is sold.
+            </div>
+            <a asp-action="Index">Back to List</a>
+        }
+    </div>
     <hr />
     <div class="row">
         <div class="col-sm-6">
