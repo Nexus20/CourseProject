@@ -1,4 +1,5 @@
-﻿@model IEnumerable<PurchaseRequest>
+﻿@*@model IEnumerable<PurchaseRequest>*@
+@model PaginatedList<PurchaseRequest>
 
 @{
     ViewData["Title"] = "Purchase requests";
@@ -20,19 +21,19 @@
         <input id="input-email" type="email" name="email" class="form-control" value="@ViewBag.Email">
     </div>
     <div class="form-group">
-        <label for="input-car-available-all" class="control-label">All: </label>
-        <input id="input-car-available-all" type="radio" name="carAvailable" class="" value="0" @(ViewBag.CarAvailable == 0 ? "checked" : "")>
+        <input id="input-car-available-all" type="radio" name="carAvailable" class="form-check-input" value="0" @(ViewBag.CarAvailable == 0 ? "checked" : "")>
         <label for="input-car-available-yes" class="control-label">Yes: </label>
-        <input id="input-car-available-yes" type="radio" name="carAvailable" class="" value="1" @(ViewBag.CarAvailable == 1 ? "checked" : "")>
+        <input id="input-car-available-yes" type="radio" name="carAvailable" class="form-check-input" value="1" @(ViewBag.CarAvailable == 1 ? "checked" : "")>
+        <label for="input-car-available-all" class="control-label">All: </label>
+        <input id="input-car-available-no" type="radio" name="carAvailable" class="form-check-input" value="2" @(ViewBag.CarAvailable == 2 ? "checked" : "")>
         <label for="input-car-available-no" class="control-label">No: </label>
-        <input id="input-car-available-no" type="radio" name="carAvailable" class="" value="2" @(ViewBag.CarAvailable == 2 ? "checked" : "")>
     </div>
     <div class="form-group">
-        
+
 
         <input id="input-owner-all" type="radio" name="owner" class="" value="" @(string.IsNullOrEmpty(ViewBag.Owner) ? "checked" : "")>
         <label for="input-owner-all" class="control-label">All: </label>
-        
+
         @foreach (var manager in ViewBag.ManagersList) {
 
             <input id="input-owner-@manager.Id" type="radio" name="owner" class="" value="@manager.Id" @(ViewBag.Owner == manager.Id ? "checked" : "")>
@@ -40,9 +41,9 @@
 
         }
 
-        
 
-    
+
+
     </div>
     <div class="form-group">
         <div class="form-check form-check-inline">
@@ -78,7 +79,7 @@
             <th>
                 @*@Html.DisplayNameFor(model => model.Id)*@
 
-                <a href="@Url.Action("Index")@ViewBag.QueryString@("sortOrder=" + ViewBag.IdSort)">Id</a>
+                <a href="@Url.Action("Index")@ViewBag.QueryString@($"sortOrder={ViewBag.IdSort}&page={Model.PageIndex}")">Id</a>
 
             </th>
             <th>
@@ -86,87 +87,95 @@
             </th>
             <th>
                 @*@Html.DisplayNameFor(model => model.FullName)*@
-                <a href="@Url.Action("Index")@ViewBag.QueryString@("sortOrder=" + ViewBag.NameSort)">Full name</a>
+                <a href="@Url.Action("Index")@ViewBag.QueryString@($"sortOrder={ViewBag.NameSort}&page={Model.PageIndex}")">Full name</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
+                @Html.DisplayNameFor(model => model[0].Email)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Phone)
+                @Html.DisplayNameFor(model => model[0].Phone)
             </th>
             <th>
                 @*@Html.DisplayNameFor(model => model.ApplicationDate)*@
-                <a href="@Url.Action("Index")@ViewBag.QueryString@("sortOrder=" + ViewBag.AppDateSort)">Application date</a>
+                <a href="@Url.Action("Index")@ViewBag.QueryString@($"sortOrder={ViewBag.AppDateSort}&page={Model.PageIndex}")">Application date</a>
             </th>
             <td>
-                @Html.DisplayNameFor(model => model.CarAvailability)
+                @Html.DisplayNameFor(model => model[0].CarAvailability)
             </td>
             <th>
-                @Html.DisplayNameFor(model => model.Manager)
+                @Html.DisplayNameFor(model => model[0].Manager)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.State)
+                @Html.DisplayNameFor(model => model[0].State)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @item.Car.Model.Brand.Name @item.Car.Model.Parent?.Name @item.Car.Model.Name
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApplicationDate)
-            </td>
-            <td>
-                @(item.CarAvailability ? "Yes" : "No")
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Manager.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.State)
-            </td>
-            <td>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @item.Car.Model.Brand.Name @item.Car.Model.Parent?.Name @item.Car.Model.Name
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApplicationDate)
+                </td>
+                <td>
+                    @(item.CarAvailability ? "Yes" : "No")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Manager.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.State)
+                </td>
+                <td>
 
-                @if (item.State == PurchaseRequest.RequestState.New) {
-                    <button class="btn btn-primary btn-assign" data-request="@item.Id">Assign myself</button>
-                }
+                    @if (item.State == PurchaseRequest.RequestState.New) {
+                        <button class="btn btn-primary btn-assign" data-request="@item.Id">Assign myself</button>
+                    }
 
-                @if (!string.IsNullOrEmpty(item.ManagerId) && (ViewBag.ManagerId == item.ManagerId || User.IsInRole("admin"))) {
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                }
+                    @if (!string.IsNullOrEmpty(item.ManagerId) && (ViewBag.ManagerId == item.ManagerId || User.IsInRole("admin"))) {
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    }
 
-                @if (User.IsInRole("admin") && (item.State == PurchaseRequest.RequestState.New || item.State == PurchaseRequest.RequestState.Processing)) {
-                    <div class="dropdown dropdown-managers">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton-@item.Id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Assign to
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-@item.Id">
-                            @foreach (var manager in ViewBag.ManagersList) {
-                                <button class="dropdown-item" data-request="@item.Id" data-manager="@manager.Id">@manager.UserName</button>
-                            }
+                    @if (User.IsInRole("admin") && (item.State == PurchaseRequest.RequestState.New || item.State == PurchaseRequest.RequestState.Processing)) {
+                        <div class="dropdown dropdown-managers">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton-@item.Id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Assign to
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-@item.Id">
+                                @foreach (var manager in ViewBag.ManagersList) {
+                                    <button class="dropdown-item" data-request="@item.Id" data-manager="@manager.Id">@manager.UserName</button>
+                                }
+                            </div>
                         </div>
-                    </div>
-                }
-            </td>
-        </tr>
+                    }
+                </td>
+            </tr>
         }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a href="@Url.Action("Index")@ViewBag.QueryString@($"sortOrder={ViewBag.CurrentSort}&page=" + (Model.PageIndex - 1))" class="btn btn-primary @prevDisabled">Prev</a>
+<a href="@Url.Action("Index")@ViewBag.QueryString@($"sortOrder={ViewBag.CurrentSort}&page=" + (Model.PageIndex + 1))" class="btn btn-primary @nextDisabled">Next</a>
 
 @section Scripts {
     <script type="text/javascript">
@@ -218,7 +227,7 @@
                         });
                     });
             });
-            
+
         </script>
     }
 }

@@ -36,6 +36,26 @@
                             </li>
                         }
                     </ul>
+                    <ul class="nav navbar-nav ml-auto">
+                        @if (User.Identity.IsAuthenticated) {
+                            <li class="nav-item" style="display: flex; align-items: center;">
+                                Hello, @User.Identity.Name
+                            </li>
+                            <li class="nav-item">
+                                <form method="post" asp-controller="Account" asp-action="Logout">
+                                    <input type="submit" value="Logout" class="btn btn-light" />
+                                </form>
+                            </li>
+                        }
+                        else {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                        }
+                    </ul>
                 </div>
             </div>
         </nav>

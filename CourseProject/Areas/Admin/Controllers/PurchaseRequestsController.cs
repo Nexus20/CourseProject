@@ -32,12 +32,12 @@ namespace CourseProject.Areas.Admin.Controllers {
             _roleManager = roleManager;
         }
 
-        public async Task<IActionResult> Index(PurchaseRequestSearchViewModel purchaseRequestSearch, string sortOrder) {
+        public async Task<IActionResult> Index(PurchaseRequestSearchViewModel purchaseRequestSearch, string sortOrder, int? newSearch, int? page) {
 
             ViewBag.IdSort = string.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
             ViewBag.NameSort = sortOrder == "name_asc" ? "name_desc" : "name_asc";
             ViewBag.AppDateSort = sortOrder == "app_date_asc" ? "app_date_desc" : "app_date_asc";
-
+            ViewBag.CurrentSort = sortOrder;
             var managerId = _userManager.GetUserId(User);
 
             var requests = _context.PurchaseRequests
@@ -51,6 +51,9 @@ namespace CourseProject.Areas.Admin.Controllers {
                 .Where(pr => (User.IsInRole("admin") || pr.ManagerId == managerId || pr.State == PurchaseRequest.RequestState.New))
                 .AsNoTracking();
 
+            if (newSearch != null) {
+                page = 1;
+            }
 
             if (purchaseRequestSearch.Id != null) {
                 requests = requests.Where(pr => pr.Id == purchaseRequestSearch.Id);
@@ -124,7 +127,10 @@ namespace CourseProject.Areas.Admin.Controllers {
 
             ViewBag.ManagerId = managerId;
 
-            return View(await requests.ToListAsync());
+            int pageSize = 5;
+
+            //return View(await requests.ToListAsync());
+            return View(await PaginatedList<PurchaseRequest>.CreateAsync(requests, page ?? 1, pageSize));
         }
 
         [HttpGet]
@@ -228,25 +234,6 @@ namespace CourseProject.Areas.Admin.Controllers {
 
             return Content(_userManager.Users.First(u => u.Id == request.ManagerId).UserName);
         }
-
-        //public IActionResult ChangeRequestState(int? requestId, int? newState) {
-
-        //    if (requestId == null || newState == null) {
-        //        return NotFound();
-        //    }
-
-        //    var request = _context.PurchaseRequests.FirstOrDefault(pr => pr.Id == requestId);
-
-        //    if (request == null) {
-        //        return NotFound();
-        //    }
-
-        //    request.State = (PurchaseRequest.RequestState)newState.Value;
-        //    _context.Update(request);
-        //    _context.SaveChanges();
-
-        //    return Content(Enum.GetName(typeof(PurchaseRequest.RequestState), (PurchaseRequest.RequestState)newState.Value));
-        //}
 
     }
 }

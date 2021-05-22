@@ -36,9 +36,11 @@ namespace CourseProject.Controllers {
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(CarSearchViewModel carSearch, int? newSearch, int? page) {
+        public async Task<IActionResult> Index(CarSearchViewModel carSearch, string sortOrder, int? newSearch, int? page) {
 
-            //StringBuilder queryStringBuilder = new StringBuilder("?");
+            //ViewBag.Price = string.IsNullOrEmpty(sortOrder) ? "price_desc" : "";
+            //ViewBag.Year = sortOrder == "year_asc" ? "year_desc" : "year_asc";
+            //ViewBag.CurrentSort = sortOrder;
 
             IQueryable<Car> cars = _context.Cars
                 .Include(c => c.Model)
@@ -128,12 +130,42 @@ namespace CourseProject.Controllers {
                 ViewBag.CheckedTransmissionTypes = null;
             }
 
+            ViewBag.Colors = _context.Cars.Where(c => c.Count > 0).Select(c => c.Color).Distinct().ToList();
+
+            if (carSearch.Colors != null && carSearch.Colors.Length > 0) {
+
+                IQueryable<Car> cars2 = cars.Where(c => c.Color == carSearch.Colors[0]);
+                for (var i = 1; i < carSearch.Colors.Length; i++) {
+                    var i1 = i;
+                    cars2 = cars2.Concat(cars.Where(c => c.Color == carSearch.Colors[i1]));
+                }
+
+                cars = cars2;
+
+                ViewBag.CheckedColors = Request.Query["colors"].ToArray();
+            }
+            else {
+                ViewBag.CheckedTransmissionTypes = null;
+            }
+
+
             if ((carSearch.PriceFrom != null && carSearch.PriceTo != null)
                 && (carSearch.PriceFrom.Value <= carSearch.PriceTo.Value)
                 && (carSearch.PriceFrom.Value >= 0 && carSearch.PriceTo.Value >= 0)) {
 
                 cars = cars.Where(c => c.Price >= carSearch.PriceFrom && c.Price <= carSearch.PriceTo);
             }
+
+            //cars = sortOrder switch {
+            //    "id_desc" => requests.OrderByDescending(r => r.Id),
+            //    "name_asc" => requests.OrderBy(r => r.Surname),
+            //    "name_desc" => requests.OrderByDescending(r => r.Surname),
+            //    "app_date_asc" => requests.OrderBy(r => r.ApplicationDate),
+            //    "app_date_desc" => requests.OrderByDescending(r => r.ApplicationDate),
+            //    _ => requests.OrderBy(r => r.Id)
+            //};
+
+
 
             //ViewBag.QueryString = queryStringBuilder.ToString();
             ViewBag.CarSearchModel = carSearch;
@@ -142,6 +174,8 @@ namespace CourseProject.Controllers {
             ViewBag.BodyTypes = _context.BodyTypes;
             ViewBag.FuelTypes = _context.FuelTypes;
             ViewBag.Brands = new SelectList(_context.Brands, "Id", "Name", carSearch.BrandId);
+
+            
 
             ViewBag.CarStates = Enum.GetValues(typeof(Car.CarState)).Cast<Car.CarState>()
                 .ToDictionary(t => (int) t, t => t.ToString());

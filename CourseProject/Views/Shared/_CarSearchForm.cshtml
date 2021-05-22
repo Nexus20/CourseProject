@@ -104,6 +104,28 @@
         </div>
     </div>
 
+    <div class="form-group">
+        <div class="form-check form-check-inline">
+            Color: &nbsp;
+            <br>
+            @foreach (var color in ViewBag.Colors) {
+
+                string state = "";
+
+                if (ViewBag.CheckedColors != null) {
+                    foreach (var checkedColor in ViewBag.CheckedColors) {
+                        if (checkedColor == color) {
+                            state = "checked";
+                        }
+                    }
+                }
+
+                <input class="form-check-input" id="@color-checkbox" type="checkbox" value="@color" name="colors" @state>
+                <label class="form-check-label" for="@color-checkbox">@color</label> @Html.Raw(" &nbsp; ")
+            }
+        </div>
+    </div>
+
     Price:
     <div class="form-row">
         <div class="form-group col-sm-6">
@@ -112,6 +134,18 @@
         <div class="form-group col-sm-6">
             <input class="form-control" type="text" name="PriceTo" value="" placeholder="To" min="0" />
         </div>
+    </div>
+
+    Order:
+    <div class="form-check-inline">
+        <input id="sort-price-asc" type="radio" class="form-check-input" name="sortOrder" value="price_asc" />
+        <label for="sort-price-asc" class="form-check-label">By price</label>
+        <input id="sort-price-desc" type="radio" class="form-check-input" name="sortOrder" value="price_desc" />
+        <label for="sort-price-desc" class="form-check-label">By price desc</label>
+        <input id="sort-year-asc" type="radio" class="form-check-input" name="sortOrder" value="year_asc" />
+        <label for="sort-year-asc" class="form-check-label">By year</label>
+        <input id="sort-year-desc" type="radio" class="form-check-input" name="sortOrder" value="year_desc" />
+        <label for="sort-year-desc" class="form-check-label">By year desc</label>
     </div>
 
     <input type="hidden" name="newSearch" value="1">

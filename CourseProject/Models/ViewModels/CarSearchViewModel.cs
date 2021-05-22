@@ -18,6 +18,7 @@ namespace CourseProject.Models.ViewModels {
         public int[] CarStates { get; set; }
         public int? PriceFrom { get; set; }
         public int? PriceTo { get; set; }
+        public string[] Colors { get; set; }
 
     }
 }
