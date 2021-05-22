@@ -485,6 +485,11 @@ namespace CourseProject.Areas.Admin.Controllers
             return RedirectToAction(nameof(BodyTypes));
         }
 
+        [AcceptVerbs("Get", "Post")]
+        public IActionResult CheckBodyType(string bodyType) {
+            return Json(_context.BodyTypes.FirstOrDefault(bt => bt.Name == bodyType) == null);
+        }
+
         #endregion
 
         #region FuelTypeHandling
@@ -550,8 +555,13 @@ namespace CourseProject.Areas.Admin.Controllers
             return RedirectToAction(nameof(FuelTypes));
         }
 
+        [AcceptVerbs("Get", "Post")]
+        public IActionResult CheckFuelType(string fuelType) {
+            return Json(_context.FuelTypes.FirstOrDefault(ft => ft.Name == fuelType) == null);
+        }
+
         #endregion
-        
+
         #region TransmissionTypeHandling
 
         [HttpGet]
@@ -613,6 +623,11 @@ namespace CourseProject.Areas.Admin.Controllers
             _context.TransmissionTypes.Remove(transmissionType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(TransmissionTypes));
+        }
+
+        [AcceptVerbs("Get", "Post")]
+        public IActionResult CheckTransmissionType(string transmissionType) {
+            return Json(_context.TransmissionTypes.FirstOrDefault(tt => tt.Name == transmissionType) == null);
         }
 
         #endregion
