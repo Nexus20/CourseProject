@@ -18,7 +18,8 @@ namespace CourseProject.Models {
         public string Email { get; set; }
 
         [Required]
-        [Phone(ErrorMessage = "Invalid phone")]
+        [DataType(DataType.PhoneNumber)]
+        [RegularExpression(@"^\+\d{10, 14}$", ErrorMessage = "Enter the phone number in the format  \"+123456789000\"")]
         public string Phone { get; set; }
 
         [Required]

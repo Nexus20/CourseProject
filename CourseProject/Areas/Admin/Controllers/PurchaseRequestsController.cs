@@ -37,6 +37,8 @@ namespace CourseProject.Areas.Admin.Controllers {
             ViewBag.NameSort = sortOrder == "name_asc" ? "name_desc" : "name_asc";
             ViewBag.AppDateSort = sortOrder == "app_date_asc" ? "app_date_desc" : "app_date_asc";
 
+            var managerId = _userManager.GetUserId(User);
+
             var requests = _context.PurchaseRequests
                 .Include(pr => pr.Car)
                     .ThenInclude(c => c.Model)
@@ -45,6 +47,7 @@ namespace CourseProject.Areas.Admin.Controllers {
                     .ThenInclude(c => c.Model)
                         .ThenInclude(cm => cm.Parent)
                 .Include(pr => pr.Manager)
+                .Where(pr => (User.IsInRole("admin") || pr.ManagerId == managerId || pr.State == PurchaseRequest.RequestState.New))
                 .AsNoTracking();
 
 
@@ -99,7 +102,7 @@ namespace CourseProject.Areas.Admin.Controllers {
 
             ViewBag.QueryString = purchaseRequestSearch.CreateRequest();
 
-            var managerId = _userManager.GetUserId(User);
+            
 
             ViewBag.RequestStates = Enum.GetValues(typeof(PurchaseRequest.RequestState)).Cast<int>().ToDictionary(key => key, key => Enum.GetName(typeof(PurchaseRequest.RequestState), key));
 
@@ -210,21 +213,13 @@ namespace CourseProject.Areas.Admin.Controllers {
                 return NotFound();
             }
 
-            if (User.IsInRole("admin")) {
-                if (string.IsNullOrEmpty(managerId)) {
-                    return NotFound();
-                }
-                request.ManagerId = managerId;
-            }
-            else {
-                request.ManagerId = _userManager.GetUserId(User);
-            }
+            request.ManagerId = string.IsNullOrEmpty(managerId) ? _userManager.GetUserId(User) : managerId;
 
             request.State = PurchaseRequest.RequestState.Processing;
             _context.Update(request);
             _context.SaveChanges();
 
-            return Content("OK");
+            return Content(_userManager.Users.First(u => u.Id == request.ManagerId).UserName);
         }
 
         //public IActionResult ChangeRequestState(int? requestId, int? newState) {

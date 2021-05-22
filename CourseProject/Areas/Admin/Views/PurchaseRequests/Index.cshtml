@@ -135,7 +135,7 @@
                     <button class="btn btn-primary btn-assign" data-request="@item.Id">Assign myself</button>
                 }
 
-                @if (!string.IsNullOrEmpty(item.ManagerId) && ViewBag.ManagerId == item.ManagerId) {
+                @if (!string.IsNullOrEmpty(item.ManagerId) && (ViewBag.ManagerId == item.ManagerId || User.IsInRole("admin"))) {
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                 }
 
@@ -173,7 +173,7 @@
                         data: { requestId: requestId }
                     }).done((data) => {
                         console.log(data);
-                        $(e.target).text('Assigned');
+                        //$(e.target).text('Assigned');
                         $(e.target).before(`<a href="@Url.Action("Details")?id=${requestId}">Details</a>`);
                         $(e.target.parentNode).prev().text('Processing');
                         $(e.target).remove();
@@ -221,6 +221,11 @@
                             }
                         }).done((data) => {
                             console.log(data);
+                            const dropdown = $(e.target).parents(".dropdown")[0];
+                            $(dropdown).prev().remove();
+                            $(dropdown).before(`<a href="@Url.Action("Details")?id=${requestId}">Details</a>`);
+                            $(dropdown).parent().prev().text('Processing');
+                            $(dropdown).parent().prev().prev().text(data);
                         });
                     });
             });
