@@ -92,76 +92,73 @@ else {
 @if (Model.PurchaseRequests != null && Model.PurchaseRequests.Count > 0) {
     <h2>Purchase requests</h2>
     <hr />
-    <table class="table" id="requests-table">
-        <thead>
-            <tr>
-                <th>
-                    Request Id
-                </th>
-                <th>
-                    Car
-                </th>
-                <th>
-                    Request state
-                </th>
-                <th>Image</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.PurchaseRequests) {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Id)
-                    </td>
-                    <td>
-                        @if (item.Car.Presence == Car.CarPresence.Sold) {
-                            <span style="color: red; font-weight: bold; font-size: 20px; text-transform: uppercase">Sold!</span>
-                        }
-                        @item.Car.Model.Brand.Name @item.Car.Model.Parent?.Name @item.Car.Model.Name
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.State)
-                    </td>
-                    <td>
+    <div class="row">
+        @foreach (var item in Model.PurchaseRequests) {
+
+           
+                var state = item.State switch {
+                    PurchaseRequest.RequestState.New => "secondary",
+                    PurchaseRequest.RequestState.Processing => "info",
+                    PurchaseRequest.RequestState.Canceled => "danger",
+                    PurchaseRequest.RequestState.Closed => "success",
+                    _ => ""
+                    };
+            
+
+            <div class="card col-sm-12 border-@state" style="margin: 20px;">
+                <div class="row no-gutters">
+                    <div class="col-sm-5">
                         @if (item.Car.CarImages.Count > 0) {
-                            <img src="@item.Car.CarImages.First().Path" alt="" style="width: 100px">
+                            <img src="@item.Car.CarImages.First().Path" class="card-img-top" alt="">
                         }
-                    </td>
-                    <td>
-                        <a asp-controller="Home" asp-action="Car" asp-route-id="@item.CarId">Details</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                        else {
+                            <img src="/img/no-image.jpg" alt="" style="height: 300px">
+                        }
+                    </div>
+                    <div class="col-sm-7">
+                        <div class="card-body text-@state">
+                            <h5 class="card-title">
+                                Request № @item.Id State @item.State
+                            </h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                @item.Car.Year @item.Car.Model.Brand.Name @item.Car.Model.Parent?.Name @item.Car.Model.Name
+                            </h6>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a asp-controller="Home" asp-action="Car" class="card-link" asp-route-id="@item.CarId">Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
 }
 else {
     <p>There are no requests yet</p>
 }
-@section Scripts {
+        @section Scripts {
     <script type="text/javascript">
     $(document).ready(() => {
         $('#featured-cars-table').on('click',
             '.btn-remove-from-featured',
             (e) => {
-                console.log(e.target.parentNode.parentNode);
+            console.log(e.target.parentNode.parentNode);
 
-                const carId = e.target.dataset['id'];
+            const carId = e.target.dataset['id'];
 
                 $.ajax({
-                    url: '@Url.Action("AddRemoveFeatured", "Home")',
+            url: '@Url.Action("AddRemoveFeatured", "Home")',
                     data: { carId: carId }
-                }).done(() => {
+            }).done(() => {
                     $(e.target.parentNode.parentNode).remove();
 
-                    if ($('#featured-cars-table tr').length == 1) {
+            if ($('#featured-cars-table tr').length == 1) {
                         $('#featured-cars-table').before('<p>There are no featured cars</p>');
                         $('#featured-cars-table').remove();
-                    }
-                });
-
+                }
             });
+
+        });
 
     });
     </script>
