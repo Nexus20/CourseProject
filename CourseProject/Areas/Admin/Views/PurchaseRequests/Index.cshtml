@@ -20,6 +20,20 @@
         <input id="input-email" type="email" name="email" class="form-control" value="@ViewBag.Email">
     </div>
     <div class="form-group">
+        <label for="input-car-available-all" class="control-label">All: </label>
+        <input id="input-car-available-all" type="radio" name="carAvailable" class="" value="0" checked>
+        <label for="input-car-available-yes" class="control-label">Yes: </label>
+        <input id="input-car-available-yes" type="radio" name="carAvailable" class="" value="1">
+        <label for="input-car-available-no" class="control-label">No: </label>
+        <input id="input-car-available-no" type="radio" name="carAvailable" class="" value="2">
+    </div>
+    <div class="form-group">
+        <label for="input-owner-all" class="control-label">All: </label>
+        <input id="input-owner-all" type="radio" name="owner" class="" value="" checked>
+        <label for="input-owner-all" class="control-label">My requests: </label>
+        <input id="input-owner-@ViewBag.UserId" type="radio" name="owner" class="" value="@ViewBag.UserId">
+    </div>
+    <div class="form-group">
         <div class="form-check form-check-inline">
             State: &nbsp;
             <br>

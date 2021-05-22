@@ -51,6 +51,15 @@ namespace CourseProject.Areas.Admin.Controllers {
             }
             ViewBag.RequestId = purchaseRequestSearch.Id;
 
+            if (purchaseRequestSearch.CarAvailable != null && purchaseRequestSearch.CarAvailable.Value != 0) {
+                requests = requests.Where(pr => pr.CarAvailability == (purchaseRequestSearch.CarAvailable == 1));
+            }
+            ViewBag.CarAvailable = purchaseRequestSearch.CarAvailable;
+
+            if (!string.IsNullOrEmpty(purchaseRequestSearch.Owner)) {
+                requests = requests.Where(pr => pr.ManagerId == purchaseRequestSearch.Owner);
+            }
+
             if (!string.IsNullOrEmpty(purchaseRequestSearch.Surname)) {
                 requests = requests.Where(pr => pr.Surname.Contains(purchaseRequestSearch.Surname));
             }
@@ -91,6 +100,10 @@ namespace CourseProject.Areas.Admin.Controllers {
             ViewBag.ManagerId = _userManager.GetUserId(User);
 
             ViewBag.RequestStates = Enum.GetValues(typeof(PurchaseRequest.RequestState)).Cast<int>().ToDictionary(key => key, key => Enum.GetName(typeof(PurchaseRequest.RequestState), key));
+
+            
+            ViewBag.UserId = _userManager.GetUserId(User);
+            
             
             return View(await requests.ToListAsync());
         }
