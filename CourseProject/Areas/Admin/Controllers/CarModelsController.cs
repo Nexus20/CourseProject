@@ -203,6 +203,11 @@ namespace CourseProject.Areas.Admin.Controllers
             return _context.CarModels.Any(e => e.Id == id);
         }
 
+        [AcceptVerbs("Get", "Post")]
+        public IActionResult CheckModel(string name) {
+            return Json(_context.CarModels.FirstOrDefault(cm => cm.Name == name) == null);
+        }
+
         public async Task<IActionResult> Brands() {
             return View(_context.Brands);
         }
