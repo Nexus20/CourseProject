@@ -92,5 +92,7 @@
             You can leave a purchase request, but it will take more time to buy a car.
         </div>
     }
-    <a asp-action="CreatePurchaseRequest" asp-route-id="@Model.Id" class="btn btn-success">Leave a purchase request</a>
+    @if (Model.Presence != Car.CarPresence.Sold) {
+        <a asp-action="CreatePurchaseRequest" asp-route-id="@Model.Id" class="btn btn-success">Leave a purchase request</a>
+    }
 </div>
