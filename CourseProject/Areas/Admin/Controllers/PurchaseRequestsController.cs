@@ -58,12 +58,18 @@ namespace CourseProject.Areas.Admin.Controllers {
 
             if (purchaseRequestSearch.CarAvailable != null && purchaseRequestSearch.CarAvailable.Value != 0) {
                 requests = requests.Where(pr => pr.CarAvailability == (purchaseRequestSearch.CarAvailable == 1));
+                ViewBag.CarAvailable = purchaseRequestSearch.CarAvailable;
             }
-            ViewBag.CarAvailable = purchaseRequestSearch.CarAvailable;
+            else {
+                ViewBag.CarAvailable = 0;
+            }
+            
 
             if (!string.IsNullOrEmpty(purchaseRequestSearch.Owner)) {
                 requests = requests.Where(pr => pr.ManagerId == purchaseRequestSearch.Owner);
             }
+
+            ViewBag.Owner = purchaseRequestSearch.Owner;
 
             if (!string.IsNullOrEmpty(purchaseRequestSearch.Surname)) {
                 requests = requests.Where(pr => pr.Surname.Contains(purchaseRequestSearch.Surname));
@@ -102,17 +108,16 @@ namespace CourseProject.Areas.Admin.Controllers {
 
             ViewBag.QueryString = purchaseRequestSearch.CreateRequest();
 
-            
-
             ViewBag.RequestStates = Enum.GetValues(typeof(PurchaseRequest.RequestState)).Cast<int>().ToDictionary(key => key, key => Enum.GetName(typeof(PurchaseRequest.RequestState), key));
 
             if (User.IsInRole("admin")) {
                 var allManagers = await _userManager.GetUsersInRoleAsync("manager");
-                allManagers.Remove(await _userManager.GetUserAsync(User));
+                //allManagers.Remove(await _userManager.GetUserAsync(User));
                 ViewBag.ManagersList = allManagers;
             }
             else {
-                ViewBag.ManagersList = null;
+                //ViewBag.ManagersList = null;
+                ViewBag.ManagersList = await _userManager.GetUserAsync(User);
             }
 
             ViewBag.ManagerId = managerId;

@@ -21,17 +21,28 @@
     </div>
     <div class="form-group">
         <label for="input-car-available-all" class="control-label">All: </label>
-        <input id="input-car-available-all" type="radio" name="carAvailable" class="" value="0" checked>
+        <input id="input-car-available-all" type="radio" name="carAvailable" class="" value="0" @(ViewBag.CarAvailable == 0 ? "checked" : "")>
         <label for="input-car-available-yes" class="control-label">Yes: </label>
-        <input id="input-car-available-yes" type="radio" name="carAvailable" class="" value="1">
+        <input id="input-car-available-yes" type="radio" name="carAvailable" class="" value="1" @(ViewBag.CarAvailable == 1 ? "checked" : "")>
         <label for="input-car-available-no" class="control-label">No: </label>
-        <input id="input-car-available-no" type="radio" name="carAvailable" class="" value="2">
+        <input id="input-car-available-no" type="radio" name="carAvailable" class="" value="2" @(ViewBag.CarAvailable == 2 ? "checked" : "")>
     </div>
     <div class="form-group">
+        
+
+        <input id="input-owner-all" type="radio" name="owner" class="" value="" @(string.IsNullOrEmpty(ViewBag.Owner) ? "checked" : "")>
         <label for="input-owner-all" class="control-label">All: </label>
-        <input id="input-owner-all" type="radio" name="owner" class="" value="" checked>
-        <label for="input-owner-all" class="control-label">My requests: </label>
-        <input id="input-owner-@ViewBag.ManagerId" type="radio" name="owner" class="" value="@ViewBag.ManagerId">
+        
+        @foreach (var manager in ViewBag.ManagersList) {
+
+            <input id="input-owner-@manager.Id" type="radio" name="owner" class="" value="@manager.Id" @(ViewBag.Owner == manager.Id ? "checked" : "")>
+            <label for="input-owner-@manager.Id" class="control-label">@manager.UserName </label>
+
+        }
+
+        
+
+    
     </div>
     <div class="form-group">
         <div class="form-check form-check-inline">
@@ -139,7 +150,7 @@
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                 }
 
-                @if (User.IsInRole("admin") && ViewBag.ManagersList != null && (item.State == PurchaseRequest.RequestState.New || item.State == PurchaseRequest.RequestState.Processing)) {
+                @if (User.IsInRole("admin") && (item.State == PurchaseRequest.RequestState.New || item.State == PurchaseRequest.RequestState.Processing)) {
                     <div class="dropdown dropdown-managers">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton-@item.Id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Assign to
@@ -179,28 +190,6 @@
                         $(e.target).remove();
                     });
                 });
-
-
-            
-
-
-
-            @*$('#requests-table').on('click',
-                '.dropdown-item',
-                (e) => {
-                    console.log(e.target);
-
-                    const requestId = e.target.dataset['id'];
-                    const newState = e.target.dataset['state'];
-
-                    $.ajax({
-                        url: '@Url.Action("ChangeRequestState", "PurchaseRequests")',
-                        data: {requestId: requestId, newState: newState}
-                    }).done((data) => {
-                        console.log(data);
-                        $(`#dropdownMenuButton-${requestId}`).text(data);
-                    });
-                });*@
         });
     </script>
     @if (User.IsInRole("admin") && ViewBag.ManagersList != null) {
