@@ -1,0 +1,236 @@
+﻿@*@model IEnumerable<PurchaseRequest>*@
+@model PaginatedList<PurchaseRequest>
+
+@{
+    ViewData["Title"] = "Purchase requests";
+}
+
+<h1>Requests</h1>
+
+<form asp-action="Index" method="get">
+    <div class="form-row">
+        <div class="form-group col-sm-2">
+            <label for="input-id" class="control-label">Id: </label>
+            <input id="input-id" type="text" name="id" class="form-control" value="@ViewBag.RequestId">
+        </div>
+        <div class="form-group col-sm-5">
+            <label for="input-surname" class="control-label">Surname: </label>
+            <input id="input-surname" type="text" name="surname" class="form-control" value="@ViewBag.Surname">
+        </div>
+        <div class="form-group col-sm-5">
+            <label for="input-email" class="control-label">Email: </label>
+            <input id="input-email" type="email" name="email" class="form-control" value="@ViewBag.Email">
+        </div>
+    </div>
+    <div class="form-group">
+        <input id="input-car-available-all" type="radio" name="carAvailable" value="0" @(ViewBag.CarAvailable == 0 ? "checked" : "")>
+        <label for="input-car-available-yes" class="control-label">Yes: </label>
+        <input id="input-car-available-yes" type="radio" name="carAvailable" value="1" @(ViewBag.CarAvailable == 1 ? "checked" : "")>
+        <label for="input-car-available-all" class="control-label">All: </label>
+        <input id="input-car-available-no" type="radio" name="carAvailable" value="2" @(ViewBag.CarAvailable == 2 ? "checked" : "")>
+        <label for="input-car-available-no" class="control-label">No: </label>
+    </div>
+    <div class="form-group">
+
+
+        <input id="input-owner-all" type="radio" name="owner" class="" value="" @(string.IsNullOrEmpty(ViewBag.Owner) ? "checked" : "")>
+        <label for="input-owner-all" class="control-label">All: </label>
+
+        @foreach (var manager in ViewBag.ManagersList) {
+
+            <input id="input-owner-@manager.Id" type="radio" name="owner" class="" value="@manager.Id" @(ViewBag.Owner == manager.Id ? "checked" : "")>
+            <label for="input-owner-@manager.Id" class="control-label">@manager.UserName </label>
+
+        }
+
+
+
+
+    </div>
+    <div class="form-group">
+        <div class="form-check form-check-inline">
+            State: &nbsp;
+            <br>
+            @foreach (var requestState in ViewBag.RequestStates) {
+
+                string state = "";
+
+                if (ViewBag.CheckedRequestStates != null) {
+                    foreach (var checkedRequestState in ViewBag.CheckedRequestStates) {
+                        if (checkedRequestState == requestState.Key.ToString()) {
+                            state = "checked";
+                        }
+                    }
+                }
+
+                <input class="form-check-input" id="@requestState.Value-checkbox" type="checkbox" value="@requestState.Key" name="requestStates" @state>
+                <label class="form-check-label" for="@requestState.Value-checkbox">@requestState.Value</label>
+                @Html.Raw(" &nbsp; ")
+            }
+        </div>
+    </div>
+    <input type="hidden" name="newSearch" value="1">
+    <div class="form-group">
+        <input type="submit" value="Search" class="btn btn-primary btn-lg"/>
+    </div>
+</form>
+
+
+<table class="table" id="requests-table">
+    <thead>
+        <tr>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Id)*@
+
+                <a href="@Url.Action("Index")@ViewBag.QueryString@($"sortOrder={ViewBag.IdSort}&page={Model.PageIndex}")">Id</a>
+
+            </th>
+            <th>
+                Car
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.FullName)*@
+                <a href="@Url.Action("Index")@ViewBag.QueryString@($"sortOrder={ViewBag.NameSort}&page={Model.PageIndex}")">Full name</a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].Phone)
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.ApplicationDate)*@
+                <a href="@Url.Action("Index")@ViewBag.QueryString@($"sortOrder={ViewBag.AppDateSort}&page={Model.PageIndex}")">Application date</a>
+            </th>
+            <td>
+                @Html.DisplayNameFor(model => model[0].CarAvailability)
+            </td>
+            <th>
+                @Html.DisplayNameFor(model => model[0].Manager)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model[0].State)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @item.Car.Model.Brand.Name @item.Car.Model.Parent?.Name @item.Car.Model.Name
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApplicationDate)
+                </td>
+                <td>
+                    @(item.CarAvailability ? "Yes" : "No")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Manager.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.State)
+                </td>
+                <td>
+
+                    @if (item.State == PurchaseRequest.RequestState.New) {
+                        <button class="btn btn-primary btn-assign" data-request="@item.Id">Assign myself</button>
+                    }
+
+                    @if (!string.IsNullOrEmpty(item.ManagerId) && (ViewBag.ManagerId == item.ManagerId || User.IsInRole("admin"))) {
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    }
+
+                    @if (User.IsInRole("admin") && (item.State == PurchaseRequest.RequestState.New || item.State == PurchaseRequest.RequestState.Processing)) {
+                        <div class="dropdown dropdown-managers">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton-@item.Id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Assign to
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-@item.Id">
+                                @foreach (var manager in ViewBag.ManagersList) {
+                                    <button class="dropdown-item" data-request="@item.Id" data-manager="@manager.Id">@manager.UserName</button>
+                                }
+                            </div>
+                        </div>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a href="@Url.Action("Index")@ViewBag.QueryString@($"sortOrder={ViewBag.CurrentSort}&page=" + (Model.PageIndex - 1))" class="btn btn-primary @prevDisabled">Prev</a>
+<a href="@Url.Action("Index")@ViewBag.QueryString@($"sortOrder={ViewBag.CurrentSort}&page=" + (Model.PageIndex + 1))" class="btn btn-primary @nextDisabled">Next</a>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(() => {
+
+            $('#requests-table').on('click',
+                '.btn-assign',
+                (e) => {
+                    console.log(e.target);
+
+                    const requestId = e.target.dataset['request'];
+
+                    $.ajax({
+                        url: '@Url.Action("AssignManagerToRequest", "PurchaseRequests")',
+                        data: { requestId: requestId }
+                    }).done((data) => {
+                        console.log(data);
+                        //$(e.target).text('Assigned');
+                        $(e.target).before(`<a href="@Url.Action("Details")?id=${requestId}">Details</a>`);
+                        $(e.target.parentNode).prev().text('Processing');
+                        $(e.target).remove();
+                    });
+                });
+        });
+    </script>
+    @if (User.IsInRole("admin") && ViewBag.ManagersList != null) {
+        <script type="text/javascript">
+            $(document).ready(() => {
+                $('.dropdown-managers').on('click',
+                    '.dropdown-item',
+                    (e) => {
+                        console.log(e.target.dataset);
+                        const requestId = e.target.dataset['request'];
+                        const managerId = encodeURIComponent(e.target.dataset['manager']);
+                        console.log(requestId, managerId);
+                        $.ajax({
+                            url: '@Url.Action("AssignManagerToRequest", "PurchaseRequests")',
+                            data: {
+                                requestId: requestId,
+                                managerId: managerId
+                            }
+                        }).done((data) => {
+                            console.log(data);
+                            const dropdown = $(e.target).parents(".dropdown")[0];
+                            $(dropdown).prev().remove();
+                            $(dropdown).before(`<a href="@Url.Action("Details")?id=${requestId}">Details</a>`);
+                            $(dropdown).parent().prev().text('Processing');
+                            $(dropdown).parent().prev().prev().text(data);
+                        });
+                    });
+            });
+
+        </script>
+    }
+}

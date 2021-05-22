@@ -1,8 +1,161 @@
-﻿@{
+﻿@using CourseProject.Models.ViewModels
+@model PaginatedList<Car>
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+@{await Html.RenderPartialAsync("_CarSearchForm", (CarSearchViewModel)ViewBag.CarSearchModel);}
+
+<div class="row">
+
+    @foreach (var item in Model) {
+        <div class="col-sm-12">
+            <div class="card car-card" style="margin: 15px;">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Model.Brand.Name @item.Model.Parent?.Name @item.Model.Name @item.Year</h5>
+                    <div class="row">
+                        <div class="col-sm-12 fotorama" data-nav="thumbs" style="display: flex; -o-justify-content: center; -webkit-justify-content: center; justify-content: center;">
+                            @if (item.CarImages.Count > 0) {
+
+                                @foreach (var image in item.CarImages) {
+                                    <img src="@image.Path" alt="">
+                                }
+                            }
+                            else {
+                                <img src="/img/no-image.jpg" alt="" style="height: 300px">
+                            }
+                        </div>
+                    </div>
+                    <dl class="row">
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => item.Price)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => item.Price)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => item.State)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => item.State)
+                        </dd>
+                        @if (item.State == Car.CarState.SecondHand) {
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => item.Mileage)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => item.Mileage)
+                            </dd>
+                        }
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => item.FuelType)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => item.FuelType.Name)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => item.TransmissionType)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => item.TransmissionType.Name)
+                        </dd>
+                    </dl>
+                    <a asp-action="Car" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
+
+                    @{
+                        var isCompared = false;
+                        if (ViewBag.ComparedCars.Count > 0) {
+                            isCompared = ViewBag.ComparedCars.Contains(item.Id);
+                        }
+
+                        <button data-id="@item.Id" class="btn btn-primary btn-add-compare">@Html.Raw(isCompared ? "Remove from " : "Add to ") compare</button>
+                    }
+
+
+
+                    @if (User.Identity.IsAuthenticated) {
+
+                        var isFeatured = false;
+                        if (ViewBag.FeaturedCars.Count > 0) {
+                            isFeatured = ViewBag.FeaturedCars.Contains(item.Id);
+                        }
+
+                        <button data-id="@item.Id" class="btn btn-primary btn-add-featured">@Html.Raw(isFeatured ? "Remove from " : "Add to ")featured</button>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a href="@Url.Action("Index")@ViewBag.QueryString@("page=" + (Model.PageIndex - 1))" class="btn btn-primary @prevDisabled">Prev</a>
+<a href="@Url.Action("Index")@ViewBag.QueryString@("page=" + (Model.PageIndex + 1))" class="btn btn-primary @nextDisabled">Next</a>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(() => {
+            $('#brands-list').on('click',
+                'option',
+                (e) => {
+                    console.log(e.target.value);
+                    let brandId = encodeURIComponent(e.target.value);
+
+                    $('#models-list').load('@Url.Action("GetModelsByBrand", "Home")?brandId=' + brandId);
+                    $('#models-list').prepend('<option value=""></option>');
+                });
+
+            $('.car-card').on('click',
+                '.btn-add-featured',
+                (e) => {
+                    console.log(e.target);
+
+                    const carId = e.target.dataset['id'];
+
+                    $.ajax({
+                        url: '@Url.Action("AddRemoveFeatured", "Home")',
+                        data: { carId: carId }
+                    }).done((data) => {
+                        console.log(data);
+                        if (data === 'added') {
+                            $(e.target).text("Remove from featured");
+                        } else if (data === 'removed') {
+                            $(e.target).text("Add to featured");
+                        }
+                    });
+
+                });
+
+
+            $('.car-card').on('click',
+                '.btn-add-compare',
+                (e) => {
+                    console.log(e.target);
+
+                    const carId = e.target.dataset['id'];
+
+                    $.ajax({
+                        url: '@Url.Action("AddRemoveToCompare", "Home")',
+                        data: { carId: carId }
+                    }).done((data) => {
+                        console.log(data);
+                        if (data === 'added') {
+                            $(e.target).text("Remove from compare");
+                        } else if (data === 'removed') {
+                            $(e.target).text("Add to compare");
+                        }
+                    });
+
+                });
+
+        });
+    </script>
+}

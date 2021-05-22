@@ -1,0 +1,17 @@
+﻿@model IEnumerable<CourseProject.Models.User>
+
+@{
+    ViewData["Title"] = "User list";
+}
+
+<h2>User list</h2>
+<table class="table">
+    @foreach (var user in Model) {
+        <tr>
+            <td>@user.UserName</td>
+            <td>
+                <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-userid="@user.Id">Access rights</a>
+            </td>
+        </tr>
+    }
+</table>

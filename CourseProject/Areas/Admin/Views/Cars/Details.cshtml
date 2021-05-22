@@ -1,0 +1,78 @@
+﻿@model CourseProject.Models.Car
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Car Details</h1>
+
+<div>
+    <h4>
+        @Model.Model.Brand.Name @Model.Model.Parent?.Name @Model.Model.Name
+    </h4>
+    <hr />
+    <div class="row">
+        <div class="col-sm-6">
+            <dl class="row">
+                <dt class = "col-sm-4">
+                    @Html.DisplayNameFor(model => model.Year)
+                </dt>
+                <dd class = "col-sm-8">
+                    @Html.DisplayFor(model => model.Year)
+                </dd>
+                <dt class = "col-sm-4">
+                    @Html.DisplayNameFor(model => model.Price)
+                </dt>
+                <dd class = "col-sm-8">
+                    @Html.DisplayFor(model => model.Price)
+                </dd>
+                <dt class = "col-sm-4">
+                    @Html.DisplayNameFor(model => model.State)
+                </dt>
+                <dd class = "col-sm-8">
+                    @Html.DisplayFor(model => model.State)
+                </dd>
+                <dt class = "col-sm-4">
+                    @Html.DisplayNameFor(model => model.EngineVolume)
+                </dt>
+                <dd class = "col-sm-8">
+                    @Html.DisplayFor(model => model.EngineVolume)
+                </dd>
+                <dt class = "col-sm-4">
+                    @Html.DisplayNameFor(model => model.Mileage)
+                </dt>
+                <dd class = "col-sm-8">
+                    @Html.DisplayFor(model => model.Mileage)
+                </dd>
+                <dt class = "col-sm-4">
+                    @Html.DisplayNameFor(model => model.FuelType)
+                </dt>
+                <dd class = "col-sm-8">
+                    @Html.DisplayFor(model => model.FuelType.Name)
+                </dd>
+                <dt class = "col-sm-4">
+                    @Html.DisplayNameFor(model => model.BodyType)
+                </dt>
+                <dd class = "col-sm-8">
+                    @Html.DisplayFor(model => model.BodyType.Name)
+                </dd>
+                <dt class = "col-sm-4">
+                    @Html.DisplayNameFor(model => model.TransmissionType)
+                </dt>
+                <dd class = "col-sm-8">
+                    @Html.DisplayFor(model => model.TransmissionType.Name)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-sm-6 fotorama" data-nav="thumbs">
+            @foreach (var image in Model.CarImages) {
+                <img src="@image.Path" alt="">
+            }
+        </div>
+    </div>
+    
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

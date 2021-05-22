@@ -1,0 +1,165 @@
+﻿@model User
+
+<h1>Personal info</h1>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-4">
+        @Html.DisplayNameFor(model => model.UserName)
+    </dt>
+    <dd class="col-sm-8">
+        @Html.DisplayFor(model => model.UserName)
+    </dd>
+    <dt class="col-sm-4">
+        @Html.DisplayNameFor(model => model.Email)
+    </dt>
+    <dd class="col-sm-8">
+        @Html.DisplayFor(model => model.Email)
+    </dd>
+</dl>
+
+<h2>Featured Cars</h2>
+<hr />
+
+@if (Model.FeaturedCars != null && Model.FeaturedCars.Count > 0) {
+    <table class="table" id="featured-cars-table">
+        <thead>
+            <tr>
+                <th>Car</th>
+                <th>Price</th>
+                <th>Year</th>
+                <th>State</th>
+                <th>Mileage</th>
+                <th>Engine Volume</th>
+                <th>Fuel</th>
+                <th>Body Type</th>
+                <th>Transmission</th>
+                <th>Image</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.FeaturedCars) {
+                <tr>
+                    <td>
+                        @if (item.Car.Presence == Car.CarPresence.Sold) {
+                            <span style="color: red; font-weight: bold; font-size: 20px; text-transform: uppercase">Sold!</span>
+                        }
+                        @item.Car.Model.Brand.Name @item.Car.Model.Parent?.Name @item.Car.Model.Name
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Car.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Car.Year)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Car.State)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Car.Mileage)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Car.EngineVolume)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Car.FuelType.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Car.BodyType.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Car.TransmissionType.Name)
+                    </td>
+                    <td>
+                        @if (item.Car.CarImages.Count > 0) {
+                            <img src="@item.Car.CarImages.First().Path" alt="" style="width: 100px">
+                        }
+                    </td>
+                    <td>
+                        <a asp-controller="Home" asp-action="Car" asp-route-id="@item.Id">Details</a> |
+                        <a class="btn btn-danger btn-remove-from-featured" data-id="@item.Id">Remove</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else {
+    <p>There are no featured cars</p>
+}
+
+@if (Model.PurchaseRequests != null && Model.PurchaseRequests.Count > 0) {
+    <h2>Purchase requests</h2>
+    <hr />
+    <div class="row">
+        @foreach (var item in Model.PurchaseRequests) {
+
+           
+                var state = item.State switch {
+                    PurchaseRequest.RequestState.New => "secondary",
+                    PurchaseRequest.RequestState.Processing => "info",
+                    PurchaseRequest.RequestState.Canceled => "danger",
+                    PurchaseRequest.RequestState.Closed => "success",
+                    _ => ""
+                    };
+            
+
+            <div class="card col-sm-12 border-@state" style="margin: 20px;">
+                <div class="row no-gutters">
+                    <div class="col-sm-5">
+                        @if (item.Car.CarImages.Count > 0) {
+                            <img src="@item.Car.CarImages.First().Path" class="card-img-top" alt="">
+                        }
+                        else {
+                            <img src="/img/no-image.jpg" alt="" style="height: 300px">
+                        }
+                    </div>
+                    <div class="col-sm-7">
+                        <div class="card-body text-@state">
+                            <h5 class="card-title">
+                                Request № @item.Id State @item.State
+                            </h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                @item.Car.Year @item.Car.Model.Brand.Name @item.Car.Model.Parent?.Name @item.Car.Model.Name
+                            </h6>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a asp-controller="Home" asp-action="Car" class="card-link" asp-route-id="@item.CarId">Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+}
+else {
+    <p>There are no requests yet</p>
+}
+        @section Scripts {
+    <script type="text/javascript">
+    $(document).ready(() => {
+        $('#featured-cars-table').on('click',
+            '.btn-remove-from-featured',
+            (e) => {
+            console.log(e.target.parentNode.parentNode);
+
+            const carId = e.target.dataset['id'];
+
+                $.ajax({
+            url: '@Url.Action("AddRemoveFeatured", "Home")',
+                    data: { carId: carId }
+            }).done(() => {
+                    $(e.target.parentNode.parentNode).remove();
+
+            if ($('#featured-cars-table tr').length == 1) {
+                        $('#featured-cars-table').before('<p>There are no featured cars</p>');
+                        $('#featured-cars-table').remove();
+                }
+            });
+
+        });
+
+    });
+    </script>
+}

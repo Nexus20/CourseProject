@@ -1,0 +1,117 @@
+﻿@model Dictionary<int, Car>
+@{
+    ViewData["Title"] = "Compare cars";
+}
+
+<h1>Compare cars</h1>
+
+@if (Model != null && Model.Count > 0) {
+    <table class="table" id="comparison-table">
+        <thead>
+            <tr>
+                <th>
+                    Car
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].Year)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].State)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].Mileage)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].EngineVolume)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].FuelType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].BodyType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].TransmissionType)
+                </th>
+                <th>Image</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Values) {
+                <tr>
+                    <td>
+                        @item.Model.Brand.Name @item.Model.Parent?.Name @item.Model.Name
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Year)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.State)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mileage)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EngineVolume)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FuelType.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BodyType.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TransmissionType.Name)
+                    </td>
+                    <td>
+                        @if (item.CarImages.Count > 0) {
+                            <img src="@item.CarImages.First().Path" alt="" style="width: 100px">
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Car" asp-route-id="@item.Id">Details</a> |
+                        <a class="btn btn-danger btn-remove-from-compare" data-id="@item.Id">Remove</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else {
+    <p>There are no cars to compare</p>
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(() => {
+            $('#comparison-table').on('click',
+                '.btn-remove-from-compare',
+                (e) => {
+                    console.log(e.target.parentNode.parentNode);
+
+                    const carId = e.target.dataset['id'];
+
+                    $.ajax({
+                        url: '@Url.Action("AddRemoveToCompare", "Home")',
+                        data: { carId: carId }
+                    }).done(() => {
+                        $(e.target.parentNode.parentNode).remove();
+
+                        if ($('#comparison-table tr').length == 1) {
+                            $('#comparison-table').before('<p>There are no cars to compare</p>');
+                            $('#comparison-table').remove();
+                        }
+                    });
+
+                });
+
+        });
+    </script>
+}
