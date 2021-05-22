@@ -178,8 +178,8 @@ namespace CourseProject.Areas.Admin.Controllers
             ViewData["State"] = new SelectList(Enum.GetNames(typeof(Car.CarState)));
             ViewData["BodyTypeId"] = new SelectList(_context.BodyTypes, "Id", "Name");
             ViewData["FuelTypeId"] = new SelectList(_context.FuelTypes, "Id", "Name");
+            ViewBag.Colors = _context.Cars.Select(c => c.Color).Distinct().ToList();
 
-            
             //ViewData["ModelId"] = new SelectList(_context.CarModels, "Id", "Name");
             ViewData["ModelId"] = new SelectList(CreateViewModel(), "ModelId", "ModelNameWithBrand");
             ViewData["TransmissionTypeId"] = new SelectList(_context.TransmissionTypes, "Id", "Name");
@@ -191,7 +191,7 @@ namespace CourseProject.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Year,Color,Count,Price,State,ModelId,EngineVolume,Mileage,FuelTypeId,BodyTypeId,TransmissionTypeId")] Car car, IFormFileCollection uploadedImages)
+        public async Task<IActionResult> Create([Bind("Id,Year,Color,Count,Color,Price,State,ModelId,EngineVolume,Mileage,FuelTypeId,BodyTypeId,TransmissionTypeId")] Car car, IFormFileCollection uploadedImages)
         {
 
             if (car.State == Car.CarState.SecondHand){
@@ -236,7 +236,7 @@ namespace CourseProject.Areas.Admin.Controllers
             ViewData["State"] = new SelectList(Enum.GetNames(typeof(Car.CarState)), car.State);
             ViewData["BodyTypeId"] = new SelectList(_context.BodyTypes, "Id", "Name", car.BodyTypeId);
             ViewData["FuelTypeId"] = new SelectList(_context.FuelTypes, "Id", "Name", car.FuelTypeId);
-
+            ViewBag.Colors = _context.Cars.Select(c => c.Color).Distinct().ToList();
             //ViewData["ModelId"] = new SelectList(_context.CarModels, "Id", "Name", car.ModelId);
             ViewData["ModelId"] = new SelectList(CreateViewModel(), "ModelId", "ModelNameWithBrand", car.ModelId);
 

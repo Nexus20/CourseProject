@@ -108,20 +108,23 @@
         <div class="form-check form-check-inline">
             Color: &nbsp;
             <br>
-            @foreach (var color in ViewBag.Colors) {
+            @if (ViewBag.Colors != null) {
+                @foreach (var color in ViewBag.Colors) {
 
-                string state = "";
+                    string state = "";
 
-                if (ViewBag.CheckedColors != null) {
-                    foreach (var checkedColor in ViewBag.CheckedColors) {
-                        if (checkedColor == color) {
-                            state = "checked";
+                    if (ViewBag.CheckedColors != null) {
+                        foreach (var checkedColor in ViewBag.CheckedColors) {
+                            if (checkedColor == color) {
+                                state = "checked";
+                            }
                         }
                     }
-                }
 
-                <input class="form-check-input" id="@color-checkbox" type="checkbox" value="@color" name="colors" @state>
-                <label class="form-check-label" for="@color-checkbox">@color</label> @Html.Raw(" &nbsp; ")
+                    <input class="form-check-input" id="@color-checkbox" type="checkbox" value="@color" name="colors" @state>
+                    <label class="form-check-label" for="@color-checkbox">@color</label>
+                    @Html.Raw(" &nbsp; ")
+                }
             }
         </div>
     </div>

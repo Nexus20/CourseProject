@@ -8,18 +8,6 @@
     <h1 class="display-4">Welcome</h1>
 </div>
 
-@*@if (User.Identity.IsAuthenticated) {
-    <p>@User.Identity.Name</p>
-
-    <form method="post" asp-controller="Account" asp-action="Logout">
-        <input type="submit" value="Выход" />
-    </form>
-}
-else {
-    <a asp-controller="Account" asp-action="Login">Login</a>
-    <a asp-controller="Account" asp-action="Register">Register</a>
-}*@
-
 @{await Html.RenderPartialAsync("_CarSearchForm", (CarSearchViewModel)ViewBag.CarSearchModel);}
 
 <div class="row">

@@ -47,6 +47,18 @@
                 <span asp-validation-for="Count" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Color" class="control-label"></label>
+                <input asp-for="Color" class="form-control" list="colors" />
+                @if (ViewBag.Colors != null) {
+                    <datalist id="colors">
+                        @foreach (var color in ViewBag.Colors) {
+                            <option>@(color.Substring(1, color.Length - 2))</option> 
+                        }
+                    </datalist>
+                }
+                <span asp-validation-for="Color" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="FuelType" class="control-label"></label>
                 <select asp-for="FuelTypeId" class="form-control" asp-items="ViewBag.FuelTypeId"></select>
             </div>

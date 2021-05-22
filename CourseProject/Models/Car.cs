@@ -9,6 +9,7 @@ namespace CourseProject.Models {
     public class Car {
         public int Id { get; set; }
 
+        [StringLength(4, ErrorMessage = "Enter correct year")]
         public int? Year { get; set; }
 
         [Required]
