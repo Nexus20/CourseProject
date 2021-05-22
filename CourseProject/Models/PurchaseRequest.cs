@@ -21,11 +21,18 @@ namespace CourseProject.Models {
         public Car Car { get; set; }
 
         [Required]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "String length must be between 3 and 50 characters")]
         public string Firstname { get; set; }
+
         [Required]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "String length must be between 3 and 50 characters")]
         public string Surname { get; set; }
+
         [Required]
+        [Phone(ErrorMessage = "Invalid phone")]
         public string Phone { get; set; }
+        [Required]
+        [EmailAddress(ErrorMessage = "Invalid email")]
         public string Email { get; set; }
 
         public RequestState State { get; set; }

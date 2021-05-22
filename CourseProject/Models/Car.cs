@@ -7,15 +7,17 @@ using System.Threading.Tasks;
 
 namespace CourseProject.Models {
     public class Car {
-
         public int Id { get; set; }
 
         public int? Year { get; set; }
 
+        [Required]
         public string Color { get; set; }
 
+        [Required]
         public int Count { get; set; }
 
+        [Required]
         [Column(TypeName = "money")]
         public decimal Price { get; set; }
 
@@ -24,6 +26,7 @@ namespace CourseProject.Models {
             SecondHand
         }
 
+        [Required]
         public CarState State { get; set; }
 
         public enum CarPresence {
@@ -35,6 +38,7 @@ namespace CourseProject.Models {
 
         public CarPresence Presence { get; set; }
 
+        [Required]
         public int ModelId { get; set; }
         public CarModel Model { get; set; }
 
@@ -42,10 +46,12 @@ namespace CourseProject.Models {
         public double? EngineVolume { get; set; }
         public double? Mileage { get; set; }
 
+        [Required]
         public int FuelTypeId { get; set; }
         [Display(Name = "Fuel")]
         public FuelType FuelType { get; set; }
 
+        [Required]
         public int BodyTypeId { get; set; }
         [Display(Name = "Body")]
         public BodyType BodyType { get; set; }

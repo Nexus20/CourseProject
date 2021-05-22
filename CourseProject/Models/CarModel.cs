@@ -10,8 +10,11 @@ namespace CourseProject.Models {
 
         public int Id { get; set; }
 
+        [Required]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "String length must be between 3 and 30 characters")]
         public string Name { get; set; }
 
+        [Required]
         [Display(Name = "Brand")]
         public int BrandId { get; set; }
         public Brand Brand { get; set; }
