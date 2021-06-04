@@ -8,6 +8,7 @@ namespace CourseProject.Models.ViewModels {
     public class RegisterViewModel {
 
         [Required]
+        [Display(Name = "Login")]
         public string UserName { get; set; }
 
         [Required]

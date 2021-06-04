@@ -32,7 +32,9 @@
                 <input asp-for="@Model.Email" class="form-control" type="email" />
                 <span asp-validation-for="@Model.Email" class="text-danger"></span>
             </div>
-            <input type="submit" value="Submit" />
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn btn-success" />
+            </div>
         </form>
     </div>
 </div>

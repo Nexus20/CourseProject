@@ -76,8 +76,10 @@
                         }
                     </td>
                     <td>
-                        <a asp-action="Car" asp-route-id="@item.Id">Details</a> |
-                        <a class="btn btn-danger btn-remove-from-compare" data-id="@item.Id">Remove</a>
+                        <div style="display: flex;">
+                            <a asp-action="Car" asp-route-id="@item.Id" class="btn btn-info">Details</a> &nbsp;
+                            <a class="btn btn-danger btn-remove-from-compare" data-id="@item.Id">Remove</a>
+                        </div>
                     </td>
                 </tr>
             }
@@ -85,7 +87,10 @@
     </table>
 }
 else {
-    <p>There are no cars to compare</p>
+    <br>
+    <div class="alert alert-info" role="alert">
+        There are no cars to compare
+    </div>
 }
 
 @section Scripts {
@@ -105,7 +110,7 @@ else {
                         $(e.target.parentNode.parentNode).remove();
 
                         if ($('#comparison-table tr').length == 1) {
-                            $('#comparison-table').before('<p>There are no cars to compare</p>');
+                            $('#comparison-table').before('<br><div class="alert alert-info" role="alert">There are no cars to compare</div>');
                             $('#comparison-table').remove();
                         }
                     });

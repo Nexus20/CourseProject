@@ -1,7 +1,7 @@
 ﻿@model User
 
 <h1>Personal info</h1>
-<hr />
+<hr>
 
 <dl class="row">
     <dt class="col-sm-4">
@@ -19,7 +19,6 @@
 </dl>
 
 <h2>Featured Cars</h2>
-<hr />
 
 @if (Model.FeaturedCars != null && Model.FeaturedCars.Count > 0) {
     <table class="table" id="featured-cars-table">
@@ -77,8 +76,10 @@
                         }
                     </td>
                     <td>
-                        <a asp-controller="Home" asp-action="Car" asp-route-id="@item.Id">Details</a> |
-                        <a class="btn btn-danger btn-remove-from-featured" data-id="@item.Id">Remove</a>
+                        <div style="display: flex;">
+                            <a asp-controller="Home" asp-action="Car" asp-route-id="@item.CarId" class="btn btn-info">Details</a> &nbsp;
+                            <a class="btn btn-danger btn-remove-from-featured" data-id="@item.CarId">Remove</a>
+                        </div>
                     </td>
                 </tr>
             }
@@ -86,24 +87,28 @@
     </table>
 }
 else {
-    <p>There are no featured cars</p>
+    <hr>
+    <br>
+    <div class="alert alert-info" role="alert">
+        There are no featured cars
+    </div>
 }
 
+<h2>Purchase requests</h2>
+
 @if (Model.PurchaseRequests != null && Model.PurchaseRequests.Count > 0) {
-    <h2>Purchase requests</h2>
-    <hr />
     <div class="row">
         @foreach (var item in Model.PurchaseRequests) {
 
-           
-                var state = item.State switch {
-                    PurchaseRequest.RequestState.New => "secondary",
-                    PurchaseRequest.RequestState.Processing => "info",
-                    PurchaseRequest.RequestState.Canceled => "danger",
-                    PurchaseRequest.RequestState.Closed => "success",
-                    _ => ""
-                    };
-            
+
+            var state = item.State switch {
+                PurchaseRequest.RequestState.New => "secondary",
+                PurchaseRequest.RequestState.Processing => "info",
+                PurchaseRequest.RequestState.Canceled => "danger",
+                PurchaseRequest.RequestState.Closed => "success",
+                _ => ""
+            };
+
 
             <div class="card col-sm-12 border-@state" style="margin: 20px;">
                 <div class="row no-gutters">
@@ -124,7 +129,7 @@ else {
                                 @item.Car.Year @item.Car.Model.Brand.Name @item.Car.Model.Parent?.Name @item.Car.Model.Name
                             </h6>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a asp-controller="Home" asp-action="Car" class="card-link" asp-route-id="@item.CarId">Details</a>
+                            <a asp-controller="Home" asp-action="Car" class="card-link btn btn-outline-info" asp-route-id="@item.CarId">Details</a>
                         </div>
                     </div>
                 </div>
@@ -134,27 +139,31 @@ else {
 
 }
 else {
-    <p>There are no requests yet</p>
+    <hr>
+    <br>
+    <div class="alert alert-info" role="alert">
+        There are no requests yet
+    </div>
 }
-        @section Scripts {
+@section Scripts {
     <script type="text/javascript">
     $(document).ready(() => {
         $('#featured-cars-table').on('click',
             '.btn-remove-from-featured',
             (e) => {
-            console.log(e.target.parentNode.parentNode);
 
-            const carId = e.target.dataset['id'];
 
-                $.ajax({
-            url: '@Url.Action("AddRemoveFeatured", "Home")',
-                    data: { carId: carId }
-            }).done(() => {
-                    $(e.target.parentNode.parentNode).remove();
+                const carId = e.target.dataset['id'];
 
-            if ($('#featured-cars-table tr').length == 1) {
-                        $('#featured-cars-table').before('<p>There are no featured cars</p>');
-                        $('#featured-cars-table').remove();
+                    $.ajax({
+                url: '@Url.Action("AddRemoveFeatured", "Home")',
+                        data: { carId: carId }
+                }).done(() => {
+                    $(e.target.parentNode.parentNode.parentNode).remove();
+
+                if ($('#featured-cars-table tr').length == 1) {
+                    $('#featured-cars-table').before('<hr><br><div class="alert alert-info" role="alert">There are no featured cars</div>');
+                    $('#featured-cars-table').remove();
                 }
             });
 

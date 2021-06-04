@@ -9,8 +9,8 @@ namespace CourseProject.Data {
     public static class DbInitializer {
 
         public static async Task InitializeRolesAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager) {
-            var adminEmail = "jack.gelder0804@gmail.com";
-            var password = "ABCabc123_";
+            const string adminEmail = "jack.gelder0804@gmail.com";
+            const string password = "ABCabc123_";
 
             if (await roleManager.FindByNameAsync("admin") == null) {
                 await roleManager.CreateAsync(new IdentityRole("admin"));
@@ -27,7 +27,7 @@ namespace CourseProject.Data {
                     UserName = "admin",
                     Email = adminEmail
                 };
-                IdentityResult result = await userManager.CreateAsync(admin, password);
+                var result = await userManager.CreateAsync(admin, password);
                 if (result.Succeeded) {
                     await userManager.AddToRoleAsync(admin, "admin");
                 }
@@ -104,9 +104,9 @@ namespace CourseProject.Data {
 
             context.SaveChanges();
 
-            List<Car> cars = new List<Car>();
+            var cars = new List<Car>();
 
-            Random random = new Random();
+            var random = new Random();
 
             for (var i = 0; i < 45; i++) {
                 cars.Add(new Car() {

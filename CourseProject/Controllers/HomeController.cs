@@ -348,10 +348,11 @@ namespace CourseProject.Controllers {
         public async Task<IActionResult> Compare() {
 
             var carsToCompare = HttpContext.Session.Get<Dictionary<int, Car>>("CarsToCompare");
-            foreach (var carToCompare in carsToCompare) {
-                carToCompare.Value.CarImages = _context.CarImages.Where(ci => ci.CarId == carToCompare.Key).AsNoTracking().ToList();
+            if (carsToCompare != null) {
+                foreach (var (key, value) in carsToCompare) {
+                    value.CarImages = _context.CarImages.Where(ci => ci.CarId == key).AsNoTracking().ToList();
+                }
             }
-
             return View(carsToCompare);
 
         }

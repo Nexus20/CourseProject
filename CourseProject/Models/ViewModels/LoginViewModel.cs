@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace CourseProject.Models.ViewModels {
     public class LoginViewModel {
         [Required]
-        [Display(Name = "User name")]
+        [Display(Name = "Login")]
         public string UserName { get; set; }
 
         [Required]
