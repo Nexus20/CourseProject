@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseProject.Models {
@@ -13,6 +9,7 @@ namespace CourseProject.Models {
         [Required]
         [StringLength(30, MinimumLength = 3, ErrorMessage = "String length must be between 3 and 30 characters")]
         [Remote(action: "CheckTransmissionType", controller: "Cars", areaName: "Admin", ErrorMessage = "This transmission type already exists")]
+        [Display(Name = "Type")]
         public string Name { get; set; }
     }
 }

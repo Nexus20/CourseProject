@@ -6,9 +6,10 @@
 }
 
 <h1>Cars</h1>
+<hr>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary btn-lg">Create New</a>
 </p>
 
 
@@ -17,9 +18,9 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model[0].Year)
-            </th>
+            </th>*@
             <th>
                 @Html.DisplayNameFor(model => model[0].Price)
             </th>
@@ -60,9 +61,9 @@
     <tbody>
         @foreach (var item in Model) {
             <tr>
-                <td>
+                @*<td>
                     @Html.DisplayFor(modelItem => item.Year)
-                </td>
+                </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.Price)
                 </td>
@@ -70,7 +71,7 @@
                     @Html.DisplayFor(modelItem => item.State)
                 </td>
                 <td>
-                    @item.Model.Brand.Name @item.Model.Parent?.Name @item.Model.Name
+                    @item.Model.Brand.Name @item.Model.Parent?.Name @item.Model.Name @item.Year
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.EngineVolume)
@@ -117,10 +118,6 @@
                             <a asp-action="Delete" asp-route-id="@item.Id" class="dropdown-item">Delete</a>
                         </div>
                     </div>
-
-
-
-
                 </td>
             </tr>
         }
@@ -142,17 +139,11 @@
                 'option',
                 (e) => {
                     console.log(e.target.value);
-                    let brandId = encodeURIComponent(e.target.value);
+                    const brandId = encodeURIComponent(e.target.value);
 
-                    $('#models-list').load('@Url.Action("GetModelsByBrand", "Home", new {Area = ""})?brandId=' + brandId);
+                    $('#models-list').load(`@Url.Action("GetModelsByBrand", "Home", new {Area = ""})?brandId=${brandId}`);
                     $('#models-list').prepend('<option value=""></option>');
                 });
-
-            
-
-
-            
-
         });
     </script>
 }

@@ -4,34 +4,25 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>SupplyRequest</h4>
+<h1>Edit supply request</h1>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="State" />
+            <input type="hidden" asp-for="CarId" />
             <div class="form-group">
                 <label asp-for="DealerId" class="control-label"></label>
                 <select asp-for="DealerId" class="form-control" asp-items="ViewBag.DealerId"></select>
                 <span asp-validation-for="DealerId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CarId" class="control-label"></label>
-                <select asp-for="CarId" class="form-control" asp-items="ViewBag.CarId"></select>
-                <span asp-validation-for="CarId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Count" class="control-label"></label>
                 <input asp-for="Count" class="form-control" />
                 <span asp-validation-for="Count" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="State" class="control-label"></label>
-                <select asp-for="State" class="form-control"></select>
-                <span asp-validation-for="State" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

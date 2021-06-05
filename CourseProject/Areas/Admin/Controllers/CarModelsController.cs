@@ -49,6 +49,7 @@ namespace CourseProject.Areas.Admin.Controllers
                 .Include(c => c.Brand)
                 .Include(c => c.Parent)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            
             if (carModel == null)
             {
                 return NotFound();

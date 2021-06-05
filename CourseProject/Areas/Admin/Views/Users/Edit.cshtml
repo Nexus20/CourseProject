@@ -2,20 +2,28 @@
 @{
     ViewData["Title"] = "Edit user";
 }
-<form asp-action="Edit" asp-controller="Users">
-    <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="form-group">
-        <input type="hidden" asp-for="Id" />
+
+<h1>Edit user</h1>
+<hr />
+
+<div class="row">
+    <div class="col-sm-6">
+        <form asp-action="Edit" asp-controller="Users">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <input type="hidden" asp-for="Id" />
+            </div>
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input type="text" asp-for="UserName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input type="text" asp-for="Email" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-success" />
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label asp-for="UserName" class="control-label">User Name</label>
-        <input type="text" asp-for="UserName" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Email" class="control-label">Email</label>
-        <input type="text" asp-for="Email" class="form-control" />
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Сохранить" class="btn btn-outline-secondary" />
-    </div>
-</form>
+</div>

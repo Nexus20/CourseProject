@@ -1,25 +1,20 @@
 ﻿@model IEnumerable<CourseProject.Models.CarModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Car models";
 }
 
-<h1>Index</h1>
-
+<h1>Car models</h1>
+<hr>
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary btn-lg">Create New</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Brand)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Parent)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Model
             </th>
             <th></th>
         </tr>
@@ -27,36 +22,28 @@
     <tbody>
 @foreach (var item in Model) {
     <tr>
-        <td>
+        <td class="parent-car-model">
             @Html.DisplayFor(modelItem => item.Brand.Name)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.Parent.Name)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.Name)
         </td>
         <td>
-            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            <div style="display: flex;">
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> &nbsp;
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a> &nbsp;
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+            </div>
         </td>
     </tr>
     foreach (var child in item.Children) {
         <tr>
+            <td class="child-car-model">       @Html.DisplayFor(modelItem => child.Brand.Name) @Html.DisplayFor(modelItem => child.Parent.Name) @Html.DisplayFor(modelItem => child.Name)</td>
             <td>
-                @Html.DisplayFor(modelItem => child.Brand.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => child.Parent.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => child.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <div style="display: flex;">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> &nbsp;
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a> &nbsp;
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                </div>
             </td>
         </tr>
     }

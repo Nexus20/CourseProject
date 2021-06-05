@@ -4,24 +4,13 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Car Details</h1>
+<h1>@Model.Model.Brand.Name @Model.Model.Parent?.Name @Model.Model.Name @Model.Year</h1>
+<hr />
 
 <div>
-    <h4>
-        @Model.Model.Brand.Name @Model.Model.Parent?.Name @Model.Model.Name
-    </h4>
-    <hr />
     <div class="row">
         <div class="col-sm-6">
             <dl class="row">
-                @if (Model.Year != null) {
-                    <dt class="col-sm-4">
-                        @Html.DisplayNameFor(model => model.Year)
-                    </dt>
-                    <dd class="col-sm-8">
-                        @Html.DisplayFor(model => model.Year)
-                    </dd>
-                }
                 <dt class="col-sm-4">
                     @Html.DisplayNameFor(model => model.Price)
                 </dt>
@@ -46,12 +35,14 @@
                 <dd class="col-sm-8">
                     @Html.DisplayFor(model => model.EngineVolume)
                 </dd>
-                <dt class="col-sm-4">
-                    @Html.DisplayNameFor(model => model.Mileage)
-                </dt>
-                <dd class="col-sm-8">
-                    @Html.DisplayFor(model => model.Mileage)
-                </dd>
+                @if(Model.State == Car.CarState.SecondHand) {
+                    <dt class="col-sm-4">
+                        @Html.DisplayNameFor(model => model.Mileage)
+                    </dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Mileage)
+                    </dd>
+                }
                 <dt class="col-sm-4">
                     @Html.DisplayNameFor(model => model.FuelType)
                 </dt>
@@ -81,6 +72,6 @@
     
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a> 
+    <a asp-action="Index" class="btn btn-primary">Back to list</a>
 </div>

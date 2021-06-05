@@ -194,13 +194,16 @@ namespace CourseProject.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var supplyRequest = await _context.SupplyRequests.FindAsync(id);
+            var supplyRequest = await _context.SupplyRequests
+                .Include(sr => sr.Dealer)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(sr => sr.Id == id);
+
             if (supplyRequest == null)
             {
                 return NotFound();
             }
-            ViewData["CarId"] = new SelectList(_context.Cars, "Id", "Id", supplyRequest.CarId);
-            ViewData["DealerId"] = new SelectList(_context.Dealers, "Id", "Id", supplyRequest.DealerId);
+            ViewData["DealerId"] = new SelectList(await _context.Dealers.Where(d => d.BrandId == supplyRequest.Dealer.BrandId).ToListAsync(), "Id", "Name", supplyRequest.DealerId);
             return View(supplyRequest);
         }
 
@@ -251,6 +254,11 @@ namespace CourseProject.Areas.Admin.Controllers
 
             var supplyRequest = await _context.SupplyRequests
                 .Include(s => s.Car)
+                    .ThenInclude(c => c.Model)
+                        .ThenInclude(cm => cm.Brand)
+                .Include(s => s.Car)
+                    .ThenInclude(c => c.Model)
+                        .ThenInclude(cm => cm.Parent)
                 .Include(s => s.Dealer)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (supplyRequest == null)

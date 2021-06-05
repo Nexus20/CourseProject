@@ -15,6 +15,7 @@ namespace CourseProject.Models {
             Canceled
         }
 
+        [Display(Name = "Request ID")]
         public int Id { get; set; }
 
         public int CarId { get; set; }
@@ -39,6 +40,7 @@ namespace CourseProject.Models {
 
         public RequestState State { get; set; }
 
+        [Display(Name="Full name")]
         public string FullName => $"{Firstname} {Surname}";
 
         public string ClientId { get; set; }

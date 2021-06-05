@@ -3,35 +3,34 @@
     ViewData["Title"] = "Fuel Types";
 }
 
-<h1>BodyTypes</h1>
-
+<h1>Fuel types</h1>
 <p>
-    <a asp-action="CreateFuelType">Create New</a>
+    <a asp-action="CreateFuelType" class="btn btn-primary">Create New</a>
 </p>
 <table class="table">
     <thead>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th></th>
-    </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <a asp-action="EditFuelType" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
-                <form asp-action="DeleteFuelType">
-                    <input type="hidden" asp-for="@item.Id" name="id" />
-                    <input type="submit" value="Delete" class="btn btn-danger" />
-                </form>
-                <a asp-action="FuelTypes">Back to List</a>
-            </td>
-        </tr>
-    }
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    <form asp-action="DeleteFuelType">
+                        <a asp-action="EditFuelType" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
+                        <input type="hidden" asp-for="@item.Id" name="id" />
+                        <input type="submit" value="Delete" class="btn btn-danger" />
+                        <a asp-action="FuelTypes" class="btn btn-primary">Back to List</a>
+                    </form>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

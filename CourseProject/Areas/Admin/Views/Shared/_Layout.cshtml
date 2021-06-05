@@ -31,13 +31,13 @@
                             <a class="nav-link text-dark" asp-area="Admin" asp-controller="CarModels" asp-action="Brands">Brands</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Cars" asp-action="BodyTypes">Body types</a>
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Cars" asp-action="BodyTypes">Bodies</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Cars" asp-action="FuelTypes">Fuel types</a>
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Cars" asp-action="FuelTypes">Fuels</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Cars" asp-action="TransmissionTypes">Transmission types</a>
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Cars" asp-action="TransmissionTypes">Transmissions</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Admin" asp-controller="PurchaseRequests" asp-action="Index">Requests</a>
@@ -63,7 +63,7 @@
                                 Hello, @User.Identity.Name
                             </li>
                             <li class="nav-item">
-                                <form method="post" asp-controller="Account" asp-action="Logout">
+                                <form method="post" asp-area="" asp-controller="Account" asp-action="Logout">
                                     <input type="submit" value="Logout" class="btn btn-light" />
                                 </form>
                             </li>
@@ -89,7 +89,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2021 - CourseProject - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2021 - AUTO SHOW - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

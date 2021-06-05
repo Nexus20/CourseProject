@@ -43,13 +43,7 @@
                 Model
             </dt>
             <dd class="col-sm-8">
-                @Model.Car.Model.Brand.Name @Model.Car.Model.Parent?.Name @Model.Car.Model.Name
-            </dd>
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.Car.Year)
-            </dt>
-            <dd class="col-sm-8">
-                @Html.DisplayFor(model => model.Car.Year)
+                @Model.Car.Model.Brand.Name @Model.Car.Model.Parent?.Name @Model.Car.Model.Name @Model.Car.Year
             </dd>
             <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.Car.Price)
@@ -64,17 +58,25 @@
                 @Html.DisplayFor(model => model.Car.State)
             </dd>
             <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Car.Color)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Car.Color)
+            </dd>
+            <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.Car.EngineVolume)
             </dt>
             <dd class="col-sm-8">
                 @Html.DisplayFor(model => model.Car.EngineVolume)
             </dd>
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.Car.Mileage)
-            </dt>
-            <dd class="col-sm-8">
-                @Html.DisplayFor(model => model.Car.Mileage)
-            </dd>
+            @if (Model.Car.State == Car.CarState.SecondHand) {
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Car.Mileage)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Car.Mileage)
+                </dd>
+            }
             <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.Car.FuelType)
             </dt>
@@ -103,19 +105,21 @@
     </div>
 </div>
 
-<form asp-action="Details">
-    <input type="hidden" asp-for="Id" />
-    <input type="submit" value="Close request" class="btn btn-primary" /> |
-    <a asp-action="Index">Back to List</a>
-</form>
-
-@if (Model.State == PurchaseRequest.RequestState.Processing) {
-    <form asp-action="CancelRequest">
-        <input type="hidden" asp-for="Id"/>
-        <input type="submit" value="Cancel request" class="btn btn-danger"/> |
+<div style="display: flex; column-gap: 5px;">
+    <form asp-action="Details">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Close request" class="btn btn-success" />
     </form>
-}
 
+    @if (Model.State == PurchaseRequest.RequestState.Processing) {
+        <form asp-action="CancelRequest">
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" value="Cancel request" class="btn btn-danger" />
+        </form>
+    }
+
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+</div>
 @*@section Scripts {
     <script type="text/javascript">
         $(document).ready(() => {

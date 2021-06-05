@@ -4,9 +4,7 @@
     ViewData["title"] = Model.Id == 0 ? "Create" : "Edit";
 }
 
-@Html.Raw(Model.Id == 0 ? "<h1>Create</h1" : "<h1>Edit</h1");
-
-<h4>Transmission Type</h4>
+@Html.Raw(Model.Id == 0 ? "<h1>Create transmission type</h1>" : "<h1>Edit transmission type</h1>")
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -17,7 +15,7 @@
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <input asp-for="Id" type="hidden"/>
+            <input asp-for="Id" type="hidden" />
             <div class="form-group">
                 <input type="submit" value="Submit" class="btn btn-primary" />
             </div>

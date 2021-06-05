@@ -3,10 +3,9 @@
     ViewData["Title"] = "Transmission Types";
 }
 
-<h1>BodyTypes</h1>
-
+<h1>Transmission types</h1>
 <p>
-    <a asp-action="CreateTransmissionType">Create New</a>
+    <a asp-action="CreateTransmissionType" class="btn btn-primary">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -24,12 +23,12 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                <a asp-action="EditTransmissionType" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
                 <form asp-action="DeleteTransmissionType">
+                    <a asp-action="EditTransmissionType" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
                     <input type="hidden" asp-for="@item.Id" name="id" />
                     <input type="submit" value="Delete" class="btn btn-danger" />
+                    <a asp-action="TransmissionTypes" class="btn btn-primary">Back to List</a>
                 </form>
-                <a asp-action="TransmissionTypes">Back to List</a>
             </td>
         </tr>
     }

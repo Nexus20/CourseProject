@@ -13,6 +13,7 @@ namespace CourseProject.Models {
         [Required]
         [StringLength(30, MinimumLength = 3, ErrorMessage = "String length must be between 3 and 30 characters")]
         [Remote(action: "CheckBrand", controller: "CarModels", areaName: "Admin", ErrorMessage = "This brand already exists")]
+        [Display(Name = "Brand")]
         public string Name { get; set; }
 
         public ICollection<Dealer> Dealers { get; set; }

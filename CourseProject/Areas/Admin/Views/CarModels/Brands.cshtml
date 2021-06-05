@@ -6,7 +6,7 @@
 <h1>Brands</h1>
 
 <p>
-    <a asp-action="CreateBrand">Create New</a>
+    <a asp-action="CreateBrand" class="btn btn-primary">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -24,11 +24,11 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                <a asp-action="EditBrand" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> |
                 <form asp-action="DeleteBrand">
+                    <a asp-action="EditBrand" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> 
                     <input type="hidden" asp-for="@item.Id" name="id" />
-                    <input type="submit" value="Delete" class="btn btn-danger" /> |
-                    <a asp-action="Index">Back to List</a>
+                    <input type="submit" value="Delete" class="btn btn-danger" /> 
+                    <a asp-action="Index" class="btn btn-primary">Back to List</a>
                 </form>
             </td>
         </tr>

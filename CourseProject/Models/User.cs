@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CourseProject.Models {
     public class User : IdentityUser {
+
         [Display(Name = "Login")]
         public override string UserName { get; set; }
 

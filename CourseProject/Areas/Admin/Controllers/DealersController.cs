@@ -93,7 +93,7 @@ namespace CourseProject.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Id", dealer.BrandId);
+            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name", dealer.BrandId);
             return View(dealer);
         }
 

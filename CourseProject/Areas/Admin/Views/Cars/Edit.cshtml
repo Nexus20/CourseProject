@@ -5,59 +5,63 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>Car</h4>
+<h1>Edit car</h1>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Year" class="control-label"></label>
-                <input asp-for="Year" class="form-control" />
-                <span asp-validation-for="Year" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="State" class="control-label"></label>
-                <select asp-for="State" class="form-control" asp-items="ViewBag.State"></select>
-                <span asp-validation-for="State" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModelId" class="control-label"></label>
-                <select asp-for="ModelId" class="form-control" asp-items="ViewBag.ModelId"></select>
-                <span asp-validation-for="ModelId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EngineVolume" class="control-label"></label>
-                <input asp-for="EngineVolume" class="form-control" />
-                <span asp-validation-for="EngineVolume" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Mileage" class="control-label"></label>
-                <input asp-for="Mileage" class="form-control" />
-                <span asp-validation-for="Mileage" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FuelTypeId" class="control-label"></label>
-                <select asp-for="FuelTypeId" class="form-control" asp-items="ViewBag.FuelTypeId"></select>
-                <span asp-validation-for="FuelTypeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BodyTypeId" class="control-label"></label>
-                <select asp-for="BodyTypeId" class="form-control" asp-items="ViewBag.BodyTypeId"></select>
-                <span asp-validation-for="BodyTypeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TransmissionTypeId" class="control-label"></label>
-                <select asp-for="TransmissionTypeId" class="form-control" asp-items="ViewBag.TransmissionTypeId"></select>
-                <span asp-validation-for="TransmissionTypeId" class="text-danger"></span>
+            <div class="form-row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Year" class="control-label"></label>
+                        <input asp-for="Year" class="form-control" />
+                        <span asp-validation-for="Year" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Price" class="control-label"></label>
+                        <input asp-for="Price" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="State" class="control-label"></label>
+                        <select asp-for="State" class="form-control" asp-items="ViewBag.State"></select>
+                        <span asp-validation-for="State" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Model" class="control-label"></label>
+                        <select asp-for="ModelId" class="form-control" asp-items="ViewBag.ModelId"></select>
+                        <span asp-validation-for="ModelId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EngineVolume" class="control-label"></label>
+                        <input asp-for="EngineVolume" class="form-control" />
+                        <span asp-validation-for="EngineVolume" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Mileage" class="control-label"></label>
+                        <input asp-for="Mileage" class="form-control" />
+                        <span asp-validation-for="Mileage" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FuelType" class="control-label"></label>
+                        <select asp-for="FuelTypeId" class="form-control" asp-items="ViewBag.FuelTypeId"></select>
+                        <span asp-validation-for="FuelTypeId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="BodyType" class="control-label"></label>
+                        <select asp-for="BodyTypeId" class="form-control" asp-items="ViewBag.BodyTypeId"></select>
+                        <span asp-validation-for="BodyTypeId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="TransmissionType" class="control-label"></label>
+                        <select asp-for="TransmissionTypeId" class="form-control" asp-items="ViewBag.TransmissionTypeId"></select>
+                        <span asp-validation-for="TransmissionTypeId" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -71,7 +75,9 @@
 </div>
 
 @if (Directory.Exists(ViewBag.ImagesDirectory)) {
+    <br>
     <h3>Uploaded Images</h3>
+    <hr>
     <form asp-action="RemoveImages" method="post">
         <input type="hidden" name="carId" value="@Model.Id" />
         @{
@@ -81,15 +87,15 @@
             <input type="checkbox" name="fileNames[]" value="@file.Name">
             <img src="/img/cars/@Model.Id/@file.Name" alt="" style="width: 200px">
         }
-        <input type="submit" value="Remove selected images" />
+        <br><input type="submit" class="btn btn-danger" value="Remove selected images" />
     </form>
 }
 
-<h3>Select image</h3>
+<br><h3>Select images</h3>
 <form asp-action="AddImages" asp-controller="Cars" method="post" enctype="multipart/form-data">
     <input type="file" name="uploadedImages" multiple accept="image/*" />
     <input type="hidden" name="carId" value="@Model.Id" />
-    <input type="submit" value="Upload" />
+    <br><br><input type="submit" class="btn btn-primary" value="Upload" />
 </form>
 
 

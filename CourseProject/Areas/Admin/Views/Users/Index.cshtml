@@ -3,10 +3,15 @@
     ViewData["Title"] = "Users list";
 }
 
-<a asp-action="Create">Create new</a>
+<h1>Users</h1>
+<hr>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary btn-lg">Create New</a>
+</p>
 
 <table class="table">
-    <tr><th>User Name</th><th>Email</th><th></th></tr>
+    <tr><th>@Html.DisplayNameFor(model => model.UserName)</th><th>@Html.DisplayNameFor(model => model.Email)</th><th></th></tr>
     @foreach (var user in Model) {
         <tr>
             <td>@user.UserName</td>

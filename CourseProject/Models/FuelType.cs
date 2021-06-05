@@ -14,6 +14,7 @@ namespace CourseProject.Models {
         [Required]
         [StringLength(30, MinimumLength = 3, ErrorMessage = "String length must be between 3 and 30 characters")]
         [Remote(action: "CheckFuelType", controller: "Cars", areaName: "Admin", ErrorMessage = "This fuel type already exists")]
+        [Display(Name = "Type")]
         public string Name { get; set; }
     }
 }

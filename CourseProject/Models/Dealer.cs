@@ -11,6 +11,7 @@ namespace CourseProject.Models {
 
         [Required]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "String length must be between 3 and 50 characters")]
+        [Display(Name="Dealer")]
         public string Name { get; set; }
 
         [Required]
@@ -23,6 +24,7 @@ namespace CourseProject.Models {
         public string Phone { get; set; }
 
         [Required]
+        [Display(Name = "Brand")]
         public int BrandId { get; set; }
         public Brand Brand { get; set; }
 

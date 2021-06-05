@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CourseProject.Models {
     public class Car {
@@ -15,6 +12,7 @@ namespace CourseProject.Models {
         public string Color { get; set; }
 
         [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "Minimum value for this field is 0")]
         public int Count { get; set; }
 
         [Required]
@@ -39,11 +37,14 @@ namespace CourseProject.Models {
         public CarPresence Presence { get; set; }
 
         [Required]
+        [Display(Name = "Model")]
         public int ModelId { get; set; }
         public CarModel Model { get; set; }
 
-        [Display(Name = "Engine Volume")]
+        [Display(Name = "Engine volume")]
         public double? EngineVolume { get; set; }
+
+        [Range(0, int.MaxValue, ErrorMessage = "Minimum value for this field is 0")]
         public double? Mileage { get; set; }
 
         [Required]

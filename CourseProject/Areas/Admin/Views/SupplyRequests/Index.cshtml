@@ -4,7 +4,7 @@
     ViewData["Title"] = "Supply requests";
 }
 
-<h1>Index</h1>
+<h1>Supply requests</h1>
 
 <table class="table">
     <thead>
@@ -46,14 +46,18 @@
                 @Html.DisplayFor(modelItem => item.State)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 @if (item.State == SupplyRequest.SupplyRequestState.New) {
-                    <a asp-action="SendRequest" asp-route-id="@item.Id">Send Request</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
+                }
+                @if (item.State == SupplyRequest.SupplyRequestState.New) {
+                    <a asp-action="SendRequest" asp-route-id="@item.Id" class="btn btn-success">Send Request</a>
                 }
                 @if (item.State == SupplyRequest.SupplyRequestState.Sent) {
-                    <a asp-action="CloseRequest" asp-route-id="@item.Id">Close Request</a>
+                    <a asp-action="CloseRequest" asp-route-id="@item.Id" class="btn btn-success">Close Request</a>
                 }
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @if (item.State != SupplyRequest.SupplyRequestState.Sent) {
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                }
             </td>
         </tr>
     }

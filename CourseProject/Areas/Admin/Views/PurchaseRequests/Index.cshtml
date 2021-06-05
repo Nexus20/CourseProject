@@ -5,12 +5,13 @@
     ViewData["Title"] = "Purchase requests";
 }
 
-<h1>Requests</h1>
+<h1>Purchase requests</h1>
+<hr>
 
 <form asp-action="Index" method="get">
     <div class="form-row">
         <div class="form-group col-sm-2">
-            <label for="input-id" class="control-label">Id: </label>
+            <label for="input-id" class="control-label">Request ID: </label>
             <input id="input-id" type="text" name="id" class="form-control" value="@ViewBag.RequestId">
         </div>
         <div class="form-group col-sm-5">
@@ -23,6 +24,7 @@
         </div>
     </div>
     <div class="form-group">
+        Car availability: &nbsp;
         <input id="input-car-available-all" type="radio" name="carAvailable" value="0" @(ViewBag.CarAvailable == 0 ? "checked" : "")>
         <label for="input-car-available-yes" class="control-label">Yes: </label>
         <input id="input-car-available-yes" type="radio" name="carAvailable" value="1" @(ViewBag.CarAvailable == 1 ? "checked" : "")>
@@ -31,8 +33,7 @@
         <label for="input-car-available-no" class="control-label">No: </label>
     </div>
     <div class="form-group">
-
-
+        Manager: &nbsp;
         <input id="input-owner-all" type="radio" name="owner" class="" value="" @(string.IsNullOrEmpty(ViewBag.Owner) ? "checked" : "")>
         <label for="input-owner-all" class="control-label">All: </label>
 
@@ -82,7 +83,7 @@
             <th>
                 @*@Html.DisplayNameFor(model => model.Id)*@
 
-                <a href="@Url.Action("Index")@ViewBag.QueryString@($"sortOrder={ViewBag.IdSort}&page={Model.PageIndex}")">Id</a>
+                <a href="@Url.Action("Index")@ViewBag.QueryString@($"sortOrder={ViewBag.IdSort}&page={Model.PageIndex}")">Request ID</a>
 
             </th>
             <th>
@@ -102,9 +103,9 @@
                 @*@Html.DisplayNameFor(model => model.ApplicationDate)*@
                 <a href="@Url.Action("Index")@ViewBag.QueryString@($"sortOrder={ViewBag.AppDateSort}&page={Model.PageIndex}")">Application date</a>
             </th>
-            <td>
+            <th>
                 @Html.DisplayNameFor(model => model[0].CarAvailability)
-            </td>
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model[0].Manager)
             </th>
@@ -151,11 +152,11 @@
                     }
 
                     @if (!string.IsNullOrEmpty(item.ManagerId) && (ViewBag.ManagerId == item.ManagerId || User.IsInRole("admin"))) {
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
                     }
 
                     @if (User.IsInRole("admin") && (item.State == PurchaseRequest.RequestState.New || item.State == PurchaseRequest.RequestState.Processing)) {
-                        <div class="dropdown dropdown-managers">
+                        <div class="dropdown dropdown-managers" style="margin-top: 10px;">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton-@item.Id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Assign to
                             </button>
