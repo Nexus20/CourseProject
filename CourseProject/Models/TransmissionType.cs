@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CourseProject.Models {
-    public class TransmissionType {
-
+namespace CourseProject.Models
+{
+    public class TransmissionType
+    {
         public int Id { get; set; }
 
         [Required]

@@ -2,37 +2,33 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using CourseProject.Data;
 using CourseProject.Models;
 using CourseProject.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
-namespace CourseProject.Areas.Admin.Controllers {
+namespace CourseProject.Areas.Admin.Controllers
+{
 
     [Authorize(Roles = "admin, manager")]
     [Area("Admin")]
-    public class PurchaseRequestsController : Controller {
+    public class PurchaseRequestsController : Controller
+    {
 
         private readonly CarContext _context;
-        private readonly IWebHostEnvironment _appEnvironment;
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public PurchaseRequestsController(CarContext context, IWebHostEnvironment appEnvironment, UserManager<User> userManager, RoleManager<IdentityRole> roleManager) {
+        public PurchaseRequestsController(CarContext context, UserManager<User> userManager)
+        {
             _context = context;
-            _appEnvironment = appEnvironment;
             _userManager = userManager;
-            _roleManager = roleManager;
         }
 
-        public async Task<IActionResult> Index(PurchaseRequestSearchViewModel purchaseRequestSearch, string sortOrder, int? newSearch, int? page) {
+        public async Task<IActionResult> Index(PurchaseRequestSearchViewModel purchaseRequestSearch, string sortOrder, int? newSearch, int? page)
+        {
 
             ViewBag.IdSort = string.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
             ViewBag.NameSort = sortOrder == "name_asc" ? "name_desc" : "name_asc";
@@ -51,44 +47,53 @@ namespace CourseProject.Areas.Admin.Controllers {
                 .Where(pr => (User.IsInRole("admin") || pr.ManagerId == managerId || pr.State == PurchaseRequest.RequestState.New))
                 .AsNoTracking();
 
-            if (newSearch != null) {
+            if (newSearch != null)
+            {
                 page = 1;
             }
 
-            if (purchaseRequestSearch.Id != null) {
+            if (purchaseRequestSearch.Id != null)
+            {
                 requests = requests.Where(pr => pr.Id == purchaseRequestSearch.Id);
             }
             ViewBag.RequestId = purchaseRequestSearch.Id;
 
-            if (purchaseRequestSearch.CarAvailable != null && purchaseRequestSearch.CarAvailable.Value != 0) {
+            if (purchaseRequestSearch.CarAvailable != null && purchaseRequestSearch.CarAvailable.Value != 0)
+            {
                 requests = requests.Where(pr => pr.CarAvailability == (purchaseRequestSearch.CarAvailable == 1));
                 ViewBag.CarAvailable = purchaseRequestSearch.CarAvailable;
             }
-            else {
+            else
+            {
                 ViewBag.CarAvailable = 0;
             }
-            
 
-            if (!string.IsNullOrEmpty(purchaseRequestSearch.Owner)) {
+
+            if (!string.IsNullOrEmpty(purchaseRequestSearch.Owner))
+            {
                 requests = requests.Where(pr => pr.ManagerId == purchaseRequestSearch.Owner);
             }
 
             ViewBag.Owner = purchaseRequestSearch.Owner;
 
-            if (!string.IsNullOrEmpty(purchaseRequestSearch.Surname)) {
+            if (!string.IsNullOrEmpty(purchaseRequestSearch.Surname))
+            {
                 requests = requests.Where(pr => pr.Surname.Contains(purchaseRequestSearch.Surname));
             }
             ViewBag.Surname = purchaseRequestSearch.Surname;
 
-            if (!string.IsNullOrEmpty(purchaseRequestSearch.Email)) {
+            if (!string.IsNullOrEmpty(purchaseRequestSearch.Email))
+            {
                 requests = requests.Where(pr => pr.Email == purchaseRequestSearch.Email);
             }
             ViewBag.Email = purchaseRequestSearch.Email;
 
-            if (purchaseRequestSearch.RequestStates != null && purchaseRequestSearch.RequestStates.Length > 0) {
+            if (purchaseRequestSearch.RequestStates != null && purchaseRequestSearch.RequestStates.Length > 0)
+            {
 
                 IQueryable<PurchaseRequest> requests2 = requests.Where(pr => pr.State == (PurchaseRequest.RequestState)purchaseRequestSearch.RequestStates[0]);
-                for (var i = 1; i < purchaseRequestSearch.RequestStates.Length; i++) {
+                for (var i = 1; i < purchaseRequestSearch.RequestStates.Length; i++)
+                {
                     var i1 = i;
                     requests2 = requests2.Concat(requests.Where(pr => pr.State == (PurchaseRequest.RequestState)purchaseRequestSearch.RequestStates[i1]));
                 }
@@ -97,11 +102,13 @@ namespace CourseProject.Areas.Admin.Controllers {
 
                 ViewBag.CheckedRequestStates = Request.Query["requestStates"].ToArray();
             }
-            else {
+            else
+            {
                 ViewBag.CheckedRequestStates = null;
             }
 
-            requests = sortOrder switch {
+            requests = sortOrder switch
+            {
                 "id_desc" => requests.OrderByDescending(r => r.Id),
                 "name_asc" => requests.OrderBy(r => r.Surname),
                 "name_desc" => requests.OrderByDescending(r => r.Surname),
@@ -116,10 +123,12 @@ namespace CourseProject.Areas.Admin.Controllers {
 
             var allManagers = new List<User>();
 
-            if (User.IsInRole("admin")) {
+            if (User.IsInRole("admin"))
+            {
                 allManagers.AddRange(await _userManager.GetUsersInRoleAsync("manager"));
             }
-            else {
+            else
+            {
                 allManagers.Add(await _userManager.GetUserAsync(User));
             }
 
@@ -127,16 +136,17 @@ namespace CourseProject.Areas.Admin.Controllers {
 
             ViewBag.ManagerId = managerId;
 
-            int pageSize = 5;
+            const int pageSize = 5;
 
-            //return View(await requests.ToListAsync());
             return View(await PaginatedList<PurchaseRequest>.CreateAsync(requests, page ?? 1, pageSize));
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details(int? id) {
+        public async Task<IActionResult> Details(int? id)
+        {
 
-            if (id == null) {
+            if (id == null)
+            {
                 return NotFound();
             }
 
@@ -158,7 +168,8 @@ namespace CourseProject.Areas.Admin.Controllers {
                 .AsNoTracking()
                 .FirstOrDefaultAsync(pr => pr.Id == id);
 
-            if (request == null) {
+            if (request == null)
+            {
                 return NotFound();
             }
 
@@ -168,14 +179,16 @@ namespace CourseProject.Areas.Admin.Controllers {
         }
 
         [HttpPost]
-        public async Task<IActionResult> Details(int id) {
+        public async Task<IActionResult> Details(int id)
+        {
             var purchaseRequest = await _context.PurchaseRequests.FindAsync(id);
 
             purchaseRequest.State = PurchaseRequest.RequestState.Closed;
             _context.Update(purchaseRequest);
 
             var car = await _context.Cars.FindAsync(purchaseRequest.CarId);
-            if (car.State == Car.CarState.SecondHand) {
+            if (car.State == Car.CarState.SecondHand)
+            {
                 car.Presence = Car.CarPresence.Sold;
                 _context.Update(car);
             }
@@ -185,27 +198,31 @@ namespace CourseProject.Areas.Admin.Controllers {
         }
 
         [HttpPost]
-        public async Task<IActionResult> CancelRequest(int id) {
+        public async Task<IActionResult> CancelRequest(int id)
+        {
             var purchaseRequest = await _context.PurchaseRequests.FindAsync(id);
 
             purchaseRequest.State = PurchaseRequest.RequestState.Canceled;
             _context.Update(purchaseRequest);
 
             var anotherPurchaseRequest = await _context.PurchaseRequests
-                .Where(pr => pr.Id != purchaseRequest.Id 
+                .Where(pr => pr.Id != purchaseRequest.Id
                              && pr.CarId == purchaseRequest.CarId && pr.CarAvailability == false
                              && (pr.State == PurchaseRequest.RequestState.New || pr.State == PurchaseRequest.RequestState.Processing))
                 .OrderBy(pr => pr.ApplicationDate)
                 .FirstOrDefaultAsync();
 
-            if (anotherPurchaseRequest != null) {
+            if (anotherPurchaseRequest != null)
+            {
                 anotherPurchaseRequest.CarAvailability = true;
                 _context.Update(anotherPurchaseRequest);
             }
-            else {
+            else
+            {
                 var car = await _context.Cars.FindAsync(purchaseRequest.CarId);
                 car.Count++;
-                if (car.Presence == Car.CarPresence.BookedOrSold) {
+                if (car.Presence == Car.CarPresence.BookedOrSold)
+                {
                     car.Presence = Car.CarPresence.InStock;
                 }
 
@@ -217,14 +234,17 @@ namespace CourseProject.Areas.Admin.Controllers {
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult AssignManagerToRequest(int? requestId, string managerId) {
-            if (requestId == null) {
+        public IActionResult AssignManagerToRequest(int? requestId, string managerId)
+        {
+            if (requestId == null)
+            {
                 return NotFound();
             }
 
             var request = _context.PurchaseRequests.FirstOrDefault(pr => pr.Id == requestId);
 
-            if (request == null) {
+            if (request == null)
+            {
                 return NotFound();
             }
 

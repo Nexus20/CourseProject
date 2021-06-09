@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace CourseProject.Models {
-    public class FeaturedCar {
-
+﻿namespace CourseProject.Models
+{
+    public class FeaturedCar
+    {
         public int Id { get; set; }
 
         public int CarId { get; set; }

@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace CourseProject.Models {
-    public class Dealer {
+namespace CourseProject.Models
+{
+    public class Dealer
+    {
 
         public int Id { get; set; }
 
         [Required]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "String length must be between 3 and 50 characters")]
-        [Display(Name="Dealer")]
+        [Display(Name = "Dealer")]
         public string Name { get; set; }
 
         [Required]

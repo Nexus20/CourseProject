@@ -120,25 +120,3 @@
 
     <a asp-action="Index" class="btn btn-primary">Back to List</a>
 </div>
-@*@section Scripts {
-    <script type="text/javascript">
-        $(document).ready(() => {
-            $('#statuses-dropdown').on('click',
-                '.dropdown-item',
-                (e) => {
-                    console.log(e.target);
-
-                    const requestId = e.target.dataset['id'];
-                    const newState = e.target.dataset['state'];
-
-                    $.ajax({
-                        url: '@Url.Action("ChangeRequestState", "PurchaseRequests")',
-                        data: {requestId: requestId, newState: newState}
-                    }).done((data) => {
-                        console.log(data);
-                        $(`#dropdownMenuButton`).text(data);
-                    });
-                });
-        });
-    </script>
-}*@

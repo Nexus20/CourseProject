@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace CourseProject.Models.ViewModels {
-    public class EditUserViewModel {
+namespace CourseProject.Models.ViewModels
+{
+    public class EditUserViewModel
+    {
         public string Id { get; set; }
         [Display(Name = "Login")]
         public string UserName { get; set; }

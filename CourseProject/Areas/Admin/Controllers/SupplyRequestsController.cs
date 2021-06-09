@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -40,7 +38,8 @@ namespace CourseProject.Areas.Admin.Controllers
         public async Task<IActionResult> Create(int? carId)
         {
 
-            if (carId == null) {
+            if (carId == null)
+            {
                 return NotFound();
             }
 
@@ -48,7 +47,8 @@ namespace CourseProject.Areas.Admin.Controllers
                 .Include(c => c.Model)
                 .FirstOrDefaultAsync(c => c.Id == carId);
 
-            if (car == null) {
+            if (car == null)
+            {
                 return NotFound();
             }
 
@@ -58,7 +58,7 @@ namespace CourseProject.Areas.Admin.Controllers
                 .ToListAsync();
 
             ViewData["DealerId"] = new SelectList(dealers, "Id", "Name");
-            return View(new SupplyRequest() {CarId = carId.Value});
+            return View(new SupplyRequest() { CarId = carId.Value });
         }
 
         // POST: Admin/SupplyRequests/Create
@@ -80,9 +80,11 @@ namespace CourseProject.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> SendRequest(int? id) {
+        public async Task<IActionResult> SendRequest(int? id)
+        {
 
-            if (id == null) {
+            if (id == null)
+            {
                 return NotFound();
             }
 
@@ -102,7 +104,8 @@ namespace CourseProject.Areas.Admin.Controllers
                 .Include(s => s.Dealer)
                 .FirstOrDefaultAsync(sr => sr.Id == id);
 
-            if (supplyRequest == null || supplyRequest.State == SupplyRequest.SupplyRequestState.Closed) {
+            if (supplyRequest == null || supplyRequest.State == SupplyRequest.SupplyRequestState.Closed)
+            {
                 return NotFound();
             }
 
@@ -111,7 +114,8 @@ namespace CourseProject.Areas.Admin.Controllers
 
         [HttpPost, ActionName("SendRequest")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SendRequest(int id) {
+        public async Task<IActionResult> SendRequest(int id)
+        {
             var supplyRequest = await _context.SupplyRequests.FindAsync(id);
             supplyRequest.State = SupplyRequest.SupplyRequestState.Sent;
             _context.Update(supplyRequest);
@@ -123,9 +127,11 @@ namespace CourseProject.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CloseRequest(int? id) {
+        public async Task<IActionResult> CloseRequest(int? id)
+        {
 
-            if (id == null) {
+            if (id == null)
+            {
                 return NotFound();
             }
 
@@ -145,7 +151,8 @@ namespace CourseProject.Areas.Admin.Controllers
                 .Include(s => s.Dealer)
                 .FirstOrDefaultAsync(sr => sr.Id == id);
 
-            if (supplyRequest == null || supplyRequest.State == SupplyRequest.SupplyRequestState.New) {
+            if (supplyRequest == null || supplyRequest.State == SupplyRequest.SupplyRequestState.New)
+            {
                 return NotFound();
             }
 
@@ -154,7 +161,8 @@ namespace CourseProject.Areas.Admin.Controllers
 
         [HttpPost, ActionName("CloseRequest")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CloseRequest(int id) {
+        public async Task<IActionResult> CloseRequest(int id)
+        {
             var supplyRequest = await _context.SupplyRequests.FindAsync(id);
             supplyRequest.State = SupplyRequest.SupplyRequestState.Closed;
             _context.Update(supplyRequest);
@@ -169,13 +177,15 @@ namespace CourseProject.Areas.Admin.Controllers
             var purchaseRequests =
                 await _context.PurchaseRequests.Where(pr => pr.CarId == supplyRequest.CarId && pr.CarAvailability == false).OrderBy(pr => pr.ApplicationDate).ToListAsync();
 
-            for (var i = 0; i < purchaseRequests.Count && i < supplyRequest.Count; i++) {
+            for (var i = 0; i < purchaseRequests.Count && i < supplyRequest.Count; i++)
+            {
                 purchaseRequests[i].CarAvailability = true;
                 _context.Update(purchaseRequests[i]);
                 car.Count--;
             }
 
-            if (car.Count == 0) {
+            if (car.Count == 0)
+            {
                 car.Presence = Car.CarPresence.BookedOrSold;
             }
 

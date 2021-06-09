@@ -2,8 +2,30 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CourseProject.Models {
-    public class Car {
+namespace CourseProject.Models
+{
+    public class Car
+    {
+
+        public enum CarState
+        {
+            New,
+            SecondHand
+        }
+
+        public enum CarPresence
+        {
+            InStock,
+            Sold,
+            AwaitingDelivery,
+            BookedOrSold,
+        }
+
+        public Car()
+        {
+            Presence = Count == 0 ? CarPresence.BookedOrSold : CarPresence.InStock;
+        }
+
         public int Id { get; set; }
 
         public int? Year { get; set; }
@@ -19,20 +41,8 @@ namespace CourseProject.Models {
         [Column(TypeName = "money")]
         public decimal Price { get; set; }
 
-        public enum CarState {
-            New,
-            SecondHand
-        }
-
         [Required]
         public CarState State { get; set; }
-
-        public enum CarPresence {
-            InStock,
-            Sold,
-            AwaitingDelivery,
-            BookedOrSold,
-        }
 
         public CarPresence Presence { get; set; }
 
@@ -42,9 +52,10 @@ namespace CourseProject.Models {
         public CarModel Model { get; set; }
 
         [Display(Name = "Engine volume")]
+        [Range(0.1, double.MaxValue, ErrorMessage = "Minimum value for this field is 0.1")]
         public double? EngineVolume { get; set; }
 
-        [Range(0, int.MaxValue, ErrorMessage = "Minimum value for this field is 0")]
+        [Range(0, double.MaxValue, ErrorMessage = "Minimum value for this field is 0")]
         public double? Mileage { get; set; }
 
         [Required]
@@ -62,10 +73,6 @@ namespace CourseProject.Models {
         public TransmissionType TransmissionType { get; set; }
 
         public ICollection<CarImage> CarImages { get; set; }
-
-        public Car() {
-            Presence = CarPresence.InStock;
-        }
 
     }
 }

@@ -1,18 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace CourseProject.Models {
-    public class PurchaseRequest {
+namespace CourseProject.Models
+{
+    public class PurchaseRequest
+    {
 
-        public enum RequestState {
+        public enum RequestState
+        {
             New,
             Processing,
             Closed,
             Canceled
+        }
+
+        public PurchaseRequest()
+        {
+            State = RequestState.New;
         }
 
         [Display(Name = "Request ID")]
@@ -40,7 +45,7 @@ namespace CourseProject.Models {
 
         public RequestState State { get; set; }
 
-        [Display(Name="Full name")]
+        [Display(Name = "Full name")]
         public string FullName => $"{Firstname} {Surname}";
 
         public string ClientId { get; set; }
@@ -57,10 +62,6 @@ namespace CourseProject.Models {
 
         [Display(Name = "Car available")]
         public bool CarAvailability { get; set; }
-
-        public PurchaseRequest() {
-            State = RequestState.New;
-        }
 
     }
 }

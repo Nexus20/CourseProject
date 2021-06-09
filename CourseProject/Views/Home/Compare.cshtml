@@ -16,9 +16,6 @@
                     @Html.DisplayNameFor(model => model[0].Price)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model[0].Year)
-                </th>
-                <th>
                     @Html.DisplayNameFor(model => model[0].State)
                 </th>
                 <th>
@@ -44,13 +41,10 @@
             @foreach (var item in Model.Values) {
                 <tr>
                     <td>
-                        @item.Model.Brand.Name @item.Model.Parent?.Name @item.Model.Name
+                        @item.Model.Brand.Name @item.Model.Parent?.Name @item.Model.Name @item.Year
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Price)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Year)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.State)

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -62,11 +60,13 @@ namespace CourseProject.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Email,Phone,BrandId")] Dealer dealer)
         {
-            if (await _context.Dealers.FirstOrDefaultAsync(d => d.Phone == dealer.Phone) != null) {
+            if (await _context.Dealers.FirstOrDefaultAsync(d => d.Phone == dealer.Phone) != null)
+            {
                 ModelState.AddModelError("Phone", "Dealer with such number already exists");
             }
 
-            if (await _context.Dealers.FirstOrDefaultAsync(d => d.Email == dealer.Email) != null) {
+            if (await _context.Dealers.FirstOrDefaultAsync(d => d.Email == dealer.Email) != null)
+            {
                 ModelState.AddModelError("Phone", "Dealer with such email already exists");
             }
 

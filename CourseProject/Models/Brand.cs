@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CourseProject.Models {
-    public class Brand {
-
+namespace CourseProject.Models
+{
+    public class Brand
+    {
         public int Id { get; set; }
 
         [Required]
@@ -17,6 +15,5 @@ namespace CourseProject.Models {
         public string Name { get; set; }
 
         public ICollection<Dealer> Dealers { get; set; }
-
     }
 }

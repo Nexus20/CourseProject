@@ -27,12 +27,13 @@
                 <form asp-action="DeleteBrand">
                     <a asp-action="EditBrand" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> 
                     <input type="hidden" asp-for="@item.Id" name="id" />
-                    <input type="submit" value="Delete" class="btn btn-danger" /> 
-                    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+                    <input type="submit" value="Delete" class="btn btn-danger" />
                 </form>
             </td>
         </tr>
     }
     </tbody>
 </table>
+<br />
+<a asp-action="Index" class="btn btn-primary">Back to List</a>
 

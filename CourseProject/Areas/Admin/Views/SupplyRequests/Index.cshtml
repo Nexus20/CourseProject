@@ -37,7 +37,7 @@
                 @Html.DisplayFor(modelItem => item.Dealer.Name)
             </td>
             <td>
-                @item.Car.Model.Brand.Name @item.Car.Model.Parent?.Name @item.Car.Model.Name
+                <a asp-controller="Cars" asp-action="Details" asp-route-id="@item.Car.Id">@item.Car.Model.Brand.Name @item.Car.Model.Parent?.Name @item.Car.Model.Name</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Count)

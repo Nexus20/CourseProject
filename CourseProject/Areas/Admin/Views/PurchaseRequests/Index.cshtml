@@ -1,5 +1,4 @@
-﻿@*@model IEnumerable<PurchaseRequest>*@
-@model PaginatedList<PurchaseRequest>
+﻿@model PaginatedList<PurchaseRequest>
 
 @{
     ViewData["Title"] = "Purchase requests";
@@ -81,26 +80,21 @@
     <thead>
         <tr>
             <th>
-                @*@Html.DisplayNameFor(model => model.Id)*@
-
                 <a href="@Url.Action("Index")@ViewBag.QueryString@($"sortOrder={ViewBag.IdSort}&page={Model.PageIndex}")">Request ID</a>
-
             </th>
             <th>
                 Car
             </th>
             <th>
-                @*@Html.DisplayNameFor(model => model.FullName)*@
                 <a href="@Url.Action("Index")@ViewBag.QueryString@($"sortOrder={ViewBag.NameSort}&page={Model.PageIndex}")">Full name</a>
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].Email)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model[0].Phone)
             </th>
             <th>
-                @*@Html.DisplayNameFor(model => model.ApplicationDate)*@
+                @Html.DisplayNameFor(model => model[0].Email)
+            </th>
+            <th>
                 <a href="@Url.Action("Index")@ViewBag.QueryString@($"sortOrder={ViewBag.AppDateSort}&page={Model.PageIndex}")">Application date</a>
             </th>
             <th>

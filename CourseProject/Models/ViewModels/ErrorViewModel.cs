@@ -1,7 +1,7 @@
-using System;
-
-namespace CourseProject.Models {
-    public class ErrorViewModel {
+namespace CourseProject.Models.ViewModels
+{
+    public class ErrorViewModel
+    {
         public string RequestId { get; set; }
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
