@@ -205,13 +205,13 @@ namespace CourseProject.Areas.Admin.Controllers
             return _context.CarModels.Any(e => e.Id == id);
         }
 
-        public async Task<IActionResult> Brands()
+        public IActionResult Brands()
         {
             return View(_context.Brands);
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreateBrand()
+        public IActionResult CreateBrand()
         {
             return View("CreateEditBrand", new Brand());
         }

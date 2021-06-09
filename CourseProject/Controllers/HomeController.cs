@@ -344,7 +344,7 @@ namespace CourseProject.Controllers {
         }
 
         [HttpGet]
-        public async Task<IActionResult> Compare() {
+        public IActionResult Compare() {
 
             var carsToCompare = HttpContext.Session.Get<Dictionary<int, Car>>("CarsToCompare");
             if (carsToCompare != null) {
