@@ -34,8 +34,8 @@ namespace CourseProject.Controllers {
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded) {
                     // установка куки
-                    await _signInManager.SignInAsync(user, false);
                     await _userManager.AddToRoleAsync(user, "user");
+                    await _signInManager.SignInAsync(user, false);
                     return RedirectToAction("Index", "Home");
                 }
                 else {
@@ -77,7 +77,7 @@ namespace CourseProject.Controllers {
             return View(model);
         }
 
-        [Authorize(Roles = "admin, manager, user")]
+        [Authorize(Roles = "user, manager, admin")]
         public async Task<IActionResult> Cabinet() {
 
             var user = await _userManager.GetUserAsync(this.User);

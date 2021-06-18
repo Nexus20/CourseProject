@@ -93,7 +93,7 @@ else {
             $('#comparison-table').on('click',
                 '.btn-remove-from-compare',
                 (e) => {
-                    console.log(e.target.parentNode.parentNode);
+                    console.log(e.target.parentNode.parentNode.parentNode);
 
                     const carId = e.target.dataset['id'];
 
@@ -101,7 +101,7 @@ else {
                         url: '@Url.Action("AddRemoveToCompare", "Home")',
                         data: { carId: carId }
                     }).done(() => {
-                        $(e.target.parentNode.parentNode).remove();
+                        $(e.target.parentNode.parentNode.parentNode).remove();
 
                         if ($('#comparison-table tr').length == 1) {
                             $('#comparison-table').before('<br><div class="alert alert-info" role="alert">There are no cars to compare</div>');
